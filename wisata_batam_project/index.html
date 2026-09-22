@@ -112,7 +112,7 @@
 </div>
 <span class="text-[11px] text-on-surface-variant flex items-center gap-1 mt-0.5">
 <span class="w-1.5 h-1.5 rounded-full bg-secondary animate-pulse"></span>
-<span id="ui-header-status">Live Assistant • Kepri</span>
+<span id="ui-header-status" data-i18n="headerStatus">Live Assistant • Kepri</span>
 </span>
 </div>
 </div>
@@ -150,11 +150,11 @@
 <section class="screen-pane active-state flex-col gap-4 w-full" id="screen-welcome">
 <div class="relative w-full rounded-3xl overflow-hidden border border-outline-light shadow-glass group">
 <div class="h-44 w-full relative overflow-hidden">
-<img alt="Nongsa Batam" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 brightness-95" src="https://images.unsplash.com/photo-1544426573-04dc39263a23?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80"/>
+<img alt="Nongsa Batam" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 brightness-95" src="image_02fa79.jpg"/>
 <div class="absolute inset-0 bg-gradient-to-t from-surface via-surface/40 to-transparent"></div>
 <div class="absolute top-3 right-3 px-2.5 py-1 rounded-full bg-black/40 backdrop-blur-md border border-white/15 text-[11px] font-medium text-white flex items-center gap-1">
 <span class="material-symbols-outlined text-[13px] text-primary">wb_sunny</span>
-<span>29°C Tropis Nongsa</span>
+<span data-i18n="weatherTag">29°C Tropis Nongsa</span>
 </div>
 </div>
 <div class="p-4 pt-1 bg-surface flex flex-col gap-2">
@@ -182,34 +182,34 @@
 <span class="text-primary font-normal lowercase" data-i18n="tapToSend">ketuk untuk tanya</span>
 </div>
 <div class="flex flex-col gap-2" id="prompt-list">
-<button class="prompt-chip w-full p-3 rounded-2xl bg-surface-low hover:bg-surface border border-outline-light flex items-center justify-between text-left transition-all active:scale-[0.99] group">
+<button class="prompt-chip w-full p-3 rounded-2xl bg-surface-low hover:bg-surface border border-outline-light flex items-center justify-between text-left transition-all active:scale-[0.99] group" data-prompt-id="p1">
 <div class="flex items-center gap-3">
 <div class="w-8 h-8 rounded-xl bg-primary/10 text-primary flex items-center justify-center shrink-0">
 <span class="material-symbols-outlined text-lg">surfing</span>
 </div>
-<span class="text-sm text-on-surface group-hover:text-primary font-medium" data-query="Rekomendasikan pantai terbaik dan tidak terlalu ramai di Nongsa Batam">
-                  Rekomendasikan pantai tenang &amp; estetik di Nongsa
+<span class="text-sm text-on-surface group-hover:text-primary font-medium" data-i18n="p1Label">
+                  Rekomendasikan pantai tenang & estetik di Nongsa
                 </span>
 </div>
 <span class="material-symbols-outlined text-on-surface-variant group-hover:text-primary text-base transition-colors">arrow_forward</span>
 </button>
-<button class="prompt-chip w-full p-3 rounded-2xl bg-surface-low hover:bg-surface border border-outline-light flex items-center justify-between text-left transition-all active:scale-[0.99] group">
+<button class="prompt-chip w-full p-3 rounded-2xl bg-surface-low hover:bg-surface border border-outline-light flex items-center justify-between text-left transition-all active:scale-[0.99] group" data-prompt-id="p2">
 <div class="flex items-center gap-3">
 <div class="w-8 h-8 rounded-xl bg-secondary/10 text-secondary flex items-center justify-center shrink-0">
 <span class="material-symbols-outlined text-lg">map</span>
 </div>
-<span class="text-sm text-on-surface group-hover:text-secondary font-medium" data-query="Kalau saya punya waktu satu hari di Batam, tempat apa yang cocok?">
+<span class="text-sm text-on-surface group-hover:text-secondary font-medium" data-i18n="p2Label">
                   Itinerary 1 hari trip keliling Batam paling optimal
                 </span>
 </div>  
 <span class="material-symbols-outlined text-on-surface-variant group-hover:text-secondary text-base transition-colors">arrow_forward</span>
 </button>
-<button class="prompt-chip w-full p-3 rounded-2xl bg-surface-low hover:bg-surface border border-outline-light flex items-center justify-between text-left transition-all active:scale-[0.99] group">
+<button class="prompt-chip w-full p-3 rounded-2xl bg-surface-low hover:bg-surface border border-outline-light flex items-center justify-between text-left transition-all active:scale-[0.99] group" data-prompt-id="p3">
 <div class="flex items-center gap-3">
-<div class="w-8 h-8 rounded-xl bg-amber-400/10 text-amber-500 flex items-center justify-center shrink-0">
+<div class="w-8 h-8 rounded-xl bg-amber-400/10 text-amber-50 flex items-center justify-center shrink-0">
 <span class="material-symbols-outlined text-lg">restaurant</span>
 </div>
-<span class="text-sm text-on-surface group-hover:text-amber-600 font-medium" data-query="Rekomendasi seafood gonggong legendaris di sekitar Barelang dan Piayu">
+<span class="text-sm text-on-surface group-hover:text-amber-600 font-medium" data-i18n="p3Label">
                   Kuliner seafood gonggong legendaris di Barelang
                 </span>
 </div>
@@ -242,7 +242,7 @@
     </div>
   </div>
   <div class="rounded-3xl rounded-tl-md bg-surface border border-outline-light p-4 shadow-glass flex flex-col gap-3">
-    <p class="text-[15px] leading-relaxed text-on-surface">Halo! Silakan ketik pertanyaan Anda di bawah, saya siap membantu panduan wisata Batam Anda.</p>
+    <p class="text-[15px] leading-relaxed text-on-surface" data-i18n="chatIntro">Halo! Silakan ketik pertanyaan Anda di bawah, saya siap membantu panduan wisata Batam Anda.</p>
   </div>
 </div>
 </div>
@@ -304,13 +304,13 @@
 <span class="text-xs font-semibold uppercase tracking-wider text-primary" data-i18n="prefCategoryInterest">Minat Utama</span>
 <div class="flex flex-wrap gap-2" id="group-interests">
 <button class="pref-chip active px-3.5 py-2 rounded-2xl bg-primary text-on-primary font-semibold text-xs border border-primary transition-all flex items-center gap-1.5" data-val="alam">
-<span>🌴 Alam &amp; Mangrove</span>
+<span data-i18n="prefNature">🌴 Alam & Mangrove</span>
 </button>
 <button class="pref-chip active px-3.5 py-2 rounded-2xl bg-primary text-on-primary font-semibold text-xs border border-primary transition-all flex items-center gap-1.5" data-val="kuliner">
-<span>🍜 Kuliner Seafood</span>
+<span data-i18n="prefFood">🍜 Kuliner Seafood</span>
 </button>
 <button class="pref-chip px-3.5 py-2 rounded-2xl bg-surface-low text-on-surface font-semibold text-xs border border-outline-light transition-all flex items-center gap-1.5" data-val="budaya">
-<span>🏛️ Budaya &amp; Sejarah</span>
+<span data-i18n="prefCulture">🏛️ Budaya & Sejarah</span>
 </button>
 </div>
 </div>
@@ -331,28 +331,24 @@
 </section>
 
 <!-- TAB 5: DESTINATION DETAIL SCREEN -->
-<section class="screen-pane hidden-state flex-col gap-3.5 w-full" id="screen-detail">
+<section class="screen-pane hidden-state flex-col gap-3.5 w-full" id="screen-detail" data-current-dest="pandang-tak-jemu">
 <div class="relative w-full h-52 rounded-3xl overflow-hidden border border-outline-light shadow-glass">
-<img alt="Destination Photo" class="w-full h-full object-cover" id="detail-hero-img" src="https://images.unsplash.com/photo-1544426573-04dc39263a23?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80"/>
+<img alt="Destination Photo" class="w-full h-full object-cover" id="detail-hero-img" src=""/>
 <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/10 to-transparent"></div>
 <button class="absolute top-3 left-3 w-9 h-9 rounded-full bg-black/50 backdrop-blur-md border border-white/15 flex items-center justify-center text-white" id="btn-back-from-detail">
 <span class="material-symbols-outlined text-lg">arrow_back</span>
 </button>
 <div class="absolute bottom-3 left-3 right-3 flex items-end justify-between">
 <div>
-<span class="px-2 py-0.5 rounded-full bg-primary/30 backdrop-blur-md text-white text-[10px] font-bold uppercase tracking-wider" id="detail-category-badge">
-                Ekowisata Pesisir
-              </span>
-<h2 class="text-lg font-bold text-white leading-tight mt-0.5" id="detail-title">
-                Pandang Tak Jemu (Kampung Terih)
-              </h2>
+<span class="px-2 py-0.5 rounded-full bg-primary/30 backdrop-blur-md text-white text-[10px] font-bold uppercase tracking-wider" id="detail-category-badge"></span>
+<h2 class="text-lg font-bold text-white leading-tight mt-0.5" id="detail-title"></h2>
 <div class="flex items-center gap-2 text-xs text-white/80 mt-0.5">
 <span class="flex items-center text-amber-300 gap-0.5 font-semibold">
 <span class="material-symbols-outlined text-[13px] fill-current">star</span>4.8
                 </span>
 <span>•</span>
 <span class="flex items-center gap-0.5">
-<span class="material-symbols-outlined text-[13px]">location_on</span>Nongsa, Batam
+<span class="material-symbols-outlined text-[13px]">location_on</span><span id="detail-location"></span>
                 </span>
 </div>
 </div>
@@ -365,7 +361,7 @@
 <div class="flex-1">
 <span class="text-[11px] font-bold uppercase tracking-wider text-primary" data-i18n="detailWhyYou">Kenapa cocok untukmu?</span>
 <p class="text-xs text-on-surface leading-relaxed mt-0.5" data-i18n="detailMatchText" id="detail-match-reason">
-              Sesuai preferensi alam &amp; trip santai: suasana teduh mangrove tanpa hiruk-pikuk kota, jembatan foto estetik.
+              Sesuai preferensi alam & trip santai: suasana teduh mangrove tanpa hiruk-pikuk kota.
             </p>
 </div>
 </div>
@@ -373,12 +369,10 @@
 <button class="detail-subtab active flex-1 py-1.5 rounded-xl bg-surface-high font-semibold text-on-surface transition-all text-center" data-i18n="subAbout" data-tab="about">Tentang</button>
 <button class="detail-subtab flex-1 py-1.5 rounded-xl text-on-surface-variant hover:text-on-surface transition-all text-center" data-i18n="subFacility" data-tab="facility">Fasilitas</button>
 <button class="detail-subtab flex-1 py-1.5 rounded-xl text-on-surface-variant hover:text-on-surface transition-all text-center" data-i18n="subAccess" data-tab="access">Akses</button>
-<button class="detail-subtab flex-1 py-1.5 rounded-xl text-on-surface-variant hover:text-on-surface transition-all text-center" data-i18n="subHours" data-tab="hours">Jam &amp; Tiket</button>
+<button class="detail-subtab flex-1 py-1.5 rounded-xl text-on-surface-variant hover:text-on-surface transition-all text-center" data-i18n="subHours" data-tab="hours">Jam & Tiket</button>
 </div>
 <div class="p-3.5 rounded-2xl bg-surface border border-outline-light text-xs leading-relaxed text-on-surface-variant" id="detail-subtab-content">
-<p id="detail-body-text">
-            Desa wisata pesisir unggulan Batam yang mengusung konservasi hutan bakau seluas 3 hektar. Pengunjung dapat menikmati sensasi berjalan di jembatan titian kayu 200 meter.
-          </p>
+<p id="detail-body-text"></p>
 </div>
 </section>
 </main>
@@ -407,21 +401,77 @@
       let currentLanguage = 'ID';
       let currentScreen = 'screen-welcome';
 
+      const destinationCatalog = {
+        'pandang-tak-jemu': {
+          img: 'image_02fa79.jpg',
+          ID: {
+            title: 'Pandang Tak Jemu (Kampung Terih)',
+            category: 'Ekowisata Pesisir',
+            location: 'Nongsa, Batam',
+            about: 'Desa wisata pesisir unggulan Batam yang mengusung konservasi hutan bakau seluas 3 hektar. Pengunjung dapat menikmati sensasi berjalan di jembatan titian kayu 200 meter.',
+            facility: 'Area parkir luas, musala, toilet bersih, serta spot foto alami yang estetik.',
+            access: '15 menit perjalanan dari Bandara Internasional Hang Nadim Batam menggunakan mobil atau motor.',
+            hours: 'Buka setiap hari: 08:00 - 18:30 WIB. Harga tiket masuk sangat terjangkau.'
+          },
+          EN: {
+            title: 'Pandang Tak Jemu (Terih Village)',
+            category: 'Coastal Ecotourism',
+            location: 'Nongsa, Batam',
+            about: 'Batam\'s premier coastal tourism village featuring 3 hectares of mangrove conservation. Visitors can enjoy walking along the 200-meter wooden bridge.',
+            facility: 'Spacious parking area, prayer room, clean toilets, and aesthetic natural photo spots.',
+            access: '15 minutes drive from Hang Nadim International Airport by car or motorcycle.',
+            hours: 'Open daily: 08:00 AM - 06:30 PM. Entrance fee is highly affordable.'
+          }
+        },
+        'barelang': {
+          img: 'https://images.unsplash.com/photo-1544426573-04dc39263a23?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80',
+          ID: {
+            title: 'Jembatan 1 Barelang',
+            category: 'Ikon Wisata Kepri',
+            location: 'Barelang, Batam',
+            about: 'Jembatan kabel-pancang megah sepanjang 642 meter yang menghubungkan Pulau Batam dan Pulau Tonton, ikon kebanggaan kota Batam.',
+            facility: 'Pusat suvenir lokal, deretan penjual jagung bakar, dan area parkir di sekitar jembatan.',
+            access: 'Sekitar 35 menit berkendara dari pusat kota Batam Center.',
+            hours: 'Buka 24 jam untuk umum. Waktu terbaik berkunjung adalah sore hari saat matahari terbenam.'
+          },
+          EN: {
+            title: 'Barelang 1st Bridge',
+            category: 'Kepri Tourism Icon',
+            location: 'Barelang, Batam',
+            about: 'A magnificent 642-meter cable-stayed bridge connecting Batam and Tonton Islands, the proud icon of Batam city.',
+            facility: 'Local souvenir center, stalls selling roasted corn, and parking areas near the bridge.',
+            access: 'About 35 minutes drive from Batam Center downtown.',
+            hours: 'Open 24 hours to the public. Best visited during the afternoon for sunset.'
+          }
+        }
+      };
+
       const i18n = {
         ID: {
+          headerStatus: "Live Assistant • Kepri",
           tabWelcome: "Welcome",
           tabChat: "Active Chat",
           tabVoice: "Voice Mode",
           tabPref: "Preferensi",
           tabDetail: "Destinasi",
+          weatherTag: "29°C Tropis Nongsa",
           welcomeTag: "Panduan Resmi Berbasis AI",
           welcomeTitle: "Mau menjelajah Batam ke mana hari ini?",
           welcomeDesc: "Rekomendasi pantai eksotis, seafood Barelang legendaris, feri internasional Singapura, hingga hidden gems kepulauan.",
           btnStartChat: "Mulai Percakapan",
           quickPromptsTitle: "Inspirasi Pertanyaan",
           tapToSend: "ketuk untuk tanya",
+          
+          p1Label: "Rekomendasikan pantai tenang & estetik di Nongsa",
+          p1Query: "Rekomendasikan pantai terbaik dan tidak terlalu ramai di Nongsa Batam",
+          p2Label: "Itinerary 1 hari trip keliling Batam paling optimal",
+          p2Query: "Kalau saya punya waktu satu hari di Batam, tempat apa yang cocok?",
+          p3Label: "Kuliner seafood gonggong legendaris di Barelang",
+          p3Query: "Rekomendasi seafood gonggong legendaris di sekitar Barelang dan Piayu",
+          
           backHome: "Kembali",
           chatTrustHeader: "Data Disbudpar Batam Terverifikasi",
+          chatIntro: "Halo! Silakan ketik pertanyaan Anda di bawah, saya siap membantu panduan wisata Batam Anda.",
           voiceModeBadge: "Batam Voice Assistant",
           voiceHeading: "Silakan bicara...",
           voiceSub: '"Mau cari penginapan di Nongsa atau tempat kuliner seafood?"',
@@ -430,6 +480,9 @@
           prefHeading: "Biar rekomendasinya lebih cocok",
           prefSub: "AI akan memprioritaskan rekomendasi berdasarkan preferensi liburan Anda di Batam.",
           prefCategoryInterest: "Minat Utama",
+          prefNature: "🌴 Alam & Mangrove",
+          prefFood: "🍜 Kuliner Seafood",
+          prefCulture: "🏛️ Budaya & Sejarah",
           prefCategoryDuration: "Durasi Waktu",
           durHours: "Beberapa Jam",
           dur1Day: "1 Hari Penuh",
@@ -446,19 +499,30 @@
           thinkingLabel: "Berpikir...",
         },
         EN: {
+          headerStatus: "Live Assistant • Kepri",
           tabWelcome: "Welcome",
           tabChat: "Active Chat",
           tabVoice: "Voice Mode",
           tabPref: "Preferences",
           tabDetail: "Destination",
+          weatherTag: "29°C Tropical Nongsa",
           welcomeTag: "Official AI Tourism Concierge",
           welcomeTitle: "Where would you like to explore in Batam today?",
           welcomeDesc: "Curated pristine beaches, legendary Barelang seafood, Singapore international ferry tips, and island hidden gems.",
           btnStartChat: "Start Exploring",
           quickPromptsTitle: "Quick Inspirations",
           tapToSend: "tap to query",
+          
+          p1Label: "Recommend quiet & aesthetic beaches in Nongsa",
+          p1Query: "Recommend the best and uncrowded beaches in Nongsa Batam",
+          p2Label: "Optimal 1-day Batam travel itinerary",
+          p2Query: "If I have one day in Batam, what are the best places to visit?",
+          p3Label: "Legendary Gonggong seafood around Barelang",
+          p3Query: "Recommend legendary gonggong seafood around Barelang and Piayu",
+
           backHome: "Back",
           chatTrustHeader: "Disbudpar Batam Verified Knowledge",
+          chatIntro: "Hello! Please type your question below, I'm ready to assist with your Batam travel guide.",
           voiceModeBadge: "Batam Voice Assistant",
           voiceHeading: "Listening now...",
           voiceSub: '"Looking for beach resorts in Nongsa or fresh seafood spots?"',
@@ -467,13 +531,16 @@
           prefHeading: "Personalize your journey",
           prefSub: "The AI tailors every island recommendation according to your travel style.",
           prefCategoryInterest: "Core Interests",
+          prefNature: "🌴 Nature & Mangrove",
+          prefFood: "🍜 Seafood Culinary",
+          prefCulture: "🏛️ Culture & History",
           prefCategoryDuration: "Trip Duration",
           durHours: "Few Hours",
           dur1Day: "Full Day",
           durMulti: "2 - 3 Days",
           btnSavePref: "Save Preferences",
           detailWhyYou: "Why it fits you?",
-          detailMatchText: "Matches your nature & relaxing vibe.",
+          detailMatchText: "Matches your nature & relaxing vibe: shady mangrove away from city bustle.",
           subAbout: "About",
           subFacility: "Facilities",
           subAccess: "Access",
@@ -481,27 +548,6 @@
           inputPlaceholder: "Ask anything about Batam travel...",
           toastPrefSaved: "Your travel preferences have been updated!",
           thinkingLabel: "Thinking...",
-        }
-      };
-
-      const destinationCatalog = {
-        'pandang-tak-jemu': {
-          title: 'Pandang Tak Jemu (Kampung Terih)',
-          category: 'Ekowisata Pesisir',
-          img: 'https://images.unsplash.com/photo-1544426573-04dc39263a23?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80',
-          about: 'Desa wisata pesisir unggulan Batam yang mengusung konservasi hutan bakau seluas 3 hektar.',
-          facility: 'Area parkir luas, musala, toilet bersih.',
-          access: '15 menit dari Bandara Hang Nadim Batam.',
-          hours: 'Buka setiap hari: 08:00 - 18:30 WIB.'
-        },
-        'barelang': {
-          title: 'Jembatan 1 Barelang',
-          category: 'Ikon Wisata Kepri',
-          img: 'https://images.unsplash.com/photo-1544426573-04dc39263a23?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80',
-          about: 'Jembatan kabel-pancang megah sepanjang 642 meter yang menghubungkan Pulau Batam dan Pulau Tonton.',
-          facility: 'Pusat suvenir, deretan penjual jagung bakar.',
-          access: '35 menit dari Batam Center.',
-          hours: 'Buka 24 jam untuk umum.'
         }
       };
 
@@ -525,16 +571,12 @@
         }, 2200);
       }
 
-      // Bacakan teks jawaban AI pakai suara browser (Text-to-Speech).
-      // Nggak butuh API tambahan, browser-native (Chrome/Edge paling stabil).
       function speakText(text, langCode) {
         if (!('speechSynthesis' in window)) {
-          showToast(currentLanguage === 'ID'
-            ? 'Browser tidak mendukung suara'
-            : 'Browser does not support speech');
+          showToast(currentLanguage === 'ID' ? 'Browser tidak mendukung suara' : 'Browser does not support speech');
           return;
         }
-        window.speechSynthesis.cancel(); // hentikan bacaan sebelumnya kalau ada
+        window.speechSynthesis.cancel();
         const utterance = new SpeechSynthesisUtterance(text);
         utterance.lang = langCode === 'en' ? 'en-US' : 'id-ID';
         utterance.rate = 1;
@@ -560,7 +602,6 @@
             pill.className = "nav-pill shrink-0 px-3 py-1 rounded-full text-[11px] font-semibold tracking-wide transition-all bg-surface-container/80 text-on-surface-variant hover:text-on-surface border border-outline-light flex items-center gap-1";
           }
         });
-
         window.scrollTo({ top: 0, behavior: 'smooth' });
       }
 
@@ -579,21 +620,17 @@
       document.getElementById('btn-cancel-voice').addEventListener('click', () => showScreen('screen-welcome'));
       document.getElementById('btn-back-from-detail').addEventListener('click', () => showScreen('screen-chat'));
 
-      document.querySelectorAll('.view-detail-trigger').forEach(btn => {
-        btn.addEventListener('click', (e) => {
-          e.stopPropagation();
-          const targetKey = btn.getAttribute('data-detail');
-          populateDestinationDetail(targetKey);
-          showScreen('screen-detail');
-        });
-      });
-
       function populateDestinationDetail(key) {
         const item = destinationCatalog[key] || destinationCatalog['pandang-tak-jemu'];
+        const langData = item[currentLanguage]; 
+        
+        document.getElementById('screen-detail').setAttribute('data-current-dest', key);
         document.getElementById('detail-hero-img').src = item.img;
-        document.getElementById('detail-title').textContent = item.title;
-        document.getElementById('detail-category-badge').textContent = item.category;
-        document.getElementById('detail-body-text').textContent = item.about;
+        document.getElementById('detail-title').textContent = langData.title;
+        document.getElementById('detail-category-badge').textContent = langData.category;
+        document.getElementById('detail-location').textContent = langData.location;
+        
+        document.getElementById('detail-body-text').textContent = langData.about;
         
         document.querySelectorAll('.detail-subtab').forEach(t => {
           if (t.getAttribute('data-tab') === 'about') {
@@ -604,6 +641,8 @@
         });
       }
 
+      populateDestinationDetail('pandang-tak-jemu');
+
       document.querySelectorAll('.detail-subtab').forEach(tab => {
         tab.addEventListener('click', () => {
           document.querySelectorAll('.detail-subtab').forEach(t => {
@@ -612,19 +651,20 @@
           tab.className = "detail-subtab active flex-1 py-1.5 rounded-xl bg-surface-high font-semibold text-on-surface transition-all text-center";
           
           const tabType = tab.getAttribute('data-tab');
-          const isBarelang = document.getElementById('detail-title').textContent.includes('Barelang');
-          const currentItem = isBarelang ? destinationCatalog['barelang'] : destinationCatalog['pandang-tak-jemu'];
+          const currentDestKey = document.getElementById('screen-detail').getAttribute('data-current-dest');
+          const langData = destinationCatalog[currentDestKey][currentLanguage];
           
-          if (tabType === 'about') document.getElementById('detail-body-text').textContent = currentItem.about;
-          if (tabType === 'facility') document.getElementById('detail-body-text').textContent = currentItem.facility;
-          if (tabType === 'access') document.getElementById('detail-body-text').textContent = currentItem.access;
-          if (tabType === 'hours') document.getElementById('detail-body-text').textContent = currentItem.hours;
+          if (tabType === 'about') document.getElementById('detail-body-text').textContent = langData.about;
+          if (tabType === 'facility') document.getElementById('detail-body-text').textContent = langData.facility;
+          if (tabType === 'access') document.getElementById('detail-body-text').textContent = langData.access;
+          if (tabType === 'hours') document.getElementById('detail-body-text').textContent = langData.hours;
         });
       });
 
       document.querySelectorAll('.prompt-chip').forEach(chip => {
         chip.addEventListener('click', () => {
-          const query = chip.querySelector('span[data-query]').getAttribute('data-query');
+          const promptId = chip.getAttribute('data-prompt-id');
+          const query = i18n[currentLanguage][promptId + 'Query'];
           submitNewUserQuery(query);
         });
       });
@@ -637,7 +677,6 @@
         showScreen('screen-chat');
 
         const chatContainer = document.getElementById('chat-messages-container');
-        
         if (!chatContainer.classList.contains('chat-started')) {
             chatContainer.innerHTML = ''; 
             chatContainer.classList.add('chat-started');
@@ -679,7 +718,7 @@
             try {
                 data = await response.json();
             } catch (err) {
-                data = { error: "Server mengembalikan format yang tidak dikenali." };
+                data = { error: currentLanguage === 'ID' ? "Server mengembalikan format yang tidak dikenali." : "Server returned unrecognized format." };
             }
             
             const loadingEl = document.getElementById(loadingId);
@@ -730,10 +769,10 @@
                   });
                 }
             } else {
-                const errorMessage = data.error || "Gagal memproses data di server.";
+                const errorMessage = data.error || (currentLanguage === 'ID' ? "Gagal memproses data di server." : "Failed to process data on server.");
                 const errorBubble = `
                   <div class="rounded-3xl bg-red-50 border border-red-200 p-3 mb-4 text-center">
-                    <p class="text-sm text-red-700 font-bold">Terjadi Kesalahan di Server</p>
+                    <p class="text-sm text-red-700 font-bold">Terjadi Kesalahan / Error</p>
                     <p class="text-xs text-red-600 mt-1">${errorMessage}</p>
                   </div>
                 `;
@@ -762,14 +801,6 @@
         if (e.key === 'Enter') submitNewUserQuery();
       });
 
-      const btnAskAiDetail = document.getElementById('btn-ask-ai-detail');
-      if (btnAskAiDetail) {
-        btnAskAiDetail.addEventListener('click', () => {
-          const title = document.getElementById('detail-title').textContent;
-          submitNewUserQuery(`Berapa harga tiket masuk dan bagaimana akses rute termudah ke ${title}?`);
-        });
-      }
-
       document.querySelectorAll('#group-interests .pref-chip').forEach(chip => {
         chip.addEventListener('click', () => {
           chip.classList.toggle('active');
@@ -792,8 +823,6 @@
         });
       }
       setupSingleGroup('group-duration');
-      setupSingleGroup('group-type');
-      setupSingleGroup('group-budget');
 
       document.getElementById('btn-save-pref').addEventListener('click', () => {
         showToast(i18n[currentLanguage].toastPrefSaved);
@@ -803,6 +832,7 @@
       function setLanguage(lang) {
         currentLanguage = lang;
         const dict = i18n[lang];
+        
         if (lang === 'ID') {
           btnLangId.className = "px-2.5 py-1 rounded-full font-semibold transition-all text-on-primary bg-primary shadow-sm";
           btnLangEn.className = "px-2.5 py-1 rounded-full font-semibold transition-all text-on-surface-variant hover:text-on-surface";
@@ -810,31 +840,33 @@
           btnLangEn.className = "px-2.5 py-1 rounded-full font-semibold transition-all text-on-primary bg-primary shadow-sm";
           btnLangId.className = "px-2.5 py-1 rounded-full font-semibold transition-all text-on-surface-variant hover:text-on-surface";
         }
+
         document.querySelectorAll('[data-i18n]').forEach(el => {
           const key = el.getAttribute('data-i18n');
           if (dict[key]) {
             el.innerHTML = dict[key];
           }
         });
+
         mainChatInput.placeholder = dict.inputPlaceholder;
+
+        const currentDestKey = document.getElementById('screen-detail').getAttribute('data-current-dest');
+        if (currentDestKey) {
+            populateDestinationDetail(currentDestKey);
+        }
       }
 
       btnLangId.addEventListener('click', () => setLanguage('ID'));
       btnLangEn.addEventListener('click', () => setLanguage('EN'));
 
-      // -------------------------------------------------------------
-      // FITUR VOICE RECOGNITION (SPEECH-TO-TEXT) ASLI
-      // -------------------------------------------------------------
       const voiceMicBtn = document.getElementById('voice-mic-main');
       const transcriptEl = document.getElementById('voice-transcript-text');
-
       const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
 
       if (SpeechRecognition) {
         const recognition = new SpeechRecognition();
         recognition.continuous = false;
         recognition.interimResults = true;
-
         let isRecording = false;
 
         voiceMicBtn.addEventListener('click', () => {
@@ -895,8 +927,6 @@
             : "Sorry, your browser doesn't support voice features. Use Chrome.";
         });
       }
-      // -------------------------------------------------------------
-
     })();
   </script>
 </body>
