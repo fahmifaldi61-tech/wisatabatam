@@ -669,7 +669,7 @@
         chatContainer.lastElementChild.scrollIntoView({ behavior: "smooth" });
         
         try {
-            const response = await fetch("http://127.0.0.1:8000/api/chat/", {
+            const response = await fetch("https://wisatabatam-backend-production.up.railway.app/api/chat/", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ message: text, language: currentLanguage.toLowerCase() })
@@ -692,7 +692,6 @@
                 const rawTextForSpeech = data.response.replace(/\*\*/g, '');
                 const speakId = 'speak-' + Date.now();
 
-                // Render chip sumber jawaban kalau backend ngirim field "sources"
                 const sourcesHtml = (data.sources && data.sources.length > 0)
                   ? `<div class="flex flex-wrap gap-1.5 mt-3 pt-3 border-t border-outline-light">
                        ${data.sources.map(src => `
