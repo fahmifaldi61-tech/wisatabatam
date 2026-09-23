@@ -15,35 +15,25 @@
       theme: {
         extend: {
           colors: {
-            "background": "#f6faf7",
+            "background": "#f8fafc", /* Warna latar off-white modern */
             "surface": "#ffffff",
-            "surface-low": "#eef7f0",
-            "surface-container": "#e1f2e6",
-            "surface-high": "#cfe9d6",
-            "surface-bright": "#b8ddc3",
-            "primary": "#16a34a",
-            "primary-dim": "#0f7d3a",
-            "primary-container": "rgba(22, 163, 74, 0.12)",
+            "surface-low": "#f1f5f9",
+            "surface-container": "#e2e8f0",
+            "primary": "#10b981", /* Hijau emerald modern */
+            "primary-dim": "#059669",
             "on-primary": "#ffffff",
-            "secondary": "#65a30d",
-            "secondary-dim": "#4d7c0f",
-            "on-surface": "#14301f",
-            "on-surface-variant": "#5d7566",
-            "outline": "#cfe3d4",
-            "outline-light": "rgba(20, 64, 40, 0.08)",
+            "secondary": "#3b82f6",
+            "on-surface": "#0f172a", /* Slate pekat untuk teks utama */
+            "on-surface-variant": "#64748b", /* Abu-abu medium untuk teks sekunder */
+            "outline-light": "rgba(15, 23, 42, 0.08)",
           },
           fontFamily: {
             sans: ['"Plus Jakarta Sans"', 'sans-serif'],
           },
-          borderRadius: {
-            '2xl': '1.25rem',
-            '3xl': '1.75rem',
-            '4xl': '2.25rem',
-          },
           boxShadow: {
-            'glass': '0 8px 32px 0 rgba(20, 64, 40, 0.10)',
-            'glow-green': '0 0 24px -2px rgba(22, 163, 74, 0.35)',
-            'glow-green-lg': '0 0 45px 0 rgba(22, 163, 74, 0.45)',
+            'glass': '0 10px 40px -10px rgba(0,0,0,0.08)',
+            'float': '0 20px 40px -15px rgba(16, 185, 129, 0.2)',
+            'glow-green': '0 0 24px -2px rgba(16, 185, 129, 0.35)',
           },
           animation: {
             'pulse-slow': 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',
@@ -66,8 +56,8 @@
         margin: 0;
         padding: 0;
         min-height: 100vh;
-        background-color: #f6faf7;
-        color: #14301f;
+        background-color: #f8fafc;
+        color: #0f172a;
         font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
         -webkit-font-smoothing: antialiased;
       }
@@ -80,140 +70,143 @@
     }
     ::-webkit-scrollbar { display: none; }
     .screen-pane {
-      transition: opacity 0.25s cubic-bezier(0.16, 1, 0.3, 1), transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+      transition: opacity 0.3s ease, transform 0.3s ease;
     }
     .screen-pane.hidden-state {
       display: none;
       opacity: 0;
-      transform: translateY(6px) scale(0.99);
+      transform: translateY(10px);
     }
     .screen-pane.active-state {
       display: flex;
       opacity: 1;
-      transform: translateY(0) scale(1);
+      transform: translateY(0);
     }
   </style>
 </head>
 <body class="bg-background text-on-surface flex justify-center selection:bg-primary selection:text-on-primary min-h-screen">
-<div class="relative w-full max-w-[410px] min-h-screen bg-background border-x border-outline-light flex flex-col justify-between overflow-x-hidden shadow-2xl">
-<div class="pointer-events-none absolute top-0 left-1/2 -translate-x-1/2 w-80 h-72 bg-primary/10 rounded-full blur-[110px] z-0"></div>
-<div class="pointer-events-none absolute top-1/2 right-[-20%] w-60 h-60 bg-secondary/10 rounded-full blur-[90px] z-0"></div>
+<div class="relative w-full max-w-[410px] min-h-screen bg-background flex flex-col justify-between overflow-x-hidden shadow-2xl border-x border-outline-light">
+<div class="pointer-events-none absolute top-0 left-1/2 -translate-x-1/2 w-96 h-96 bg-primary/10 rounded-full blur-[120px] z-0"></div>
 
-<header class="sticky top-0 z-40 w-full bg-background/85 backdrop-blur-xl border-b border-outline-light pt-safe px-4 pb-2.5">
-<div class="flex items-center justify-between gap-2 mb-2.5">
-<div class="flex items-center gap-2.5">
-<div class="relative w-8 h-8 rounded-full overflow-hidden p-0.5 border border-primary/40 bg-surface-container flex items-center justify-center shrink-0">
-          <span class="material-symbols-outlined text-primary text-xl">travel_explore</span>
+<!-- HEADER MODERN GLASSMORPHISM -->
+<header class="sticky top-0 z-40 w-full bg-white/70 backdrop-blur-xl border-b border-outline-light pt-safe px-4 pb-3">
+<div class="flex items-center justify-between gap-2 mb-3">
+<div class="flex items-center gap-3">
+<div class="relative w-9 h-9 rounded-2xl overflow-hidden p-0.5 border border-outline-light bg-white shadow-sm flex items-center justify-center shrink-0">
+          <span class="material-symbols-outlined text-primary text-[22px]">travel_explore</span>
           </div>
 <div>
 <div class="flex items-center gap-1.5 leading-none">
-<span class="font-bold text-sm tracking-tight text-on-surface">Wisata Batam</span>
-<span class="text-[10px] font-extrabold px-1.5 py-0.5 rounded-full bg-primary/15 text-primary tracking-wide">AI</span>
+<span class="font-bold text-[15px] tracking-tight text-on-surface">Wisata Batam</span>
+<span class="text-[9px] font-black px-1.5 py-0.5 rounded-md bg-primary/15 text-primary tracking-wider uppercase">AI</span>
 </div>
-<span class="text-[11px] text-on-surface-variant flex items-center gap-1 mt-0.5">
-<span class="w-1.5 h-1.5 rounded-full bg-secondary animate-pulse"></span>
+<span class="text-[11px] text-on-surface-variant flex items-center gap-1.5 mt-1 font-medium">
+<span class="w-1.5 h-1.5 rounded-full bg-primary animate-pulse"></span>
 <span id="ui-header-status" data-i18n="headerStatus">Live Assistant • Kepri</span>
 </span>
 </div>
 </div>
-<div class="flex items-center bg-surface-container rounded-full p-0.5 border border-outline-light text-xs">
-<button class="px-2.5 py-1 rounded-full font-semibold transition-all text-on-primary bg-primary shadow-sm" id="btn-lang-id" type="button">ID</button>
-<button class="px-2.5 py-1 rounded-full font-semibold transition-all text-on-surface-variant hover:text-on-surface" id="btn-lang-en" type="button">EN</button>
+<!-- TOGGLE BAHASA ALA iOS -->
+<div class="flex items-center bg-surface-low rounded-full p-1 border border-outline-light shadow-inner">
+<button class="px-3 py-1 rounded-full text-xs font-bold transition-all bg-white text-primary shadow-sm" id="btn-lang-id" type="button">ID</button>
+<button class="px-3 py-1 rounded-full text-xs font-semibold transition-all text-on-surface-variant hover:text-on-surface" id="btn-lang-en" type="button">EN</button>
 </div>
 </div>
-<div class="flex items-center gap-1.5 overflow-x-auto no-scrollbar py-0.5" id="screen-nav">
-<button class="nav-pill active shrink-0 px-3 py-1 rounded-full text-[11px] font-semibold tracking-wide transition-all bg-primary text-on-primary border border-primary shadow-sm flex items-center gap-1" data-target="screen-welcome">
-<span class="material-symbols-outlined text-[13px]">home</span>
+<!-- NAV PILLS MINIMALIS -->
+<div class="flex items-center gap-2 overflow-x-auto no-scrollbar py-1" id="screen-nav">
+<button class="nav-pill active shrink-0 px-4 py-1.5 rounded-full text-[12px] font-bold tracking-wide transition-all bg-primary text-white shadow-md shadow-primary/20 flex items-center gap-1.5" data-target="screen-welcome">
+<span class="material-symbols-outlined text-[14px]">home</span>
 <span data-i18n="tabWelcome">Welcome</span>
 </button>
-<button class="nav-pill shrink-0 px-3 py-1 rounded-full text-[11px] font-semibold tracking-wide transition-all bg-surface-container/80 text-on-surface-variant hover:text-on-surface border border-outline-light flex items-center gap-1" data-target="screen-chat">
-<span class="material-symbols-outlined text-[13px]">forum</span>
+<button class="nav-pill shrink-0 px-4 py-1.5 rounded-full text-[12px] font-semibold tracking-wide transition-all bg-transparent text-on-surface-variant hover:bg-surface-low flex items-center gap-1.5" data-target="screen-chat">
+<span class="material-symbols-outlined text-[14px]">forum</span>
 <span data-i18n="tabChat">Active Chat</span>
 </button>
-<button class="nav-pill shrink-0 px-3 py-1 rounded-full text-[11px] font-semibold tracking-wide transition-all bg-surface-container/80 text-on-surface-variant hover:text-on-surface border border-outline-light flex items-center gap-1" data-target="screen-voice">
-<span class="material-symbols-outlined text-[13px]">mic</span>
+<button class="nav-pill shrink-0 px-4 py-1.5 rounded-full text-[12px] font-semibold tracking-wide transition-all bg-transparent text-on-surface-variant hover:bg-surface-low flex items-center gap-1.5" data-target="screen-voice">
+<span class="material-symbols-outlined text-[14px]">mic</span>
 <span data-i18n="tabVoice">Voice Mode</span>
 </button>
-<button class="nav-pill shrink-0 px-3 py-1 rounded-full text-[11px] font-semibold tracking-wide transition-all bg-surface-container/80 text-on-surface-variant hover:text-on-surface border border-outline-light flex items-center gap-1" data-target="screen-pref">
-<span class="material-symbols-outlined text-[13px]">tune</span>
+<button class="nav-pill shrink-0 px-4 py-1.5 rounded-full text-[12px] font-semibold tracking-wide transition-all bg-transparent text-on-surface-variant hover:bg-surface-low flex items-center gap-1.5" data-target="screen-pref">
+<span class="material-symbols-outlined text-[14px]">tune</span>
 <span data-i18n="tabPref">Preferensi</span>
 </button>
-<button class="nav-pill shrink-0 px-3 py-1 rounded-full text-[11px] font-semibold tracking-wide transition-all bg-surface-container/80 text-on-surface-variant hover:text-on-surface border border-outline-light flex items-center gap-1" data-target="screen-detail">
-<span class="material-symbols-outlined text-[13px]">place</span>
+<button class="nav-pill shrink-0 px-4 py-1.5 rounded-full text-[12px] font-semibold tracking-wide transition-all bg-transparent text-on-surface-variant hover:bg-surface-low flex items-center gap-1.5" data-target="screen-detail">
+<span class="material-symbols-outlined text-[14px]">place</span>
 <span data-i18n="tabDetail">Destinasi</span>
 </button>
 </div>
 </header>
 
-<main class="flex-1 relative z-10 flex flex-col px-4 pt-3 pb-24">
+<main class="flex-1 relative z-10 flex flex-col px-4 pt-4 pb-28">
 <!-- TAB 1: WELCOME SCREEN -->
-<section class="screen-pane active-state flex-col gap-4 w-full" id="screen-welcome">
-<div class="relative w-full rounded-3xl overflow-hidden border border-outline-light shadow-glass group">
-<div class="h-44 w-full relative overflow-hidden">
-<img alt="Nongsa Batam" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 brightness-95" src="image_02fa79.jpg"/>
-<div class="absolute inset-0 bg-gradient-to-t from-surface via-surface/40 to-transparent"></div>
-<div class="absolute top-3 right-3 px-2.5 py-1 rounded-full bg-black/40 backdrop-blur-md border border-white/15 text-[11px] font-medium text-white flex items-center gap-1">
-<span class="material-symbols-outlined text-[13px] text-primary">wb_sunny</span>
+<section class="screen-pane active-state flex-col gap-5 w-full" id="screen-welcome">
+<div class="relative w-full rounded-[2rem] overflow-hidden border border-outline-light shadow-glass bg-white group">
+<div class="h-48 w-full relative overflow-hidden">
+<img alt="Nongsa Batam" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" src="image_02fa79.jpg"/>
+<div class="absolute inset-0 bg-gradient-to-t from-white via-white/20 to-transparent"></div>
+<div class="absolute top-3 right-3 px-3 py-1.5 rounded-full bg-black/30 backdrop-blur-md border border-white/20 text-[11px] font-semibold text-white flex items-center gap-1.5">
+<span class="material-symbols-outlined text-[14px] text-yellow-300">wb_sunny</span>
 <span data-i18n="weatherTag">29°C Tropis Nongsa</span>
 </div>
 </div>
-<div class="p-4 pt-1 bg-surface flex flex-col gap-2">
-<span class="text-xs font-semibold uppercase tracking-wider text-primary" data-i18n="welcomeTag">Panduan Resmi Berbasis AI</span>
-<h1 class="text-2xl font-bold tracking-tight text-on-surface leading-tight" data-i18n="welcomeTitle">
+<div class="px-5 pb-5 pt-1 flex flex-col gap-2.5">
+<span class="text-[10px] font-black uppercase tracking-widest text-primary" data-i18n="welcomeTag">Panduan Resmi Berbasis AI</span>
+<h1 class="text-2xl font-extrabold tracking-tight text-on-surface leading-tight" data-i18n="welcomeTitle">
             Mau menjelajah Batam ke mana hari ini?
           </h1>
-<p class="text-sm text-on-surface-variant leading-relaxed" data-i18n="welcomeDesc">
+<p class="text-sm text-on-surface-variant leading-relaxed mt-1" data-i18n="welcomeDesc">
             Rekomendasi pantai eksotis, seafood Barelang legendaris, feri internasional Singapura, hingga hidden gems kepulauan.
           </p>
-<div class="flex items-center gap-2 pt-2">
-<button class="flex-1 py-3 px-4 rounded-2xl bg-gradient-to-r from-primary to-primary-dim text-on-primary font-bold text-sm flex items-center justify-center gap-2 shadow-glow-green active:scale-[0.98] transition-transform" id="btn-start-chat">
-<span class="material-symbols-outlined text-base">chat_bubble</span>
+<div class="flex items-center gap-3 mt-3">
+<button class="flex-1 py-3.5 px-4 rounded-2xl bg-primary text-white font-bold text-sm flex items-center justify-center gap-2 shadow-float active:scale-[0.98] transition-all" id="btn-start-chat">
+<span class="material-symbols-outlined text-[18px]">chat_bubble</span>
 <span data-i18n="btnStartChat">Mulai Percakapan</span>
 </button>
-<button class="w-12 h-12 rounded-2xl bg-surface-high border border-outline-light flex items-center justify-center text-primary hover:bg-surface-bright active:scale-95 transition-all" id="btn-quick-voice">
-<span class="material-symbols-outlined text-xl">mic</span>
+<button class="w-12 h-12 rounded-2xl bg-surface-low border border-outline-light flex items-center justify-center text-primary hover:bg-surface-container active:scale-95 transition-all" id="btn-quick-voice">
+<span class="material-symbols-outlined text-[22px]">mic</span>
 </button>
 </div>
 </div>
 </div>
-<div class="flex flex-col gap-2 pt-1">
-<div class="flex items-center justify-between text-xs text-on-surface-variant px-1 font-semibold uppercase tracking-wider">
+
+<div class="flex flex-col gap-3 pt-2">
+<div class="flex items-center justify-between text-xs text-on-surface-variant px-1 font-bold uppercase tracking-wider">
 <span data-i18n="quickPromptsTitle">Inspirasi Pertanyaan</span>
-<span class="text-primary font-normal lowercase" data-i18n="tapToSend">ketuk untuk tanya</span>
+<span class="text-primary font-semibold lowercase" data-i18n="tapToSend">ketuk untuk tanya</span>
 </div>
-<div class="flex flex-col gap-2" id="prompt-list">
-<button class="prompt-chip w-full p-3 rounded-2xl bg-surface-low hover:bg-surface border border-outline-light flex items-center justify-between text-left transition-all active:scale-[0.99] group" data-prompt-id="p1">
-<div class="flex items-center gap-3">
-<div class="w-8 h-8 rounded-xl bg-primary/10 text-primary flex items-center justify-center shrink-0">
-<span class="material-symbols-outlined text-lg">surfing</span>
+<div class="flex flex-col gap-2.5" id="prompt-list">
+<button class="prompt-chip w-full p-3.5 rounded-2xl bg-white hover:bg-surface-low border border-outline-light shadow-sm flex items-center justify-between text-left transition-all active:scale-[0.99] group" data-prompt-id="p1">
+<div class="flex items-center gap-3.5">
+<div class="w-10 h-10 rounded-xl bg-primary/10 text-primary flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-[20px]">surfing</span>
 </div>
-<span class="text-sm text-on-surface group-hover:text-primary font-medium" data-i18n="p1Label">
+<span class="text-sm text-on-surface font-semibold leading-snug group-hover:text-primary transition-colors" data-i18n="p1Label">
                   Rekomendasikan pantai tenang & estetik di Nongsa
                 </span>
 </div>
-<span class="material-symbols-outlined text-on-surface-variant group-hover:text-primary text-base transition-colors">arrow_forward</span>
+<span class="material-symbols-outlined text-outline-light group-hover:text-primary text-[20px] transition-colors">arrow_forward_ios</span>
 </button>
-<button class="prompt-chip w-full p-3 rounded-2xl bg-surface-low hover:bg-surface border border-outline-light flex items-center justify-between text-left transition-all active:scale-[0.99] group" data-prompt-id="p2">
-<div class="flex items-center gap-3">
-<div class="w-8 h-8 rounded-xl bg-secondary/10 text-secondary flex items-center justify-center shrink-0">
-<span class="material-symbols-outlined text-lg">map</span>
+<button class="prompt-chip w-full p-3.5 rounded-2xl bg-white hover:bg-surface-low border border-outline-light shadow-sm flex items-center justify-between text-left transition-all active:scale-[0.99] group" data-prompt-id="p2">
+<div class="flex items-center gap-3.5">
+<div class="w-10 h-10 rounded-xl bg-secondary/10 text-secondary flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-[20px]">map</span>
 </div>
-<span class="text-sm text-on-surface group-hover:text-secondary font-medium" data-i18n="p2Label">
+<span class="text-sm text-on-surface font-semibold leading-snug group-hover:text-secondary transition-colors" data-i18n="p2Label">
                   Itinerary 1 hari trip keliling Batam paling optimal
                 </span>
 </div>  
-<span class="material-symbols-outlined text-on-surface-variant group-hover:text-secondary text-base transition-colors">arrow_forward</span>
+<span class="material-symbols-outlined text-outline-light group-hover:text-secondary text-[20px] transition-colors">arrow_forward_ios</span>
 </button>
-<button class="prompt-chip w-full p-3 rounded-2xl bg-surface-low hover:bg-surface border border-outline-light flex items-center justify-between text-left transition-all active:scale-[0.99] group" data-prompt-id="p3">
-<div class="flex items-center gap-3">
-<div class="w-8 h-8 rounded-xl bg-amber-400/10 text-amber-50 flex items-center justify-center shrink-0">
-<span class="material-symbols-outlined text-lg">restaurant</span>
+<button class="prompt-chip w-full p-3.5 rounded-2xl bg-white hover:bg-surface-low border border-outline-light shadow-sm flex items-center justify-between text-left transition-all active:scale-[0.99] group" data-prompt-id="p3">
+<div class="flex items-center gap-3.5">
+<div class="w-10 h-10 rounded-xl bg-orange-500/10 text-orange-500 flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-[20px]">restaurant</span>
 </div>
-<span class="text-sm text-on-surface group-hover:text-amber-600 font-medium" data-i18n="p3Label">
+<span class="text-sm text-on-surface font-semibold leading-snug group-hover:text-orange-500 transition-colors" data-i18n="p3Label">
                   Kuliner seafood gonggong legendaris di Barelang
                 </span>
 </div>
-<span class="material-symbols-outlined text-on-surface-variant group-hover:text-amber-500 text-base transition-colors">arrow_forward</span>
+<span class="material-symbols-outlined text-outline-light group-hover:text-orange-500 text-[20px] transition-colors">arrow_forward_ios</span>
 </button>
 </div>
 </div>
@@ -221,177 +214,171 @@
 
 <!-- TAB 2: ACTIVE CHAT SCREEN -->
 <section class="screen-pane hidden-state flex-col gap-4 w-full" id="screen-chat">
-<div class="flex items-center justify-between pb-1 border-b border-outline-light">
-<button class="flex items-center gap-1 text-on-surface-variant hover:text-on-surface text-xs font-semibold" id="btn-back-from-chat">
-<span class="material-symbols-outlined text-base">arrow_back</span>
+<div class="flex items-center justify-between pb-2 border-b border-outline-light">
+<button class="flex items-center gap-1.5 text-on-surface-variant hover:text-on-surface text-xs font-bold" id="btn-back-from-chat">
+<span class="material-symbols-outlined text-[18px]">arrow_back</span>
 <span data-i18n="backHome">Kembali</span>
 </button>
-<div class="flex items-center gap-1 text-[11px] text-secondary font-medium">
-<span class="w-1.5 h-1.5 rounded-full bg-secondary"></span>
-<span data-i18n="chatTrustHeader">Data Disbudpar Batam Terverifikasi</span>
+<div class="flex items-center gap-1.5 text-[11px] text-primary font-bold px-2 py-1 bg-primary/10 rounded-md">
+<span class="material-symbols-outlined text-[14px]">verified</span>
+<span data-i18n="chatTrustHeader">Data Disbudpar Batam</span>
 </div>
 </div>
-<div class="flex flex-col gap-3.5" id="chat-messages-container">
-<div class="flex flex-col gap-2 w-full mb-6">
-  <div class="flex items-center justify-between px-1">
+<div class="flex flex-col gap-4" id="chat-messages-container">
+<!-- Intro Bubble AI -->
+<div class="flex flex-col gap-1.5 w-full mb-4">
+  <div class="flex items-center px-1">
     <div class="flex items-center gap-2">
-      <div class="w-6 h-6 rounded-full bg-primary/20 border border-primary/30 flex items-center justify-center text-primary text-xs">
-        <span class="material-symbols-outlined text-sm">smart_toy</span>
+      <div class="w-6 h-6 rounded-lg bg-primary/15 flex items-center justify-center text-primary">
+        <span class="material-symbols-outlined text-[14px]">smart_toy</span>
       </div>
-      <span class="text-xs font-semibold text-on-surface">Wisata Batam AI</span>
+      <span class="text-[11px] font-bold text-on-surface-variant uppercase tracking-wider">Wisata Batam AI</span>
     </div>
   </div>
-  <div class="rounded-3xl rounded-tl-md bg-surface border border-outline-light p-4 shadow-glass flex flex-col gap-3">
-    <p class="text-[15px] leading-relaxed text-on-surface" data-i18n="chatIntro">Halo! Silakan ketik pertanyaan Anda di bawah, saya siap membantu panduan wisata Batam Anda.</p>
+  <div class="rounded-2xl rounded-tl-sm bg-white border border-outline-light p-4 shadow-sm w-fit max-w-[90%]">
+    <p class="text-[14px] leading-relaxed text-on-surface font-medium" data-i18n="chatIntro">Halo! Silakan ketik pertanyaan Anda di bawah, saya siap membantu panduan wisata Batam Anda.</p>
   </div>
 </div>
 </div>
 </section>
 
-<!-- TAB 3: FOCUSED VOICE MODAL -->
-<section class="screen-pane hidden-state flex-col items-center justify-center gap-6 w-full py-8 text-center" id="screen-voice">
+<!-- TAB 3: VOICE MODAL -->
+<section class="screen-pane hidden-state flex-col items-center justify-center gap-6 w-full py-12 text-center" id="screen-voice">
 <div class="w-full flex justify-end">
-<button class="w-9 h-9 rounded-full bg-surface-container border border-outline-light flex items-center justify-center text-on-surface-variant hover:text-on-surface" id="btn-close-voice">
-<span class="material-symbols-outlined text-lg">close</span>
+<button class="w-10 h-10 rounded-full bg-white border border-outline-light shadow-sm flex items-center justify-center text-on-surface-variant hover:text-on-surface" id="btn-close-voice">
+<span class="material-symbols-outlined text-[20px]">close</span>
 </button>
 </div>
-<div class="flex flex-col items-center gap-2">
-<span class="px-3 py-1 rounded-full bg-primary/10 border border-primary/20 text-primary text-xs font-semibold tracking-wide uppercase" data-i18n="voiceModeBadge">
+<div class="flex flex-col items-center gap-3">
+<span class="px-3 py-1 rounded-full bg-primary/10 text-primary text-[10px] font-black tracking-widest uppercase" data-i18n="voiceModeBadge">
             Batam Voice Assistant
           </span>
-<h2 class="text-2xl font-bold text-on-surface tracking-tight" data-i18n="voiceHeading" id="voice-heading-text">
+<h2 class="text-3xl font-extrabold text-on-surface tracking-tight" data-i18n="voiceHeading" id="voice-heading-text">
             Silakan bicara...
           </h2>
-<p class="text-xs text-on-surface-variant max-w-xs" data-i18n="voiceSub" id="voice-subtitle">
+<p class="text-sm text-on-surface-variant max-w-[250px] leading-relaxed mt-2" data-i18n="voiceSub" id="voice-subtitle">
             "Mau cari penginapan di Nongsa atau tempat kuliner seafood?"
           </p>
 </div>
-<div class="flex items-center justify-center gap-2 h-14 px-6 py-2">
-<div class="w-1.5 bg-primary rounded-full animate-wave-bar" style="animation-delay: 0.1s; height: 18px;"></div>
-<div class="w-1.5 bg-primary-dim rounded-full animate-wave-bar" style="animation-delay: 0.3s; height: 28px;"></div>
-<div class="w-1.5 bg-secondary rounded-full animate-wave-bar" style="animation-delay: 0.5s; height: 34px;"></div>
-<div class="w-1.5 bg-primary rounded-full animate-wave-bar" style="animation-delay: 0.2s; height: 38px;"></div>
-<div class="w-1.5 bg-secondary rounded-full animate-wave-bar" style="animation-delay: 0.4s; height: 26px;"></div>
-<div class="w-1.5 bg-primary-dim rounded-full animate-wave-bar" style="animation-delay: 0.6s; height: 16px;"></div>
-</div>
-<div class="relative flex items-center justify-center my-4">
-<div class="absolute w-36 h-36 rounded-full bg-primary/20 animate-ping pointer-events-none"></div>
-<div class="absolute w-28 h-28 rounded-full bg-primary/30 blur-md pointer-events-none"></div>
-<button class="relative w-24 h-24 rounded-full bg-gradient-to-tr from-primary-dim to-primary text-on-primary flex items-center justify-center shadow-glow-green-lg active:scale-95 transition-transform" id="voice-mic-main">
-<span class="material-symbols-outlined text-4xl">mic</span>
+<div class="relative flex items-center justify-center my-8">
+<div class="absolute w-40 h-40 rounded-full bg-primary/20 animate-ping pointer-events-none"></div>
+<div class="absolute w-32 h-32 rounded-full bg-primary/30 blur-xl pointer-events-none"></div>
+<button class="relative w-24 h-24 rounded-full bg-primary text-white flex items-center justify-center shadow-float active:scale-95 transition-transform" id="voice-mic-main">
+<span class="material-symbols-outlined text-[40px]">mic</span>
 </button>
 </div>
-<div class="p-3.5 rounded-2xl bg-surface-low border border-outline-light w-full max-w-xs text-xs text-on-surface leading-relaxed">
+<div class="p-4 rounded-2xl bg-white shadow-sm border border-outline-light w-full max-w-xs text-sm text-on-surface leading-relaxed">
 <span class="text-primary font-bold mr-1">RAG STT:</span>
 <span class="italic text-on-surface-variant" data-i18n="voiceListeningStatus" id="voice-transcript-text">
             Mendengarkan suara Anda dalam Bahasa Indonesia / English...
           </span>
 </div>
-<button class="text-xs font-semibold text-on-surface-variant hover:text-on-surface px-4 py-2 rounded-full bg-surface-low border border-outline-light" data-i18n="voiceCancel" id="btn-cancel-voice">
+<button class="mt-4 text-xs font-bold text-on-surface-variant hover:text-on-surface px-5 py-2.5 rounded-full bg-surface-low border border-outline-light transition-colors" data-i18n="voiceCancel" id="btn-cancel-voice">
           Batalkan
         </button>
 </section>
 
 <!-- TAB 4: PREFERENCES SCREEN -->
-<section class="screen-pane hidden-state flex-col gap-4 w-full" id="screen-pref">
+<section class="screen-pane hidden-state flex-col gap-5 w-full" id="screen-pref">
 <div>
-<h2 class="text-2xl font-bold tracking-tight text-on-surface" data-i18n="prefHeading">Biar rekomendasinya lebih cocok</h2>
-<p class="text-xs text-on-surface-variant mt-1" data-i18n="prefSub">
+<h2 class="text-2xl font-extrabold tracking-tight text-on-surface" data-i18n="prefHeading">Biar rekomendasinya lebih cocok</h2>
+<p class="text-sm text-on-surface-variant mt-1.5 leading-relaxed" data-i18n="prefSub">
             AI akan memprioritaskan rekomendasi berdasarkan preferensi liburan Anda di Batam.
           </p>
 </div>
-<div class="flex flex-col gap-2">
-<span class="text-xs font-semibold uppercase tracking-wider text-primary" data-i18n="prefCategoryInterest">Minat Utama</span>
+<div class="flex flex-col gap-2.5">
+<span class="text-[10px] font-black uppercase tracking-widest text-primary" data-i18n="prefCategoryInterest">Minat Utama</span>
 <div class="flex flex-wrap gap-2" id="group-interests">
-<button class="pref-chip active px-3.5 py-2 rounded-2xl bg-primary text-on-primary font-semibold text-xs border border-primary transition-all flex items-center gap-1.5" data-val="alam">
+<button class="pref-chip active px-4 py-2.5 rounded-xl bg-primary text-white font-bold text-xs shadow-sm transition-all flex items-center gap-2" data-val="alam">
 <span data-i18n="prefNature">🌴 Alam & Mangrove</span>
 </button>
-<button class="pref-chip active px-3.5 py-2 rounded-2xl bg-primary text-on-primary font-semibold text-xs border border-primary transition-all flex items-center gap-1.5" data-val="kuliner">
+<button class="pref-chip active px-4 py-2.5 rounded-xl bg-primary text-white font-bold text-xs shadow-sm transition-all flex items-center gap-2" data-val="kuliner">
 <span data-i18n="prefFood">🍜 Kuliner Seafood</span>
 </button>
-<button class="pref-chip px-3.5 py-2 rounded-2xl bg-surface-low text-on-surface font-semibold text-xs border border-outline-light transition-all flex items-center gap-1.5" data-val="budaya">
+<button class="pref-chip px-4 py-2.5 rounded-xl bg-white text-on-surface font-semibold text-xs border border-outline-light shadow-sm transition-all flex items-center gap-2" data-val="budaya">
 <span data-i18n="prefCulture">🏛️ Budaya & Sejarah</span>
 </button>
 </div>
 </div>
-<div class="flex flex-col gap-2">
-<span class="text-xs font-semibold uppercase tracking-wider text-primary" data-i18n="prefCategoryDuration">Durasi Waktu</span>
+<div class="flex flex-col gap-2.5 mt-2">
+<span class="text-[10px] font-black uppercase tracking-widest text-primary" data-i18n="prefCategoryDuration">Durasi Waktu</span>
 <div class="grid grid-cols-3 gap-2" id="group-duration">
-<button class="pref-single px-3 py-2 rounded-2xl bg-surface-low text-on-surface font-semibold text-xs border border-outline-light text-center transition-all" data-i18n="durHours" data-val="hours">Beberapa Jam</button>
-<button class="pref-single active px-3 py-2 rounded-2xl bg-primary text-on-primary font-semibold text-xs border border-primary text-center transition-all" data-i18n="dur1Day" data-val="1day">1 Hari Penuh</button>
-<button class="pref-single px-3 py-2 rounded-2xl bg-surface-low text-on-surface font-semibold text-xs border border-outline-light text-center transition-all" data-i18n="durMulti" data-val="multiday">2 - 3 Hari</button>
+<button class="pref-single px-2 py-3 rounded-xl bg-white text-on-surface font-semibold text-xs border border-outline-light text-center transition-all shadow-sm" data-i18n="durHours" data-val="hours">Beberapa Jam</button>
+<button class="pref-single active px-2 py-3 rounded-xl bg-primary text-white font-bold text-xs text-center transition-all shadow-sm" data-i18n="dur1Day" data-val="1day">1 Hari Penuh</button>
+<button class="pref-single px-2 py-3 rounded-xl bg-white text-on-surface font-semibold text-xs border border-outline-light text-center transition-all shadow-sm" data-i18n="durMulti" data-val="multiday">2 - 3 Hari</button>
 </div>
 </div>
-<div class="pt-2">
-<button class="w-full py-3 px-4 rounded-2xl bg-primary text-on-primary font-bold text-sm shadow-glow-green active:scale-[0.98] transition-transform flex items-center justify-center gap-2" id="btn-save-pref">
-<span class="material-symbols-outlined text-base">check_circle</span>
+<div class="pt-4">
+<button class="w-full py-4 px-4 rounded-2xl bg-primary text-white font-bold text-sm shadow-float active:scale-[0.98] transition-transform flex items-center justify-center gap-2" id="btn-save-pref">
+<span class="material-symbols-outlined text-[20px]">check_circle</span>
 <span data-i18n="btnSavePref">Simpan Preferensi</span>
 </button>
 </div>
 </section>
 
 <!-- TAB 5: DESTINATION DETAIL SCREEN -->
-<section class="screen-pane hidden-state flex-col gap-3.5 w-full" id="screen-detail" data-current-dest="pandang-tak-jemu">
-<div class="relative w-full h-52 rounded-3xl overflow-hidden border border-outline-light shadow-glass">
+<section class="screen-pane hidden-state flex-col gap-4 w-full" id="screen-detail" data-current-dest="pandang-tak-jemu">
+<div class="relative w-full h-56 rounded-[2rem] overflow-hidden border border-outline-light shadow-glass">
 <img alt="Destination Photo" class="w-full h-full object-cover" id="detail-hero-img" src=""/>
-<div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/10 to-transparent"></div>
-<button class="absolute top-3 left-3 w-9 h-9 rounded-full bg-black/50 backdrop-blur-md border border-white/15 flex items-center justify-center text-white" id="btn-back-from-detail">
-<span class="material-symbols-outlined text-lg">arrow_back</span>
+<div class="absolute inset-0 bg-gradient-to-t from-black/90 via-black/30 to-transparent"></div>
+<button class="absolute top-4 left-4 w-10 h-10 rounded-full bg-black/40 backdrop-blur-md border border-white/20 flex items-center justify-center text-white" id="btn-back-from-detail">
+<span class="material-symbols-outlined text-[20px]">arrow_back</span>
 </button>
-<div class="absolute bottom-3 left-3 right-3 flex items-end justify-between">
+<div class="absolute bottom-4 left-4 right-4 flex items-end justify-between">
 <div>
-<span class="px-2 py-0.5 rounded-full bg-primary/30 backdrop-blur-md text-white text-[10px] font-bold uppercase tracking-wider" id="detail-category-badge"></span>
-<h2 class="text-lg font-bold text-white leading-tight mt-0.5" id="detail-title"></h2>
-<div class="flex items-center gap-2 text-xs text-white/80 mt-0.5">
-<span class="flex items-center text-amber-300 gap-0.5 font-semibold">
-<span class="material-symbols-outlined text-[13px] fill-current">star</span>4.8
+<span class="px-2.5 py-1 rounded-md bg-primary/90 text-white text-[9px] font-black uppercase tracking-widest" id="detail-category-badge"></span>
+<h2 class="text-xl font-extrabold text-white leading-tight mt-1.5" id="detail-title"></h2>
+<div class="flex items-center gap-2 text-xs text-white/90 mt-1.5">
+<span class="flex items-center text-yellow-400 gap-0.5 font-bold">
+<span class="material-symbols-outlined text-[14px] fill-current">star</span>4.8
                 </span>
 <span>•</span>
-<span class="flex items-center gap-0.5">
-<span class="material-symbols-outlined text-[13px]">location_on</span><span id="detail-location"></span>
+<span class="flex items-center gap-1 font-medium">
+<span class="material-symbols-outlined text-[14px]">location_on</span><span id="detail-location"></span>
                 </span>
 </div>
 </div>
 </div>
 </div>
-<div class="p-3.5 rounded-2xl bg-surface-container border border-primary/20 flex items-start gap-3 shadow-sm">
-<div class="w-7 h-7 rounded-xl bg-primary/20 text-primary flex items-center justify-center shrink-0 mt-0.5">
-<span class="material-symbols-outlined text-base">auto_awesome</span>
+<div class="p-4 rounded-2xl bg-white border border-outline-light flex items-start gap-3 shadow-sm">
+<div class="w-8 h-8 rounded-xl bg-primary/10 text-primary flex items-center justify-center shrink-0 mt-0.5">
+<span class="material-symbols-outlined text-[18px]">auto_awesome</span>
 </div>
 <div class="flex-1">
-<span class="text-[11px] font-bold uppercase tracking-wider text-primary" data-i18n="detailWhyYou">Kenapa cocok untukmu?</span>
-<p class="text-xs text-on-surface leading-relaxed mt-0.5" data-i18n="detailMatchText" id="detail-match-reason">
+<span class="text-[10px] font-black uppercase tracking-widest text-primary" data-i18n="detailWhyYou">Kenapa cocok untukmu?</span>
+<p class="text-[13px] text-on-surface font-medium leading-relaxed mt-1" data-i18n="detailMatchText" id="detail-match-reason">
               Sesuai preferensi alam & trip santai: suasana teduh mangrove tanpa hiruk-pikuk kota.
             </p>
 </div>
 </div>
-<div class="flex items-center gap-1.5 p-1 rounded-2xl bg-surface-low border border-outline-light text-xs">
-<button class="detail-subtab active flex-1 py-1.5 rounded-xl bg-surface-high font-semibold text-on-surface transition-all text-center" data-i18n="subAbout" data-tab="about">Tentang</button>
-<button class="detail-subtab flex-1 py-1.5 rounded-xl text-on-surface-variant hover:text-on-surface transition-all text-center" data-i18n="subFacility" data-tab="facility">Fasilitas</button>
-<button class="detail-subtab flex-1 py-1.5 rounded-xl text-on-surface-variant hover:text-on-surface transition-all text-center" data-i18n="subAccess" data-tab="access">Akses</button>
-<button class="detail-subtab flex-1 py-1.5 rounded-xl text-on-surface-variant hover:text-on-surface transition-all text-center" data-i18n="subHours" data-tab="hours">Jam & Tiket</button>
+<div class="flex items-center gap-1.5 p-1.5 rounded-2xl bg-surface-low border border-outline-light text-xs font-semibold">
+<button class="detail-subtab active flex-1 py-2 rounded-xl bg-white text-on-surface shadow-sm transition-all text-center" data-i18n="subAbout" data-tab="about">Tentang</button>
+<button class="detail-subtab flex-1 py-2 rounded-xl text-on-surface-variant hover:text-on-surface transition-all text-center" data-i18n="subFacility" data-tab="facility">Fasilitas</button>
+<button class="detail-subtab flex-1 py-2 rounded-xl text-on-surface-variant hover:text-on-surface transition-all text-center" data-i18n="subAccess" data-tab="access">Akses</button>
+<button class="detail-subtab flex-1 py-2 rounded-xl text-on-surface-variant hover:text-on-surface transition-all text-center" data-i18n="subHours" data-tab="hours">Jam & Tiket</button>
 </div>
-<div class="p-3.5 rounded-2xl bg-surface border border-outline-light text-xs leading-relaxed text-on-surface-variant" id="detail-subtab-content">
+<div class="p-4 rounded-2xl bg-white shadow-sm border border-outline-light text-[13px] leading-relaxed text-on-surface-variant font-medium" id="detail-subtab-content">
 <p id="detail-body-text"></p>
 </div>
 </section>
 </main>
 
-<!-- FLOATING LIGHTWEIGHT CONVERSATIONAL INPUT BAR -->
-<div class="sticky bottom-0 z-40 w-full px-4 pb-safe pt-2 bg-gradient-to-t from-background via-background/95 to-transparent">
-<div class="relative w-full rounded-full bg-surface-container/90 backdrop-blur-2xl border border-outline-light p-1.5 flex items-center gap-2 shadow-glass transition-all focus-within:border-primary/50 focus-within:shadow-glow-green">
-<button aria-label="Bicara dengan suara" class="w-10 h-10 rounded-full bg-surface-low text-primary hover:bg-surface-high active:scale-95 flex items-center justify-center shrink-0 transition-colors" id="input-bar-mic">
-<span class="material-symbols-outlined text-xl">mic</span>
+<!-- DYNAMIC FLOATING INPUT ISLAND -->
+<div class="fixed bottom-4 left-0 right-0 z-50 flex justify-center px-4 pointer-events-none">
+<div class="w-full max-w-[378px] rounded-full bg-white/85 backdrop-blur-2xl border border-outline-light p-1.5 flex items-center gap-2 shadow-2xl shadow-slate-300/60 transition-all focus-within:border-primary/40 focus-within:shadow-glow-green pointer-events-auto">
+<button aria-label="Bicara dengan suara" class="w-10 h-10 rounded-full bg-primary/10 text-primary hover:bg-primary/20 active:scale-95 flex items-center justify-center shrink-0 transition-colors" id="input-bar-mic">
+<span class="material-symbols-outlined text-[20px]">mic</span>
 </button>
-<input autocomplete="off" class="flex-1 bg-transparent border-0 text-sm text-on-surface placeholder:text-on-surface-variant/60 focus:ring-0 px-1 py-1.5" id="main-chat-input" placeholder="Tanyakan apa saja tentang wisata Batam..." type="text"/>
-<button aria-label="Kirim pertanyaan" class="w-10 h-10 rounded-full bg-primary text-on-primary font-bold active:scale-95 flex items-center justify-center shrink-0 shadow-sm transition-transform" id="input-bar-send">
-<span class="material-symbols-outlined text-xl">arrow_upward</span>
+<input autocomplete="off" class="flex-1 bg-transparent border-0 text-sm text-on-surface font-medium placeholder:text-on-surface-variant/60 focus:ring-0 px-2 py-2" id="main-chat-input" placeholder="Tanya tentang wisata Batam..." type="text"/>
+<button aria-label="Kirim pertanyaan" class="w-10 h-10 rounded-full bg-primary text-white font-bold active:scale-95 flex items-center justify-center shrink-0 shadow-md transition-transform opacity-70 hover:opacity-100" id="input-bar-send">
+<span class="material-symbols-outlined text-[20px]">arrow_upward</span>
 </button>
 </div>
 </div>
+
 <!-- Notification Toast -->
-<div class="fixed top-20 left-1/2 -translate-x-1/2 z-50 pointer-events-none opacity-0 -translate-y-2 transition-all duration-300 px-4 py-2 rounded-full bg-surface-high/95 backdrop-blur-xl border border-outline-light text-xs font-semibold text-on-surface shadow-glass flex items-center gap-2" id="toast">
-<span class="material-symbols-outlined text-sm text-secondary">check_circle</span>
+<div class="fixed top-20 left-1/2 -translate-x-1/2 z-50 pointer-events-none opacity-0 -translate-y-2 transition-all duration-300 px-4 py-2.5 rounded-full bg-on-surface/95 backdrop-blur-xl text-[12px] font-bold text-white shadow-glass flex items-center gap-2" id="toast">
+<span class="material-symbols-outlined text-[16px] text-primary">check_circle</span>
 <span id="toast-text">Preferensi tersimpan</span>
 </div>
 </div>
@@ -470,7 +457,7 @@
           p3Query: "Rekomendasi seafood gonggong legendaris di sekitar Barelang dan Piayu",
           
           backHome: "Kembali",
-          chatTrustHeader: "Data Disbudpar Batam Terverifikasi",
+          chatTrustHeader: "Data Disbudpar Batam",
           chatIntro: "Halo! Silakan ketik pertanyaan Anda di bawah, saya siap membantu panduan wisata Batam Anda.",
           voiceModeBadge: "Batam Voice Assistant",
           voiceHeading: "Silakan bicara...",
@@ -494,7 +481,7 @@
           subFacility: "Fasilitas",
           subAccess: "Akses",
           subHours: "Jam & Tiket",
-          inputPlaceholder: "Tanyakan apa saja tentang wisata Batam...",
+          inputPlaceholder: "Tanya tentang wisata Batam...",
           toastPrefSaved: "Preferensi liburan Anda telah diperbarui!",
           thinkingLabel: "Berpikir...",
         },
@@ -521,7 +508,7 @@
           p3Query: "Recommend legendary gonggong seafood around Barelang and Piayu",
 
           backHome: "Back",
-          chatTrustHeader: "Disbudpar Batam Verified Knowledge",
+          chatTrustHeader: "Disbudpar Batam Verified",
           chatIntro: "Hello! Please type your question below, I'm ready to assist with your Batam travel guide.",
           voiceModeBadge: "Batam Voice Assistant",
           voiceHeading: "Listening now...",
@@ -545,7 +532,7 @@
           subFacility: "Facilities",
           subAccess: "Access",
           subHours: "Hours & Fees",
-          inputPlaceholder: "Ask anything about Batam travel...",
+          inputPlaceholder: "Ask about Batam travel...",
           toastPrefSaved: "Your travel preferences have been updated!",
           thinkingLabel: "Thinking...",
         }
@@ -560,6 +547,15 @@
       const inputBarMic = document.getElementById('input-bar-mic');
       const btnLangId = document.getElementById('btn-lang-id');
       const btnLangEn = document.getElementById('btn-lang-en');
+
+      // Animasi Send Button
+      mainChatInput.addEventListener('input', (e) => {
+          if(e.target.value.trim() !== '') {
+              inputBarSend.classList.remove('opacity-70');
+          } else {
+              inputBarSend.classList.add('opacity-70');
+          }
+      });
 
       function showToast(msg) {
         toastText.textContent = msg;
@@ -597,9 +593,9 @@
 
         navPills.forEach(pill => {
           if (pill.getAttribute('data-target') === screenId) {
-            pill.className = "nav-pill active shrink-0 px-3 py-1 rounded-full text-[11px] font-semibold tracking-wide transition-all bg-primary text-on-primary border border-primary shadow-sm flex items-center gap-1";
+            pill.className = "nav-pill active shrink-0 px-4 py-1.5 rounded-full text-[12px] font-bold tracking-wide transition-all bg-primary text-white shadow-md shadow-primary/20 flex items-center gap-1.5";
           } else {
-            pill.className = "nav-pill shrink-0 px-3 py-1 rounded-full text-[11px] font-semibold tracking-wide transition-all bg-surface-container/80 text-on-surface-variant hover:text-on-surface border border-outline-light flex items-center gap-1";
+            pill.className = "nav-pill shrink-0 px-4 py-1.5 rounded-full text-[12px] font-semibold tracking-wide transition-all bg-transparent text-on-surface-variant hover:bg-surface-low flex items-center gap-1.5";
           }
         });
         window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -607,8 +603,7 @@
 
       navPills.forEach(pill => {
         pill.addEventListener('click', () => {
-          const target = pill.getAttribute('data-target');
-          showScreen(target);
+          showScreen(pill.getAttribute('data-target'));
         });
       });
 
@@ -629,14 +624,13 @@
         document.getElementById('detail-title').textContent = langData.title;
         document.getElementById('detail-category-badge').textContent = langData.category;
         document.getElementById('detail-location').textContent = langData.location;
-        
         document.getElementById('detail-body-text').textContent = langData.about;
         
         document.querySelectorAll('.detail-subtab').forEach(t => {
           if (t.getAttribute('data-tab') === 'about') {
-            t.className = "detail-subtab active flex-1 py-1.5 rounded-xl bg-surface-high font-semibold text-on-surface transition-all text-center";
+            t.className = "detail-subtab active flex-1 py-2 rounded-xl bg-white text-on-surface shadow-sm transition-all text-center";
           } else {
-            t.className = "detail-subtab flex-1 py-1.5 rounded-xl text-on-surface-variant hover:text-on-surface transition-all text-center";
+            t.className = "detail-subtab flex-1 py-2 rounded-xl text-on-surface-variant hover:text-on-surface transition-all text-center";
           }
         });
       }
@@ -646,9 +640,9 @@
       document.querySelectorAll('.detail-subtab').forEach(tab => {
         tab.addEventListener('click', () => {
           document.querySelectorAll('.detail-subtab').forEach(t => {
-            t.className = "detail-subtab flex-1 py-1.5 rounded-xl text-on-surface-variant hover:text-on-surface transition-all text-center";
+            t.className = "detail-subtab flex-1 py-2 rounded-xl text-on-surface-variant hover:text-on-surface transition-all text-center";
           });
-          tab.className = "detail-subtab active flex-1 py-1.5 rounded-xl bg-surface-high font-semibold text-on-surface transition-all text-center";
+          tab.className = "detail-subtab active flex-1 py-2 rounded-xl bg-white text-on-surface shadow-sm transition-all text-center";
           
           const tabType = tab.getAttribute('data-tab');
           const currentDestKey = document.getElementById('screen-detail').getAttribute('data-current-dest');
@@ -674,6 +668,7 @@
         if (!text) return;
 
         mainChatInput.value = '';
+        inputBarSend.classList.add('opacity-70');
         showScreen('screen-chat');
 
         const chatContainer = document.getElementById('chat-messages-container');
@@ -682,10 +677,11 @@
             chatContainer.classList.add('chat-started');
         }
 
+        // BUBBLE USER (HIJAU MODERN)
         const userBubble = `
           <div class="flex justify-end w-full mb-2">
-            <div class="max-w-[85%] rounded-3xl rounded-tr-md bg-primary text-on-primary p-3.5 shadow-md">
-              <p class="text-[15px] leading-relaxed">${text}</p>
+            <div class="max-w-[85%] rounded-2xl rounded-tr-sm bg-primary text-white p-3.5 shadow-md shadow-primary/20">
+              <p class="text-[14px] leading-relaxed font-medium">${text}</p>
             </div>
           </div>
         `;
@@ -695,12 +691,14 @@
         const loadingId = 'loading-' + Date.now();
         const thinkingLabel = i18n[currentLanguage].thinkingLabel;
         const loadingBubble = `
-          <div id="${loadingId}" class="flex flex-col gap-2 w-full mb-4">
-            <div class="flex items-center gap-2 px-1">
-              <div class="w-6 h-6 rounded-full bg-primary/20 flex items-center justify-center text-primary text-xs animate-pulse">
-                <span class="material-symbols-outlined text-sm">smart_toy</span>
+          <div id="${loadingId}" class="flex flex-col gap-1.5 w-full mb-4">
+            <div class="flex items-center px-1">
+              <div class="flex items-center gap-2">
+                <div class="w-6 h-6 rounded-lg bg-primary/15 flex items-center justify-center text-primary animate-pulse">
+                  <span class="material-symbols-outlined text-[14px]">smart_toy</span>
+                </div>
+                <span class="text-[11px] font-bold text-on-surface-variant uppercase tracking-wider animate-pulse">${thinkingLabel}</span>
               </div>
-              <span class="text-xs font-semibold text-on-surface animate-pulse">${thinkingLabel}</span>
             </div>
           </div>
         `;
@@ -722,40 +720,39 @@
             }
             
             const loadingEl = document.getElementById(loadingId);
-            if (loadingEl) {
-                loadingEl.remove();
-            }
+            if (loadingEl) loadingEl.remove();
 
             if (response.ok && data.response) {
-                const formattedText = data.response.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>').replace(/\n/g, '<br>');
+                const formattedText = data.response.replace(/\*\*(.*?)\*\*/g, '<strong class="text-on-surface font-extrabold">$1</strong>').replace(/\n/g, '<br>');
                 const rawTextForSpeech = data.response.replace(/\*\*/g, '');
                 const speakId = 'speak-' + Date.now();
 
                 const sourcesHtml = (data.sources && data.sources.length > 0)
-                  ? `<div class="flex flex-wrap gap-1.5 mt-3 pt-3 border-t border-outline-light">
+                  ? `<div class="flex flex-wrap gap-1.5 mt-4 pt-3 border-t border-outline-light">
                        ${data.sources.map(src => `
-                         <span class="inline-flex items-center gap-1 px-2 py-1 rounded-full bg-surface-container text-[11px] text-on-surface-variant">
+                         <span class="inline-flex items-center gap-1 px-2 py-1 rounded-md bg-surface-low text-[10px] font-bold text-on-surface-variant border border-outline-light">
                            <span class="material-symbols-outlined text-[13px] text-primary">verified</span>${src}
                          </span>
                        `).join('')}
                      </div>`
                   : '';
 
+                // BUBBLE AI (PUTIH BERSIH)
                 const aiBubble = `
-                  <div class="flex flex-col gap-2 w-full mb-6">
+                  <div class="flex flex-col gap-1.5 w-full mb-6">
                     <div class="flex items-center justify-between px-1">
                       <div class="flex items-center gap-2">
-                        <div class="w-6 h-6 rounded-full bg-primary/20 flex items-center justify-center text-primary text-xs">
-                          <span class="material-symbols-outlined text-sm">smart_toy</span>
+                        <div class="w-6 h-6 rounded-lg bg-primary/15 flex items-center justify-center text-primary">
+                          <span class="material-symbols-outlined text-[14px]">smart_toy</span>
                         </div>
-                        <span class="text-xs font-semibold text-on-surface">Wisata Batam AI</span>
+                        <span class="text-[11px] font-bold text-on-surface-variant uppercase tracking-wider">Wisata Batam AI</span>
                       </div>
-                      <button class="tts-btn w-6 h-6 rounded-full bg-surface-container hover:bg-surface-high flex items-center justify-center text-primary transition-colors" data-speak-id="${speakId}" aria-label="Dengarkan jawaban">
-                        <span class="material-symbols-outlined text-sm">volume_up</span>
+                      <button class="tts-btn w-7 h-7 rounded-full bg-white border border-outline-light hover:bg-surface-low flex items-center justify-center text-primary transition-colors shadow-sm" data-speak-id="${speakId}" aria-label="Dengarkan jawaban">
+                        <span class="material-symbols-outlined text-[16px]">volume_up</span>
                       </button>
                     </div>
-                    <div class="rounded-3xl rounded-tl-md bg-surface border border-outline-light p-4 shadow-glass">
-                      <p class="text-[15px] leading-relaxed text-on-surface">${formattedText}</p>
+                    <div class="rounded-2xl rounded-tl-sm bg-white border border-outline-light p-4 shadow-sm w-fit max-w-[90%]">
+                      <p class="text-[14px] leading-relaxed text-slate-700 font-medium">${formattedText}</p>
                       ${sourcesHtml}
                     </div>
                   </div>
@@ -771,23 +768,21 @@
             } else {
                 const errorMessage = data.error || (currentLanguage === 'ID' ? "Gagal memproses data di server." : "Failed to process data on server.");
                 const errorBubble = `
-                  <div class="rounded-3xl bg-red-50 border border-red-200 p-3 mb-4 text-center">
-                    <p class="text-sm text-red-700 font-bold">Terjadi Kesalahan / Error</p>
-                    <p class="text-xs text-red-600 mt-1">${errorMessage}</p>
+                  <div class="rounded-2xl bg-red-50 border border-red-200 p-4 mb-4 text-center shadow-sm w-fit max-w-[90%] mx-auto">
+                    <p class="text-[13px] text-red-700 font-bold">Terjadi Kesalahan / Error</p>
+                    <p class="text-[12px] text-red-600 font-medium mt-1">${errorMessage}</p>
                   </div>
                 `;
                 chatContainer.insertAdjacentHTML('beforeend', errorBubble);
             }
         } catch (error) {
             const loadingEl = document.getElementById(loadingId);
-            if (loadingEl) {
-                loadingEl.remove();
-            }
+            if (loadingEl) loadingEl.remove();
             
             const errorBubble = `
-              <div class="rounded-3xl bg-red-50 border border-red-200 p-3 mb-4 text-center">
-                <p class="text-sm text-red-700 font-bold">Koneksi Ke Django Gagal / Diblokir</p>
-                <p class="text-xs text-red-600 mt-1">Pastikan server Django menyala dan CORS diizinkan. Detail: ${error.message}</p>
+              <div class="rounded-2xl bg-red-50 border border-red-200 p-4 mb-4 text-center shadow-sm w-fit max-w-[90%] mx-auto">
+                <p class="text-[13px] text-red-700 font-bold">Koneksi Ke Django Gagal / Diblokir</p>
+                <p class="text-[12px] text-red-600 font-medium mt-1">Pastikan server Django menyala dan CORS diizinkan. Detail: ${error.message}</p>
               </div>
             `;
             chatContainer.insertAdjacentHTML('beforeend', errorBubble);
@@ -805,9 +800,9 @@
         chip.addEventListener('click', () => {
           chip.classList.toggle('active');
           if (chip.classList.contains('active')) {
-            chip.className = "pref-chip active px-3.5 py-2 rounded-2xl bg-primary text-on-primary font-semibold text-xs border border-primary transition-all flex items-center gap-1.5";
+            chip.className = "pref-chip active px-4 py-2.5 rounded-xl bg-primary text-white font-bold text-xs shadow-sm transition-all flex items-center gap-2";
           } else {
-            chip.className = "pref-chip px-3.5 py-2 rounded-2xl bg-surface-low text-on-surface font-semibold text-xs border border-outline-light transition-all flex items-center gap-1.5";
+            chip.className = "pref-chip px-4 py-2.5 rounded-xl bg-white text-on-surface font-semibold text-xs border border-outline-light shadow-sm transition-all flex items-center gap-2";
           }
         });
       });
@@ -816,9 +811,9 @@
         document.querySelectorAll(`#${groupId} .pref-single`).forEach(btn => {
           btn.addEventListener('click', () => {
             document.querySelectorAll(`#${groupId} .pref-single`).forEach(b => {
-              b.className = "pref-single px-2.5 py-2 rounded-2xl bg-surface-low text-on-surface font-semibold text-xs border border-outline-light text-center transition-all";
+              b.className = "pref-single px-2 py-3 rounded-xl bg-white text-on-surface font-semibold text-xs border border-outline-light text-center transition-all shadow-sm";
             });
-            btn.className = "pref-single active px-2.5 py-2 rounded-2xl bg-primary text-on-primary font-semibold text-xs border border-primary text-center transition-all";
+            btn.className = "pref-single active px-2 py-3 rounded-xl bg-primary text-white font-bold text-xs text-center transition-all shadow-sm";
           });
         });
       }
@@ -834,11 +829,11 @@
         const dict = i18n[lang];
         
         if (lang === 'ID') {
-          btnLangId.className = "px-2.5 py-1 rounded-full font-semibold transition-all text-on-primary bg-primary shadow-sm";
-          btnLangEn.className = "px-2.5 py-1 rounded-full font-semibold transition-all text-on-surface-variant hover:text-on-surface";
+          btnLangId.className = "px-3 py-1 rounded-full text-xs font-bold transition-all bg-white text-primary shadow-sm";
+          btnLangEn.className = "px-3 py-1 rounded-full text-xs font-semibold transition-all text-on-surface-variant hover:text-on-surface";
         } else {
-          btnLangEn.className = "px-2.5 py-1 rounded-full font-semibold transition-all text-on-primary bg-primary shadow-sm";
-          btnLangId.className = "px-2.5 py-1 rounded-full font-semibold transition-all text-on-surface-variant hover:text-on-surface";
+          btnLangEn.className = "px-3 py-1 rounded-full text-xs font-bold transition-all bg-white text-primary shadow-sm";
+          btnLangId.className = "px-3 py-1 rounded-full text-xs font-semibold transition-all text-on-surface-variant hover:text-on-surface";
         }
 
         document.querySelectorAll('[data-i18n]').forEach(el => {
@@ -923,8 +918,8 @@
       } else {
         voiceMicBtn.addEventListener('click', () => {
           transcriptEl.textContent = currentLanguage === 'ID'
-            ? "Maaf, browser Anda tidak mendukung fitur suara. Gunakan Chrome."
-            : "Sorry, your browser doesn't support voice features. Use Chrome.";
+            ? "Maaf, browser Anda tidak mendukung fitur suara."
+            : "Sorry, your browser doesn't support voice features.";
         });
       }
     })();
