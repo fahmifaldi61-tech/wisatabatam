@@ -9,6 +9,9 @@
 <link href="https://fonts.googleapis.com/css2?family=Onest:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
 <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL,opsz@200..500,0..1,20..24&display=swap" rel="stylesheet"/>
 <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- TAMBAHAN: Library Marked.js untuk membaca Markdown (Tabel, List, Bold) dari AI -->
+<script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+
 <script id="tailwind-config">
     tailwind.config = {
       darkMode: "class",
@@ -72,7 +75,19 @@
     .icon-fill { font-variation-settings: 'FILL' 1, 'wght' 450, 'GRAD' 0, 'opsz' 22; }
     .tap { transition: transform 0.15s cubic-bezier(0.34, 1.56, 0.64, 1); }
     .tap:active { transform: scale(0.96); }
-    .brand-wave { display: block; width: 100%; height: 30px; }
+    
+    /* TAMBAHAN: Styling CSS khusus untuk respons AI (Tabel, List, Paragraf) */
+    .prose-ai p { margin-bottom: 0.75rem; }
+    .prose-ai p:last-child { margin-bottom: 0; }
+    .prose-ai strong { font-weight: 700; color: #111214; }
+    .prose-ai ul { list-style-type: disc; padding-left: 1.25rem; margin-bottom: 0.75rem; }
+    .prose-ai ol { list-style-type: decimal; padding-left: 1.25rem; margin-bottom: 0.75rem; }
+    .prose-ai li { margin-bottom: 0.25rem; }
+    .prose-ai table { width: 100%; border-collapse: collapse; margin-top: 0.5rem; margin-bottom: 1rem; border-radius: 8px; overflow: hidden; font-size: 13px; }
+    .prose-ai thead { background-color: #E7F8EF; color: #0E9A58; border-bottom: 2px solid #17B268; }
+    .prose-ai th, .prose-ai td { border: 1px solid rgba(17,18,20,0.08); padding: 8px 10px; text-align: left; }
+    .prose-ai tr:nth-child(even) { background-color: rgba(255,255,255,0.5); }
+    .prose-ai tr:nth-child(odd) { background-color: transparent; }
   </style>
 </head>
 <body class="bg-paper text-ink flex justify-center selection:bg-leaf selection:text-white min-h-screen">
@@ -82,9 +97,7 @@
 <header class="sticky top-0 z-40 w-full bg-white/75 backdrop-blur-xl border-b border-ink/[0.06] pt-safe px-4 pb-2.5">
 <div class="flex items-center justify-between gap-2">
 <div class="flex items-center gap-2.5">
-<!-- BAGIAN LOGO YANG DIGANTI -->
 <img src="Cuplikan layar 2026-09-23 135856.png" alt="Logo" class="w-[30px] h-[30px] shrink-0 object-contain"/>
-<!-- END BAGIAN LOGO YANG DIGANTI -->
 <div>
 <div class="flex items-baseline gap-1 leading-none">
 <span class="font-bold text-[15px] tracking-tight text-ink">Wisata Batam</span>
@@ -326,7 +339,7 @@
 </section>
 </main>
 
-<!-- DYNAMIC FLOATING INPUT ISLAND (sits above the tab bar) -->
+<!-- DYNAMIC FLOATING INPUT ISLAND -->
 <div class="fixed bottom-[84px] left-0 right-0 z-50 flex justify-center px-4 pointer-events-none">
 <div class="w-full max-w-[378px] rounded-full bg-white border border-ink/[0.08] p-1.5 flex items-center gap-2 shadow-float transition-all focus-within:border-leaf/40 pointer-events-auto">
 <button aria-label="Bicara dengan suara" class="tap w-10 h-10 rounded-full bg-mint text-leaf flex items-center justify-center shrink-0" id="input-bar-mic">
@@ -339,7 +352,7 @@
 </div>
 </div>
 
-<!-- BOTTOM TAB BAR (native iOS style) -->
+<!-- BOTTOM TAB BAR -->
 <nav class="fixed bottom-0 left-0 right-0 z-40 w-full max-w-[410px] mx-auto bg-white/80 backdrop-blur-xl border-t border-ink/[0.06] pb-safe pt-2 px-2 flex items-stretch justify-around" id="screen-nav" style="left:50%;transform:translateX(-50%);">
 <button class="nav-pill active tap flex flex-col items-center justify-center gap-0.5 flex-1 py-1.5 rounded-xl text-leaf" data-target="screen-welcome">
 <span class="material-symbols-outlined text-[22px] icon-fill">home</span>
@@ -534,7 +547,6 @@
       const NAV_ACTIVE = "nav-pill active tap flex flex-col items-center justify-center gap-0.5 flex-1 py-1.5 rounded-xl text-leaf";
       const NAV_INACTIVE = "nav-pill tap flex flex-col items-center justify-center gap-0.5 flex-1 py-1.5 rounded-xl text-ink/35";
 
-      // Animasi Send Button
       mainChatInput.addEventListener('input', (e) => {
           if(e.target.value.trim() !== '') {
               inputBarSend.classList.remove('opacity-70');
@@ -713,8 +725,15 @@
             if (loadingEl) loadingEl.remove();
 
             if (response.ok && data.response) {
-                const formattedText = data.response.replace(/\*\*(.*?)\*\*/g, '<strong class="text-ink font-extrabold">$1</strong>').replace(/\n/g, '<br>');
-                const rawTextForSpeech = data.response.replace(/\*\*/g, '');
+                // MODIFIKASI: Memakai marked.js untuk membaca format Markdown dari AI 
+                // agar tabel, list, dan tulisan tebal tersusun rapi secara otomatis
+                const formattedText = marked.parse(data.response);
+                
+                // Mencegah error pembacaan suara yang membaca tag HTML
+                const tempDiv = document.createElement("div");
+                tempDiv.innerHTML = formattedText;
+                const rawTextForSpeech = tempDiv.textContent || tempDiv.innerText || "";
+                
                 const speakId = 'speak-' + Date.now();
 
                 const sourcesHtml = (data.sources && data.sources.length > 0)
@@ -742,7 +761,7 @@
                       </button>
                     </div>
                     <div class="rounded-2xl rounded-tl-sm bg-mist p-4 w-fit max-w-[90%]">
-                      <p class="text-[14.5px] leading-relaxed text-ink font-medium">${formattedText}</p>
+                      <div class="prose-ai text-[14.5px] leading-relaxed text-ink font-medium">${formattedText}</div>
                       ${sourcesHtml}
                     </div>
                   </div>
