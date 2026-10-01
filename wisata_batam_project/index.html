@@ -9,7 +9,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Onest:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
 <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL,opsz@200..500,0..1,20..24&display=swap" rel="stylesheet"/>
 <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
-<!-- TAMBAHAN: Library Marked.js untuk membaca Markdown (Tabel, List, Bold) dari AI -->
+<!-- Library Marked.js untuk membaca Markdown (Tabel, List, Bold) dari AI -->
 <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
 
 <script id="tailwind-config">
@@ -47,7 +47,6 @@
         margin: 0;
         padding: 0;
         min-height: 100vh;
-        background-color: #FFFFFF;
         color: #111214;
         font-family: 'Onest', -apple-system, BlinkMacSystemFont, sans-serif;
         -webkit-font-smoothing: antialiased;
@@ -76,7 +75,7 @@
     .tap { transition: transform 0.15s cubic-bezier(0.34, 1.56, 0.64, 1); }
     .tap:active { transform: scale(0.96); }
     
-    /* TAMBAHAN: Styling CSS khusus untuk respons AI (Tabel, List, Paragraf) */
+    /* Styling khusus untuk respons AI (Tabel, List, Paragraf) */
     .prose-ai p { margin-bottom: 0.75rem; }
     .prose-ai p:last-child { margin-bottom: 0; }
     .prose-ai strong { font-weight: 700; color: #111214; }
@@ -90,8 +89,8 @@
     .prose-ai tr:nth-child(odd) { background-color: transparent; }
   </style>
 </head>
-<body class="bg-paper text-ink flex justify-center selection:bg-leaf selection:text-white min-h-screen">
-<div class="relative w-full max-w-[410px] min-h-screen bg-paper flex flex-col justify-between overflow-x-hidden">
+<body class="bg-gray-100 text-ink flex justify-center selection:bg-leaf selection:text-white min-h-screen">
+<div class="relative w-full max-w-[410px] min-h-screen bg-paper flex flex-col justify-between overflow-x-hidden shadow-2xl border-x border-gray-200">
 
 <!-- COMPACT FROSTED NAV BAR -->
 <header class="sticky top-0 z-40 w-full bg-white/75 backdrop-blur-xl border-b border-ink/[0.06] pt-safe px-4 pb-2.5">
@@ -129,11 +128,11 @@
 </div>
 <div class="px-5 pt-5 pb-2 flex flex-col gap-3">
 <h1 class="text-[30px] leading-[1.12] font-extrabold tracking-tight text-ink" data-i18n="welcomeTitle">
-            Mau menjelajah Batam ke mana hari ini?
-          </h1>
+          Mau menjelajah Batam ke mana hari ini?
+        </h1>
 <p class="text-[14.5px] text-ink/55 leading-relaxed" data-i18n="welcomeDesc">
-            Rekomendasi pantai eksotis, seafood Barelang legendaris, feri internasional Singapura, hingga hidden gems kepulauan.
-          </p>
+          Rekomendasi pantai eksotis, seafood Barelang legendaris, feri internasional Singapura, hingga hidden gems kepulauan.
+        </p>
 <div class="flex items-center gap-2.5 mt-1.5">
 <button class="tap flex-1 py-3.5 px-4 rounded-2xl bg-leaf text-white font-bold text-sm flex items-center justify-center gap-2 shadow-glow-green" id="btn-start-chat">
 <span class="material-symbols-outlined text-[18px]">chat_bubble</span>
@@ -339,8 +338,8 @@
 </section>
 </main>
 
-<!-- DYNAMIC FLOATING INPUT ISLAND -->
-<div class="fixed bottom-[84px] left-0 right-0 z-50 flex justify-center px-4 pointer-events-none">
+<!-- DYNAMIC FLOATING INPUT ISLAND (FIXED FOR LAPTOP & MOBILE) -->
+<div class="fixed bottom-[84px] left-1/2 -translate-x-1/2 w-full max-w-[410px] z-50 flex justify-center px-4 pointer-events-none">
 <div class="w-full max-w-[378px] rounded-full bg-white border border-ink/[0.08] p-1.5 flex items-center gap-2 shadow-float transition-all focus-within:border-leaf/40 pointer-events-auto">
 <button aria-label="Bicara dengan suara" class="tap w-10 h-10 rounded-full bg-mint text-leaf flex items-center justify-center shrink-0" id="input-bar-mic">
 <span class="material-symbols-outlined text-[20px]">mic</span>
@@ -352,8 +351,8 @@
 </div>
 </div>
 
-<!-- BOTTOM TAB BAR -->
-<nav class="fixed bottom-0 left-0 right-0 z-40 w-full max-w-[410px] mx-auto bg-white/80 backdrop-blur-xl border-t border-ink/[0.06] pb-safe pt-2 px-2 flex items-stretch justify-around" id="screen-nav" style="left:50%;transform:translateX(-50%);">
+<!-- BOTTOM TAB BAR (FIXED FOR LAPTOP & MOBILE) -->
+<nav class="fixed bottom-0 left-1/2 -translate-x-1/2 z-40 w-full max-w-[410px] bg-white/80 backdrop-blur-xl border-t border-ink/[0.06] pb-safe pt-2 px-2 flex items-stretch justify-around" id="screen-nav">
 <button class="nav-pill active tap flex flex-col items-center justify-center gap-0.5 flex-1 py-1.5 rounded-xl text-leaf" data-target="screen-welcome">
 <span class="material-symbols-outlined text-[22px] icon-fill">home</span>
 <span class="text-[10px] font-bold" data-i18n="tabWelcome">Welcome</span>
@@ -725,11 +724,8 @@
             if (loadingEl) loadingEl.remove();
 
             if (response.ok && data.response) {
-                // MODIFIKASI: Memakai marked.js untuk membaca format Markdown dari AI 
-                // agar tabel, list, dan tulisan tebal tersusun rapi secara otomatis
                 const formattedText = marked.parse(data.response);
                 
-                // Mencegah error pembacaan suara yang membaca tag HTML
                 const tempDiv = document.createElement("div");
                 tempDiv.innerHTML = formattedText;
                 const rawTextForSpeech = tempDiv.textContent || tempDiv.innerText || "";
@@ -790,8 +786,8 @@
 
             const errorBubble = `
               <div class="rounded-2xl bg-sysred/10 border border-sysred/25 p-4 mb-4 text-center w-fit max-w-[90%] mx-auto">
-                <p class="text-[13px] text-sysred font-bold">Koneksi Ke Django Gagal / Diblokir</p>
-                <p class="text-[12px] text-sysred/80 font-medium mt-1">Pastikan server Django menyala dan CORS diizinkan. Detail: ${error.message}</p>
+                <p class="text-[13px] text-sysred font-bold">Koneksi Ke Server Gagal</p>
+                <p class="text-[12px] text-sysred/80 font-medium mt-1">Detail: ${error.message}</p>
               </div>
             `;
             chatContainer.insertAdjacentHTML('beforeend', errorBubble);
