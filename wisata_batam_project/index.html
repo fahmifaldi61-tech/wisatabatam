@@ -1,933 +1,970 @@
+Siap. **Ganti seluruh isi `index.html` dengan kode ini.** Tetap satu file, tanpa build step, dan memakai endpoint Railway yang sama.
+
+Yang dibenahi: navigasi ID/EN, layout responsif, daftar destinasi, input khusus halaman chat, transkripsi suara sebelum kirim, penyimpanan preferensi, `session_id`, serta status loading/error. Preferensi disertakan sebagai konteks pertanyaan agar tetap bisa digunakan oleh backend lama.
+
+Simpan foto **`image_02fa79.jpg`** di folder yang sama. Koneksi backend dan mikrofon tetap perlu dicoba di aplikasi setelah dipasang; saya belum menjalankannya di browser Anda.
+
+```html
 <!DOCTYPE html>
 <html lang="id">
 <head>
-<meta charset="utf-8"/>
-<meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" name="viewport"/>
-<title>Wisata Batam AI — Your Intelligent Tourism Companion</title>
-<link href="https://fonts.googleapis.com" rel="preconnect"/>
-<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
-<link href="https://fonts.googleapis.com/css2?family=Onest:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
-<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL,opsz@200..500,0..1,20..24&display=swap" rel="stylesheet"/>
-<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
-<!-- Library Marked.js untuk membaca Markdown (Tabel, List, Bold) dari AI -->
-<script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#087f5b">
+<title>Wisata Batam AI</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Onest:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght@400&display=swap" rel="stylesheet">
+<script defer src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/dompurify/dist/purify.min.js"></script>
 
-<script id="tailwind-config">
-    tailwind.config = {
-      darkMode: "class",
-      theme: {
-        extend: {
-          colors: {
-            "paper": "#FFFFFF",
-            "mist": "#F5F8F6",
-            "mint": "#E7F8EF",
-            "leaf": "#17B268",
-            "leaf-deep": "#0E9A58",
-            "ink": "#111214",
-            "sysblue": "#0A84FF",
-            "sysorange": "#FF9500",
-            "sysred": "#FF3B30",
-          },
-          fontFamily: {
-            sans: ['"Onest"', '-apple-system', 'sans-serif'],
-          },
-          boxShadow: {
-            'card': '0 2px 16px -4px rgba(17,18,20,0.06)',
-            'float': '0 16px 32px -12px rgba(17,18,20,0.16)',
-            'glow-green': '0 8px 24px -6px rgba(23,178,104,0.35)',
-          },
-        }
-      }
-    };
-  </script>
 <style>
-    @layer base {
-      html, body {
-        width: 100%;
-        margin: 0;
-        padding: 0;
-        min-height: 100vh;
-        color: #111214;
-        font-family: 'Onest', -apple-system, BlinkMacSystemFont, sans-serif;
-        -webkit-font-smoothing: antialiased;
-      }
-      body {
-        overscroll-behavior: none;
-        -webkit-tap-highlight-color: transparent;
-      }
-      .pb-safe { padding-bottom: env(safe-area-inset-bottom, 0px); }
-      .pt-safe { padding-top: max(0.6rem, env(safe-area-inset-top, 0.6rem)); }
-    }
-    ::-webkit-scrollbar { display: none; }
-    *:focus-visible { outline: 2px solid #17B268; outline-offset: 2px; border-radius: 4px; }
-    @media (prefers-reduced-motion: reduce) {
-      *, *::before, *::after {
-        animation-duration: 0.01ms !important;
-        animation-iteration-count: 1 !important;
-        transition-duration: 0.01ms !important;
-      }
-    }
-    .screen-pane { transition: opacity 0.28s ease, transform 0.28s ease; }
-    .screen-pane.hidden-state { display: none; opacity: 0; transform: translateY(8px); }
-    .screen-pane.active-state { display: flex; opacity: 1; transform: translateY(0); }
-    .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 350, 'GRAD' 0, 'opsz' 22; }
-    .icon-fill { font-variation-settings: 'FILL' 1, 'wght' 450, 'GRAD' 0, 'opsz' 22; }
-    .tap { transition: transform 0.15s cubic-bezier(0.34, 1.56, 0.64, 1); }
-    .tap:active { transform: scale(0.96); }
-    
-    /* Styling khusus untuk respons AI (Tabel, List, Paragraf) */
-    .prose-ai p { margin-bottom: 0.75rem; }
-    .prose-ai p:last-child { margin-bottom: 0; }
-    .prose-ai strong { font-weight: 700; color: #111214; }
-    .prose-ai ul { list-style-type: disc; padding-left: 1.25rem; margin-bottom: 0.75rem; }
-    .prose-ai ol { list-style-type: decimal; padding-left: 1.25rem; margin-bottom: 0.75rem; }
-    .prose-ai li { margin-bottom: 0.25rem; }
-    .prose-ai table { width: 100%; border-collapse: collapse; margin-top: 0.5rem; margin-bottom: 1rem; border-radius: 8px; overflow: hidden; font-size: 13px; }
-    .prose-ai thead { background-color: #E7F8EF; color: #0E9A58; border-bottom: 2px solid #17B268; }
-    .prose-ai th, .prose-ai td { border: 1px solid rgba(17,18,20,0.08); padding: 8px 10px; text-align: left; }
-    .prose-ai tr:nth-child(even) { background-color: rgba(255,255,255,0.5); }
-    .prose-ai tr:nth-child(odd) { background-color: transparent; }
-  </style>
+:root{
+  --green:#087f5b;--green-dark:#056347;--mint:#eaf6ef;
+  --ink:#172e26;--muted:#62736c;--line:#e3ebe6;
+  --bg:#f6f9f6;--white:#fff;--radius:22px;
+}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+html,body{margin:0;height:100%;color:var(--ink);background:#eaf0eb}
+body{font-family:"Onest",system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+button,input,textarea{font:inherit}
+button,a,input,textarea{-webkit-tap-highlight-color:transparent}
+button{cursor:pointer}
+button{border:0}
+button:disabled{opacity:.45;cursor:not-allowed}
+a{color:var(--green)}
+button,a{touch-action:manipulation}
+:focus-visible{outline:3px solid #e3ab36;outline-offset:4px}
+button:active:not(:disabled){transform:translateY(1px)}
+.icon{font-family:"Material Symbols Outlined";font-weight:400;font-style:normal;
+font-size:23px;line-height:1;display:inline-block;white-space:nowrap;
+font-feature-settings:"liga";-webkit-font-smoothing:antialiased}
+.app{max-width:1000px;margin:auto;height:100vh;height:100dvh;
+display:flex;flex-direction:column;background:var(--bg);overflow:hidden;
+box-shadow:0 0 70px #193d2010}
+.header{padding:14px 24px;padding-top:max(14px,env(safe-area-inset-top));
+display:flex;align-items:center;justify-content:space-between;gap:12px;
+background:white;border-bottom:1px solid var(--line);flex-shrink:0}
+.brand{display:flex;align-items:center;gap:10px}
+.brand-mark{width:42px;height:42px;display:grid;place-items:center;
+background:var(--green);color:white;border-radius:14px}
+.brand strong{font-size:16px;letter-spacing:-.5px}
+.brand small{display:block;font-size:11px;color:var(--muted);margin-top:4px}
+.ai{font-size:10px;vertical-align:middle;background:var(--mint);
+color:var(--green);padding:3px 5px;border-radius:5px;margin-left:3px}
+.language{display:flex;background:var(--bg);padding:4px;border-radius:30px}
+.language button{background:none;color:var(--muted);font-size:12px;
+font-weight:700;border-radius:24px;min-width:39px;min-height:36px}
+.language button[aria-pressed=true]{background:white;color:var(--green);
+box-shadow:0 2px 7px #193d2010}
+main{flex:1;min-height:0;overflow:auto;overscroll-behavior:contain}
+.page{max-width:780px;margin:auto;padding:28px 24px 36px}
+.eyebrow{font-size:11px;letter-spacing:1.7px;text-transform:uppercase;
+font-weight:800;color:var(--green);margin:0 0 10px}
+h1,h2,h3,p{margin-top:0}
+h1{font-size:clamp(30px,5vw,44px);line-height:1.12;letter-spacing:-1.7px;margin-bottom:14px}
+h2{font-size:27px;letter-spacing:-1px;line-height:1.2;margin-bottom:10px}
+h3{font-size:17px;letter-spacing:-.3px;margin-bottom:8px}
+p{font-size:14px;line-height:1.75}
+.muted{color:var(--muted)}
+.small{font-size:12px}
+.hero{min-height:230px;position:relative;border-radius:var(--radius);
+overflow:hidden;background:linear-gradient(135deg,#24664a,#91bca6);
+margin-bottom:26px}
+.hero img{position:absolute;width:100%;height:100%;object-fit:cover}
+.hero:after{content:"";position:absolute;inset:0;
+background:linear-gradient(0deg,#092a27ba,transparent 80%)}
+.hero-caption{position:absolute;z-index:1;bottom:22px;left:22px;right:22px;color:white}
+.hero-caption p{font-size:12px;color:#ffffffd9;margin:7px 0 0}
+.tag{display:inline-flex;align-items:center;gap:6px;border-radius:30px;
+font-size:11px;font-weight:600;padding:7px 11px;background:var(--mint);color:var(--green)}
+.hero .tag{background:#ffffff26;color:white;backdrop-filter:blur(8px)}
+.hero-caption strong{display:block;font-size:26px;letter-spacing:-.8px;margin-top:10px}
+.button{display:inline-flex;align-items:center;justify-content:center;gap:9px;
+min-height:48px;padding:12px 18px;border-radius:14px;font-size:13px;
+font-weight:700;text-decoration:none;line-height:1.4}
+.primary{background:var(--green);color:white}
+.primary:hover:not(:disabled){background:var(--green-dark)}
+.secondary{background:white;color:var(--green);border:1px solid var(--line)}
+.soft{background:var(--mint);color:var(--green)}
+.actions{display:flex;gap:10px;flex-wrap:wrap}
+.actions .button{flex:1}
+.section-heading{display:flex;align-items:center;justify-content:space-between;
+gap:12px;margin:28px 0 14px}
+.section-heading h3{margin:0}
+.text-button{background:transparent;color:var(--green);font-size:12px;
+font-weight:700;min-height:44px;padding:8px}
+.prompt-list{display:grid;gap:10px}
+.prompt{display:flex;align-items:center;gap:13px;width:100%;text-align:left;
+padding:15px;background:white;border:1px solid var(--line);border-radius:16px;color:var(--ink)}
+.prompt:hover{border-color:#8dc4aa}
+.prompt>span:nth-child(2){flex:1;font-size:13px;font-weight:600;line-height:1.5}
+.prompt-icon{width:39px;height:39px;background:var(--mint);
+color:var(--green);display:grid;place-items:center;border-radius:12px;flex-shrink:0}
+.prompt:nth-child(2) .prompt-icon{background:#edf2ff;color:#536cbd}
+.prompt:nth-child(3) .prompt-icon{background:#fff4df;color:#aa7014}
+.arrow{font-size:19px;color:#82968c}
+.note{padding:16px;border:1px solid var(--line);border-radius:16px;
+background:white;color:var(--muted);font-size:12px;line-height:1.7;margin-top:20px}
+.nav{display:flex;flex-shrink:0;background:white;border-top:1px solid var(--line);
+padding:8px 8px max(8px,env(safe-area-inset-bottom));gap:4px}
+.nav button{flex:1;min-width:0;min-height:55px;border-radius:13px;background:transparent;
+color:var(--muted);display:flex;flex-direction:column;align-items:center;
+justify-content:center;gap:5px;font-size:10px;font-weight:600}
+.nav button[aria-current=page]{color:var(--green);background:var(--mint)}
+.nav .icon{font-size:22px}
+.page-top{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:22px}
+.page-top h2{margin:0;font-size:23px}
+.icon-button{display:inline-grid;place-items:center;min-width:44px;
+min-height:44px;border-radius:13px;background:white;border:1px solid var(--line);color:var(--green)}
+.chat-empty{text-align:center;padding:32px 0 20px}
+.chat-empty .brand-mark{margin:0 auto 18px;width:60px;height:60px;border-radius:20px}
+.chat-empty h2{font-size:25px}
+.chat-empty p{max-width:390px;margin:0 auto 23px}
+.chat-empty .prompt-list{text-align:left;max-width:440px;margin:auto}
+.messages{display:flex;flex-direction:column;gap:24px}
+.message{max-width:92%;min-width:0;align-self:flex-start}
+.message.user{align-self:flex-end;max-width:85%}
+.message-label{display:block;font-size:11px;color:var(--muted);margin:0 0 8px 3px;font-weight:600}
+.bubble{padding:16px 18px;background:white;border:1px solid var(--line);
+border-radius:4px 19px 19px 19px;font-size:14px;line-height:1.8;overflow-wrap:anywhere}
+.user .bubble{background:var(--green);color:white;border:0;
+border-radius:19px 4px 19px 19px;white-space:pre-wrap}
+.answer{overflow:auto}
+.answer p{margin:0 0 12px}
+.answer p:last-child{margin-bottom:0}
+.answer ul,.answer ol{padding-left:22px}
+.answer pre{overflow:auto;background:var(--bg);padding:12px;border-radius:8px}
+.answer table{border-collapse:collapse;font-size:12px;min-width:100%}
+.answer th,.answer td{padding:9px;border:1px solid var(--line);text-align:left}
+.answer th{background:var(--mint)}
+.answer h1,.answer h2,.answer h3{font-size:17px;letter-spacing:0;margin:15px 0 9px}
+.sources{border-top:1px solid var(--line);margin-top:14px;padding-top:12px;
+display:flex;gap:7px;flex-wrap:wrap}
+.sources small{width:100%;font-weight:700;color:var(--muted)}
+.source{font-size:11px;padding:5px 8px;border-radius:7px;background:var(--mint);
+text-decoration:none;overflow-wrap:anywhere;max-width:100%}
+.message-tools{display:flex;gap:8px;margin-top:8px}
+.message-tools button{display:flex;align-items:center;gap:6px;
+min-height:40px;padding:7px 10px;color:var(--green);background:transparent;
+border-radius:9px;font-size:11px}
+.message-tools .icon{font-size:18px}
+.error .bubble{border-color:#efd3ca;background:#fff6f2;color:#8f3e26}
+.loading{font-size:13px;color:var(--muted);display:flex;align-items:center;gap:9px}
+.loading:before{content:"";height:8px;width:8px;background:var(--green);border-radius:50%;
+animation:pulse 1s infinite alternate}
+.composer{flex-shrink:0;background:var(--bg);padding:10px 24px 12px}
+.composer-inner{max-width:732px;margin:auto}
+.input-wrap{display:flex;align-items:flex-end;gap:8px;border:1px solid var(--line);
+padding:8px;border-radius:20px;background:white;box-shadow:0 6px 25px #173f2010}
+.input-wrap:focus-within{border-color:#69a88b}
+.input-wrap textarea{resize:none;flex:1;min-width:0;max-height:120px;
+padding:11px 3px;border:0;background:transparent;outline:none;font-size:16px;line-height:1.5}
+.input-wrap .icon-button{border:0;background:var(--mint);flex-shrink:0}
+.input-wrap .send{background:var(--green);color:white}
+.composer-hint{text-align:center;font-size:10px;color:var(--muted);margin:8px 0 0}
+.card{background:white;border:1px solid var(--line);padding:22px;border-radius:var(--radius);margin-top:20px}
+fieldset{padding:0;margin:0 0 25px;border:0;min-width:0}
+legend{font-size:14px;font-weight:700;margin-bottom:8px}
+.chips{display:flex;flex-wrap:wrap;gap:9px}
+.choice{display:inline-flex;align-items:center;gap:8px;padding:11px 13px;
+border:1px solid var(--line);border-radius:12px;font-size:12px;cursor:pointer;min-height:44px}
+.choice:has(input:checked){background:var(--mint);border-color:#80b59a;color:var(--green)}
+.choice input{accent-color:var(--green);width:16px;height:16px;margin:0}
+.full{width:100%}
+.voice-page{text-align:center;max-width:620px}
+.voice-page .eyebrow{margin-top:20px}
+.voice-circle{width:112px;height:112px;margin:30px auto;border-radius:50%;
+display:grid;place-items:center;background:var(--green);color:white;
+box-shadow:0 0 0 15px var(--mint)}
+.voice-circle .icon{font-size:40px}
+.voice-circle.recording{animation:pulse 1s infinite alternate;box-shadow:0 0 0 20px #c9ebd7}
+.voice-text{width:100%;min-height:115px;resize:vertical;background:var(--bg);
+border:1px solid var(--line);border-radius:13px;padding:14px;font-size:16px;line-height:1.7;color:var(--ink)}
+.voice-label{text-align:left;display:block;font-size:12px;font-weight:700;margin-bottom:10px}
+.dest-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;margin-top:22px}
+.dest-card{text-align:left;padding:0;background:white;border:1px solid var(--line);
+border-radius:20px;overflow:hidden;color:var(--ink)}
+.dest-art{height:145px;background:linear-gradient(140deg,#d8ebdf,#eff6ec);
+display:grid;place-items:center;color:var(--green);overflow:hidden}
+.dest-art .icon{font-size:56px}
+.dest-copy{padding:18px}
+.dest-copy h3{line-height:1.4;font-size:16px;margin:10px 0}
+.dest-copy p{font-size:12px;margin:0}
+.detail-title{font-size:32px}
+.detail-tabs{display:flex;overflow:auto;border-bottom:1px solid var(--line);gap:12px;margin:22px 0 16px}
+.detail-tabs button{white-space:nowrap;padding:13px 4px;min-height:46px;
+background:transparent;color:var(--muted);font-size:12px;border-bottom:2px solid transparent}
+.detail-tabs button[aria-pressed=true]{color:var(--green);border-color:var(--green);font-weight:700}
+#detail-body{min-height:100px}
+.toast{position:fixed;z-index:100;left:50%;transform:translateX(-50%);
+top:85px;max-width:calc(100% - 32px);width:max-content;background:var(--ink);
+color:white;padding:13px 18px;border-radius:14px;font-size:12px;box-shadow:0 8px 30px #0002}
+@keyframes pulse{to{opacity:.55}}
+@media(min-width:760px){
+  .header{padding-left:34px;padding-right:34px}
+  .page{padding-top:32px}
+  .home-intro{display:grid;grid-template-columns:1fr 1fr;gap:28px;align-items:center}
+  .hero{margin:0;min-height:325px;order:2}
+  .home-copy h1{font-size:38px}
+  .home-copy .actions{flex-direction:column}
+  .nav{justify-content:center;gap:12px}
+  .nav button{max-width:130px;font-size:11px}
+}
+@media(max-width:420px){
+  .header{padding-left:16px;padding-right:16px}
+  .page{padding:22px 18px 28px}
+  .hero{min-height:200px}
+  .actions .button{padding:12px;font-size:12px}
+  .dest-grid{grid-template-columns:1fr}
+  .dest-card{display:flex}
+  .dest-art{height:auto;width:100px;flex-shrink:0}
+  .dest-copy{padding:15px}
+  .composer{padding:8px 12px 10px}
+  .card{padding:18px}
+}
+@media(prefers-reduced-motion:reduce){
+  *,*:before,*:after{animation:none!important;scroll-behavior:auto!important}
+}
+</style>
 </head>
-<body class="bg-gray-100 text-ink flex justify-center selection:bg-leaf selection:text-white min-h-screen">
-<div class="relative w-full max-w-[410px] min-h-screen bg-paper flex flex-col justify-between overflow-x-hidden shadow-2xl border-x border-gray-200">
 
-<!-- COMPACT FROSTED NAV BAR -->
-<header class="sticky top-0 z-40 w-full bg-white/75 backdrop-blur-xl border-b border-ink/[0.06] pt-safe px-4 pb-2.5">
-<div class="flex items-center justify-between gap-2">
-<div class="flex items-center gap-2.5">
-<img src="Cuplikan layar 2026-09-23 135856.png" alt="Logo" class="w-[30px] h-[30px] shrink-0 object-contain"/>
-<div>
-<div class="flex items-baseline gap-1 leading-none">
-<span class="font-bold text-[15px] tracking-tight text-ink">Wisata Batam</span>
-<span class="font-bold text-[11px] text-leaf">ai</span>
-</div>
-<span class="text-[11px] text-ink/45 flex items-center gap-1.5 mt-1 font-medium">
-<span class="w-1.5 h-1.5 rounded-full bg-leaf animate-pulse"></span>
-<span data-i18n="headerStatus">Live Assistant • Kepri</span>
-</span>
-</div>
-</div>
-<div class="flex items-center gap-0.5 bg-ink/[0.05] rounded-full p-1 shrink-0">
-<button class="px-2.5 py-1 rounded-full text-[11px] font-bold bg-white text-ink shadow-sm transition-all" id="btn-lang-id" type="button">ID</button>
-<button class="px-2.5 py-1 rounded-full text-[11px] font-semibold text-ink/40 hover:text-ink transition-all" id="btn-lang-en" type="button">EN</button>
-</div>
-</div>
-</header>
-
-<main class="flex-1 relative z-10 flex flex-col pb-44">
-<!-- TAB 1: WELCOME SCREEN -->
-<section class="screen-pane active-state flex-col w-full" id="screen-welcome">
-<div class="relative w-full h-[244px] overflow-hidden rounded-b-[28px]">
-<img alt="Nongsa Batam" class="w-full h-full object-cover" src="image_02fa79.jpg"/>
-<div class="absolute inset-0 bg-gradient-to-t from-ink/55 via-ink/0 to-ink/10"></div>
-<div class="absolute top-4 right-4 px-3 py-1.5 rounded-full bg-white/25 backdrop-blur-md border border-white/30 text-[11px] font-semibold text-white flex items-center gap-1.5">
-<span class="material-symbols-outlined text-[14px] text-sysorange icon-fill">wb_sunny</span>
-<span data-i18n="weatherTag">29°C Tropis Nongsa</span>
-</div>
-</div>
-<div class="px-5 pt-5 pb-2 flex flex-col gap-3">
-<h1 class="text-[30px] leading-[1.12] font-extrabold tracking-tight text-ink" data-i18n="welcomeTitle">
-          Mau menjelajah Batam ke mana hari ini?
-        </h1>
-<p class="text-[14.5px] text-ink/55 leading-relaxed" data-i18n="welcomeDesc">
-          Rekomendasi pantai eksotis, seafood Barelang legendaris, feri internasional Singapura, hingga hidden gems kepulauan.
-        </p>
-<div class="flex items-center gap-2.5 mt-1.5">
-<button class="tap flex-1 py-3.5 px-4 rounded-2xl bg-leaf text-white font-bold text-sm flex items-center justify-center gap-2 shadow-glow-green" id="btn-start-chat">
-<span class="material-symbols-outlined text-[18px]">chat_bubble</span>
-<span data-i18n="btnStartChat">Mulai Percakapan</span>
-</button>
-<button class="tap w-[52px] h-[52px] rounded-2xl bg-mint flex items-center justify-center text-leaf shrink-0" id="btn-quick-voice">
-<span class="material-symbols-outlined text-[22px]">mic</span>
-</button>
-</div>
-</div>
-
-<div class="flex flex-col px-5 pt-5">
-<span class="text-[12px] text-ink/45 font-semibold mb-1" data-i18n="quickPromptsTitle">Inspirasi Pertanyaan</span>
-<div class="flex flex-col divide-y divide-ink/[0.06]" id="prompt-list">
-<button class="tap prompt-chip group w-full py-4 flex items-center justify-between gap-3.5 text-left" data-prompt-id="p1">
-<div class="flex items-center gap-3.5">
-<div class="w-10 h-10 rounded-full bg-mint text-leaf flex items-center justify-center shrink-0">
-<span class="material-symbols-outlined text-[19px]">surfing</span>
-</div>
-<span class="text-[14.5px] text-ink font-semibold leading-snug" data-i18n="p1Label">
-                  Rekomendasikan pantai tenang & estetik di Nongsa
-                </span>
-</div>
-<span class="material-symbols-outlined text-ink/25 group-hover:text-leaf group-hover:translate-x-0.5 text-[18px] transition-all shrink-0">chevron_right</span>
-</button>
-<button class="tap prompt-chip group w-full py-4 flex items-center justify-between gap-3.5 text-left" data-prompt-id="p2">
-<div class="flex items-center gap-3.5">
-<div class="w-10 h-10 rounded-full bg-sysblue/10 text-sysblue flex items-center justify-center shrink-0">
-<span class="material-symbols-outlined text-[19px]">map</span>
-</div>
-<span class="text-[14.5px] text-ink font-semibold leading-snug" data-i18n="p2Label">
-                  Itinerary 1 hari trip keliling Batam paling optimal
-                </span>
-</div>
-<span class="material-symbols-outlined text-ink/25 group-hover:text-sysblue group-hover:translate-x-0.5 text-[18px] transition-all shrink-0">chevron_right</span>
-</button>
-<button class="tap prompt-chip group w-full py-4 flex items-center justify-between gap-3.5 text-left" data-prompt-id="p3">
-<div class="flex items-center gap-3.5">
-<div class="w-10 h-10 rounded-full bg-sysorange/10 text-sysorange flex items-center justify-center shrink-0">
-<span class="material-symbols-outlined text-[19px]">restaurant</span>
-</div>
-<span class="text-[14.5px] text-ink font-semibold leading-snug" data-i18n="p3Label">
-                  Kuliner seafood gonggong legendaris di Barelang
-                </span>
-</div>
-<span class="material-symbols-outlined text-ink/25 group-hover:text-sysorange group-hover:translate-x-0.5 text-[18px] transition-all shrink-0">chevron_right</span>
-</button>
-</div>
-</div>
-</section>
-
-<!-- TAB 2: ACTIVE CHAT SCREEN -->
-<section class="screen-pane hidden-state flex-col gap-4 w-full px-4 pt-4" id="screen-chat">
-<div class="flex items-center justify-between pb-3 border-b border-ink/[0.06]">
-<button class="tap flex items-center gap-1.5 text-ink/50 hover:text-ink text-xs font-bold" id="btn-back-from-chat">
-<span class="material-symbols-outlined text-[18px]">arrow_back</span>
-<span data-i18n="backHome">Kembali</span>
-</button>
-<div class="flex items-center gap-1.5 text-[11px] text-leaf font-semibold">
-<span class="material-symbols-outlined text-[15px] icon-fill">verified</span>
-<span data-i18n="chatTrustHeader">Data Disbudpar Batam</span>
-</div>
-</div>
-<div class="flex flex-col gap-4" id="chat-messages-container">
-<!-- Intro Bubble AI -->
-<div class="flex flex-col gap-1.5 w-full mb-4">
-  <div class="flex items-center px-1">
-    <div class="flex items-center gap-2">
-      <div class="w-6 h-6 rounded-full bg-mint flex items-center justify-center shrink-0">
-        <svg width="12" height="12" viewBox="0 0 34 34" fill="none"><circle cx="17" cy="17" r="17" fill="#17B268"/><path d="M9.5 21C9.5 13.8 15 9 24.5 9C24.5 19.2 18.8 24.2 9.5 21Z" fill="#FFFFFF"/></svg>
+<body>
+<div class="app">
+  <header class="header">
+    <div class="brand">
+      <span class="brand-mark" aria-hidden="true"><span class="icon">travel_explore</span></span>
+      <div>
+        <strong>Wisata Batam <span class="ai">AI</span></strong>
+        <small data-t="brandSub"></small>
       </div>
-      <span class="text-[11px] font-bold text-ink/45">Wisata Batam AI</span>
     </div>
-  </div>
-  <div class="rounded-2xl rounded-tl-sm bg-mist p-4 w-fit max-w-[90%]">
-    <p class="text-[14.5px] leading-relaxed text-ink font-medium" data-i18n="chatIntro">Halo! Silakan ketik pertanyaan Anda di bawah, saya siap membantu panduan wisata Batam Anda.</p>
-  </div>
-</div>
-</div>
-</section>
+    <div class="language" aria-label="Language">
+      <button type="button" data-lang="ID" aria-label="Bahasa Indonesia">ID</button>
+      <button type="button" data-lang="EN" aria-label="English">EN</button>
+    </div>
+  </header>
 
-<!-- TAB 3: VOICE MODAL -->
-<section class="screen-pane hidden-state flex-col items-center justify-center gap-6 w-full py-10 px-4 text-center" id="screen-voice">
-<div class="w-full flex justify-end">
-<button class="tap w-10 h-10 rounded-full bg-mist flex items-center justify-center text-ink/50 hover:text-ink" id="btn-close-voice">
-<span class="material-symbols-outlined text-[20px]">close</span>
-</button>
-</div>
-<div class="flex flex-col items-center gap-3">
-<span class="text-[12px] text-leaf font-semibold flex items-center gap-1.5" data-i18n="voiceModeBadge">
-<span class="w-1.5 h-1.5 rounded-full bg-leaf"></span>
-            Batam Voice Assistant
-          </span>
-<h2 class="text-[27px] font-extrabold text-ink tracking-tight" data-i18n="voiceHeading" id="voice-heading-text">
-            Silakan bicara...
-          </h2>
-<p class="text-sm text-ink/50 max-w-[250px] leading-relaxed mt-1" data-i18n="voiceSub" id="voice-subtitle">
-            "Mau cari penginapan di Nongsa atau tempat kuliner seafood?"
-          </p>
-</div>
-<div class="relative flex items-center justify-center my-8">
-<div class="absolute w-40 h-40 rounded-full bg-leaf/15 animate-ping pointer-events-none"></div>
-<div class="absolute w-32 h-32 rounded-full bg-leaf/20 blur-xl pointer-events-none"></div>
-<button class="tap relative w-24 h-24 rounded-full bg-leaf text-white flex items-center justify-center shadow-glow-green" id="voice-mic-main">
-<span class="material-symbols-outlined text-[38px]">mic</span>
-</button>
-</div>
-<div class="p-4 rounded-2xl bg-mist w-full max-w-xs text-sm text-ink leading-relaxed">
-<span class="text-leaf font-bold mr-1">RAG STT:</span>
-<span class="italic text-ink/55" data-i18n="voiceListeningStatus" id="voice-transcript-text">
-            Mendengarkan suara Anda dalam Bahasa Indonesia / English...
-          </span>
-</div>
-<button class="tap mt-4 text-xs font-bold text-ink/50 hover:text-ink px-5 py-2.5 rounded-full bg-mist" data-i18n="voiceCancel" id="btn-cancel-voice">
-          Batalkan
+  <main id="main">
+    <section class="page" id="home">
+      <div class="home-intro">
+        <div class="hero">
+          <img src="image_02fa79.jpg" alt="" onerror="this.hidden=true">
+          <div class="hero-caption">
+            <span class="tag"><span class="icon" style="font-size:15px">location_on</span> Batam, Kepulauan Riau</span>
+            <strong data-t="heroTitle"></strong>
+            <p data-t="heroSub"></p>
+          </div>
+        </div>
+        <div class="home-copy">
+          <p class="eyebrow" data-t="eyebrow"></p>
+          <h1 data-t="welcome"></h1>
+          <p class="muted" data-t="welcomeSub"></p>
+          <div class="actions">
+            <button class="button primary" data-go="chat">
+              <span class="icon">chat_bubble</span><span data-t="start"></span>
+            </button>
+            <button class="button secondary" data-go="voice">
+              <span class="icon">mic</span><span data-t="useVoice"></span>
+            </button>
+          </div>
+        </div>
+      </div>
+      <div class="section-heading"><h3 data-t="inspiration"></h3><span class="tag" data-t="try"></span></div>
+      <div class="prompt-list" id="home-prompts"></div>
+      <div class="note">
+        <strong data-t="personalTitle"></strong><br>
+        <span data-t="personalSub"></span>
+        <button class="text-button" data-go="prefs" data-t="setPrefs"></button>
+      </div>
+    </section>
+
+    <section class="page" id="chat" hidden>
+      <div class="page-top">
+        <h2 data-t="chat"></h2>
+        <span class="tag"><span class="icon" style="font-size:16px">auto_awesome</span> Wisata Batam AI</span>
+      </div>
+      <div class="chat-empty" id="chat-empty">
+        <div class="brand-mark"><span class="icon">forum</span></div>
+        <h2 data-t="hello"></h2>
+        <p class="muted" data-t="intro"></p>
+        <div class="prompt-list" id="chat-prompts"></div>
+      </div>
+      <div class="messages" id="messages" role="log" aria-live="polite" aria-relevant="additions"></div>
+    </section>
+
+    <section class="page voice-page" id="voice" hidden>
+      <p class="eyebrow" data-t="voiceBadge"></p>
+      <h1 style="font-size:32px" data-t="voiceTitle"></h1>
+      <p class="muted" id="voice-status" role="status"></p>
+      <span class="tag" id="voice-language"></span>
+      <button class="voice-circle" id="record" type="button"><span class="icon">mic</span></button>
+      <p class="small muted" id="record-label"></p>
+      <div class="card">
+        <label for="transcript" class="voice-label" data-t="transcript"></label>
+        <textarea id="transcript" class="voice-text"></textarea>
+        <p class="small muted" style="text-align:left;margin:9px 0 16px" data-t="reviewVoice"></p>
+        <div class="actions">
+          <button class="button secondary" id="repeat" data-t="repeat"></button>
+          <button class="button primary" id="send-voice" disabled>
+            <span class="icon">arrow_upward</span><span data-t="send"></span>
+          </button>
+        </div>
+      </div>
+      <button class="text-button" data-go="chat" style="margin-top:15px" data-t="useText"></button>
+    </section>
+
+    <section class="page" id="prefs" hidden>
+      <p class="eyebrow" data-t="yourTrip"></p>
+      <h1 style="font-size:32px" data-t="prefsTitle"></h1>
+      <p class="muted" data-t="prefsSub"></p>
+      <form class="card" id="prefs-form">
+        <fieldset>
+          <legend data-t="interests"></legend>
+          <p class="small muted" data-t="multiple"></p>
+          <div class="chips" id="interest-options"></div>
+        </fieldset>
+        <fieldset>
+          <legend data-t="duration"></legend>
+          <div class="chips" id="duration-options"></div>
+        </fieldset>
+        <button class="button primary full" type="submit">
+          <span class="icon">check_circle</span><span data-t="save"></span>
         </button>
-</section>
+      </form>
+      <p class="small muted" style="margin-top:15px" data-t="prefsNote"></p>
+    </section>
 
-<!-- TAB 4: PREFERENCES SCREEN -->
-<section class="screen-pane hidden-state flex-col gap-5 w-full px-4 pt-4" id="screen-pref">
-<div>
-<h2 class="text-[24px] font-extrabold tracking-tight text-ink" data-i18n="prefHeading">Biar rekomendasinya lebih cocok</h2>
-<p class="text-sm text-ink/50 mt-1.5 leading-relaxed" data-i18n="prefSub">
-            AI akan memprioritaskan rekomendasi berdasarkan preferensi liburan Anda di Batam.
-          </p>
-</div>
-<div class="flex flex-col gap-2.5">
-<span class="text-[12px] font-semibold text-ink/45" data-i18n="prefCategoryInterest">Minat Utama</span>
-<div class="flex flex-wrap gap-2" id="group-interests">
-<button class="pref-chip active px-4 py-2.5 rounded-full bg-leaf text-white font-semibold text-[12.5px] transition-all flex items-center gap-2" data-val="alam">
-<span data-i18n="prefNature">🌴 Alam & Mangrove</span>
-</button>
-<button class="pref-chip active px-4 py-2.5 rounded-full bg-leaf text-white font-semibold text-[12.5px] transition-all flex items-center gap-2" data-val="kuliner">
-<span data-i18n="prefFood">🍜 Kuliner Seafood</span>
-</button>
-<button class="pref-chip px-4 py-2.5 rounded-full bg-mist text-ink/50 font-medium text-[12.5px] transition-all flex items-center gap-2" data-val="budaya">
-<span data-i18n="prefCulture">🏛️ Budaya & Sejarah</span>
-</button>
-</div>
-</div>
-<div class="flex flex-col gap-2.5 mt-2">
-<span class="text-[12px] font-semibold text-ink/45" data-i18n="prefCategoryDuration">Durasi Waktu</span>
-<div class="grid grid-cols-3 gap-1 p-1 rounded-2xl bg-mist" id="group-duration">
-<button class="pref-single px-2 py-2.5 rounded-xl text-ink/50 font-medium text-[12.5px] text-center transition-all" data-i18n="durHours" data-val="hours">Beberapa Jam</button>
-<button class="pref-single active px-2 py-2.5 rounded-xl bg-white text-ink font-semibold text-[12.5px] text-center shadow-sm transition-all" data-i18n="dur1Day" data-val="1day">1 Hari Penuh</button>
-<button class="pref-single px-2 py-2.5 rounded-xl text-ink/50 font-medium text-[12.5px] text-center transition-all" data-i18n="durMulti" data-val="multiday">2 - 3 Hari</button>
-</div>
-</div>
-<div class="pt-4">
-<button class="tap w-full py-4 px-4 rounded-2xl bg-leaf text-white font-bold text-sm shadow-glow-green flex items-center justify-center gap-2" id="btn-save-pref">
-<span class="material-symbols-outlined text-[20px] icon-fill">check_circle</span>
-<span data-i18n="btnSavePref">Simpan Preferensi</span>
-</button>
-</div>
-</section>
+    <section class="page" id="destinations" hidden>
+      <p class="eyebrow" data-t="explore"></p>
+      <h1 style="font-size:32px" data-t="destTitle"></h1>
+      <p class="muted" data-t="destSub"></p>
+      <div class="dest-grid" id="dest-list"></div>
+    </section>
 
-<!-- TAB 5: DESTINATION DETAIL SCREEN -->
-<section class="screen-pane hidden-state flex-col w-full" id="screen-detail" data-current-dest="pandang-tak-jemu">
-<div class="relative w-full h-56 overflow-hidden rounded-b-[28px]">
-<img alt="Destination Photo" class="w-full h-full object-cover" id="detail-hero-img" src=""/>
-<div class="absolute inset-0 bg-gradient-to-t from-ink/85 via-ink/20 to-transparent"></div>
-<button class="tap absolute top-4 left-4 w-10 h-10 rounded-full bg-white/25 backdrop-blur-md border border-white/30 flex items-center justify-center text-white" id="btn-back-from-detail">
-<span class="material-symbols-outlined text-[20px]">arrow_back</span>
-</button>
-<div class="absolute bottom-5 left-5 right-5 flex items-end justify-between">
-<div>
-<span class="px-2.5 py-1 rounded-full bg-white/20 backdrop-blur-sm text-white text-[10px] font-semibold" id="detail-category-badge"></span>
-<h2 class="text-[21px] font-extrabold text-white leading-tight mt-1.5" id="detail-title"></h2>
-<div class="flex items-center gap-2 text-xs text-white/85 mt-1.5">
-<span class="flex items-center text-sysorange gap-0.5 font-bold">
-<span class="material-symbols-outlined text-[14px] icon-fill">star</span>4.8
-                </span>
-<span>•</span>
-<span class="flex items-center gap-1 font-medium">
-<span class="material-symbols-outlined text-[14px]">location_on</span><span id="detail-location"></span>
-                </span>
-</div>
-</div>
-</div>
-</div>
-<div class="flex flex-col gap-4 px-4 pt-4">
-<div class="p-4 rounded-2xl bg-mist flex items-start gap-3">
-<div class="w-8 h-8 rounded-full bg-white text-leaf flex items-center justify-center shrink-0 mt-0.5">
-<span class="material-symbols-outlined text-[18px]">auto_awesome</span>
-</div>
-<div class="flex-1">
-<span class="text-[11px] font-semibold text-leaf" data-i18n="detailWhyYou">Kenapa cocok untukmu?</span>
-<p class="text-[13px] text-ink font-medium leading-relaxed mt-1" data-i18n="detailMatchText" id="detail-match-reason">
-              Sesuai preferensi alam & trip santai: suasana teduh mangrove tanpa hiruk-pikuk kota.
-            </p>
-</div>
-</div>
-<div class="flex items-center gap-4 border-b border-ink/[0.06] text-xs font-semibold">
-<button class="detail-subtab active pb-2.5 pt-1 text-[12.5px] font-semibold text-ink border-b-2 border-leaf text-center transition-all" data-i18n="subAbout" data-tab="about">Tentang</button>
-<button class="detail-subtab pb-2.5 pt-1 text-[12.5px] font-medium text-ink/45 border-b-2 border-transparent text-center transition-all hover:text-ink" data-i18n="subFacility" data-tab="facility">Fasilitas</button>
-<button class="detail-subtab pb-2.5 pt-1 text-[12.5px] font-medium text-ink/45 border-b-2 border-transparent text-center transition-all hover:text-ink" data-i18n="subAccess" data-tab="access">Akses</button>
-<button class="detail-subtab pb-2.5 pt-1 text-[12.5px] font-medium text-ink/45 border-b-2 border-transparent text-center transition-all hover:text-ink" data-i18n="subHours" data-tab="hours">Jam & Tiket</button>
-</div>
-<div class="pb-6 text-[13.5px] leading-relaxed text-ink/55 font-medium" id="detail-subtab-content">
-<p id="detail-body-text"></p>
-</div>
-</div>
-</section>
-</main>
+    <section class="page" id="detail" hidden>
+      <button class="text-button" data-go="destinations" style="padding-left:0">
+        <span aria-hidden="true">← </span><span data-t="backDest"></span>
+      </button>
+      <div class="dest-art" style="height:160px;border-radius:22px;margin:10px 0 24px" aria-hidden="true">
+        <span class="icon" id="detail-icon"></span>
+      </div>
+      <span class="tag" id="detail-category"></span>
+      <h1 class="detail-title" id="detail-title" style="margin-top:14px"></h1>
+      <p class="muted small">Batam, Kepulauan Riau</p>
+      <div class="detail-tabs" id="detail-tabs"></div>
+      <p id="detail-body" class="muted"></p>
+      <div class="actions">
+        <a class="button secondary" id="map-link" target="_blank" rel="noopener noreferrer">
+          <span class="icon">map</span><span data-t="map"></span>
+        </a>
+        <button class="button primary" id="ask-dest">
+          <span class="icon">chat_bubble</span><span data-t="askDest"></span>
+        </button>
+      </div>
+      <div class="note" data-t="dataNote"></div>
+    </section>
+  </main>
 
-<!-- DYNAMIC FLOATING INPUT ISLAND (FIXED FOR LAPTOP & MOBILE) -->
-<div class="fixed bottom-[84px] left-1/2 -translate-x-1/2 w-full max-w-[410px] z-50 flex justify-center px-4 pointer-events-none">
-<div class="w-full max-w-[378px] rounded-full bg-white border border-ink/[0.08] p-1.5 flex items-center gap-2 shadow-float transition-all focus-within:border-leaf/40 pointer-events-auto">
-<button aria-label="Bicara dengan suara" class="tap w-10 h-10 rounded-full bg-mint text-leaf flex items-center justify-center shrink-0" id="input-bar-mic">
-<span class="material-symbols-outlined text-[20px]">mic</span>
-</button>
-<input autocomplete="off" class="flex-1 bg-transparent border-0 text-sm text-ink font-medium placeholder:text-ink/35 focus:ring-0 px-2 py-2" id="main-chat-input" placeholder="Tanya tentang wisata Batam..." type="text"/>
-<button aria-label="Kirim pertanyaan" class="tap w-10 h-10 rounded-full bg-leaf text-white font-bold flex items-center justify-center shrink-0 shadow-md transition-transform opacity-70 hover:opacity-100" id="input-bar-send">
-<span class="material-symbols-outlined text-[20px]">arrow_upward</span>
-</button>
-</div>
-</div>
+  <form class="composer" id="composer" hidden>
+    <div class="composer-inner">
+      <div class="input-wrap">
+        <button class="icon-button" type="button" data-go="voice" id="composer-mic">
+          <span class="icon">mic</span>
+        </button>
+        <textarea id="input" rows="1" maxlength="4000"></textarea>
+        <button class="icon-button send" type="submit" id="send" disabled>
+          <span class="icon">arrow_upward</span>
+        </button>
+      </div>
+      <p class="composer-hint" data-t="chatHint"></p>
+    </div>
+  </form>
 
-<!-- BOTTOM TAB BAR (FIXED FOR LAPTOP & MOBILE) -->
-<nav class="fixed bottom-0 left-1/2 -translate-x-1/2 z-40 w-full max-w-[410px] bg-white/80 backdrop-blur-xl border-t border-ink/[0.06] pb-safe pt-2 px-2 flex items-stretch justify-around" id="screen-nav">
-<button class="nav-pill active tap flex flex-col items-center justify-center gap-0.5 flex-1 py-1.5 rounded-xl text-leaf" data-target="screen-welcome">
-<span class="material-symbols-outlined text-[22px] icon-fill">home</span>
-<span class="text-[10px] font-bold" data-i18n="tabWelcome">Welcome</span>
-</button>
-<button class="nav-pill tap flex flex-col items-center justify-center gap-0.5 flex-1 py-1.5 rounded-xl text-ink/35" data-target="screen-chat">
-<span class="material-symbols-outlined text-[22px]">forum</span>
-<span class="text-[10px] font-semibold" data-i18n="tabChat">Active Chat</span>
-</button>
-<button class="nav-pill tap flex flex-col items-center justify-center gap-0.5 flex-1 py-1.5 rounded-xl text-ink/35" data-target="screen-voice">
-<span class="material-symbols-outlined text-[22px]">mic</span>
-<span class="text-[10px] font-semibold" data-i18n="tabVoice">Voice Mode</span>
-</button>
-<button class="nav-pill tap flex flex-col items-center justify-center gap-0.5 flex-1 py-1.5 rounded-xl text-ink/35" data-target="screen-pref">
-<span class="material-symbols-outlined text-[22px]">tune</span>
-<span class="text-[10px] font-semibold" data-i18n="tabPref">Preferensi</span>
-</button>
-<button class="nav-pill tap flex flex-col items-center justify-center gap-0.5 flex-1 py-1.5 rounded-xl text-ink/35" data-target="screen-detail">
-<span class="material-symbols-outlined text-[22px]">place</span>
-<span class="text-[10px] font-semibold" data-i18n="tabDetail">Destinasi</span>
-</button>
-</nav>
-
-<!-- Notification Toast -->
-<div class="fixed top-20 left-1/2 -translate-x-1/2 z-50 pointer-events-none opacity-0 -translate-y-2 transition-all duration-300 px-4 py-2.5 rounded-full bg-ink text-[12px] font-bold text-white shadow-float flex items-center gap-2" id="toast">
-<span class="material-symbols-outlined text-[16px] text-leaf icon-fill">check_circle</span>
-<span id="toast-text">Preferensi tersimpan</span>
+  <nav class="nav" id="nav">
+    <button data-go="home"><span class="icon" aria-hidden="true">home</span><span data-t="home"></span></button>
+    <button data-go="chat"><span class="icon" aria-hidden="true">forum</span><span data-t="chat"></span></button>
+    <button data-go="voice"><span class="icon" aria-hidden="true">mic</span><span data-t="voice"></span></button>
+    <button data-go="prefs"><span class="icon" aria-hidden="true">tune</span><span data-t="prefs"></span></button>
+    <button data-go="destinations"><span class="icon" aria-hidden="true">location_on</span><span data-t="destinations"></span></button>
+  </nav>
 </div>
-</div>
+<div class="toast" id="toast" role="status" hidden></div>
 
 <script>
-    (function() {
-      let currentLanguage = 'ID';
-      let currentScreen = 'screen-welcome';
+(() => {
+  "use strict";
 
-      const destinationCatalog = {
-        'pandang-tak-jemu': {
-          img: 'image_02fa79.jpg',
-          ID: {
-            title: 'Pandang Tak Jemu (Kampung Terih)',
-            category: 'Ekowisata Pesisir',
-            location: 'Nongsa, Batam',
-            about: 'Desa wisata pesisir unggulan Batam yang mengusung konservasi hutan bakau seluas 3 hektar. Pengunjung dapat menikmati sensasi berjalan di jembatan titian kayu 200 meter.',
-            facility: 'Area parkir luas, musala, toilet bersih, serta spot foto alami yang estetik.',
-            access: '15 menit perjalanan dari Bandara Internasional Hang Nadim Batam menggunakan mobil atau motor.',
-            hours: 'Buka setiap hari: 08:00 - 18:30 WIB. Harga tiket masuk sangat terjangkau.'
-          },
-          EN: {
-            title: 'Pandang Tak Jemu (Terih Village)',
-            category: 'Coastal Ecotourism',
-            location: 'Nongsa, Batam',
-            about: 'Batam\'s premier coastal tourism village featuring 3 hectares of mangrove conservation. Visitors can enjoy walking along the 200-meter wooden bridge.',
-            facility: 'Spacious parking area, prayer room, clean toilets, and aesthetic natural photo spots.',
-            access: '15 minutes drive from Hang Nadim International Airport by car or motorcycle.',
-            hours: 'Open daily: 08:00 AM - 06:30 PM. Entrance fee is highly affordable.'
-          }
-        },
-        'barelang': {
-          img: 'https://images.unsplash.com/photo-1544426573-04dc39263a23?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80',
-          ID: {
-            title: 'Jembatan 1 Barelang',
-            category: 'Ikon Wisata Kepri',
-            location: 'Barelang, Batam',
-            about: 'Jembatan kabel-pancang megah sepanjang 642 meter yang menghubungkan Pulau Batam dan Pulau Tonton, ikon kebanggaan kota Batam.',
-            facility: 'Pusat suvenir lokal, deretan penjual jagung bakar, dan area parkir di sekitar jembatan.',
-            access: 'Sekitar 35 menit berkendara dari pusat kota Batam Center.',
-            hours: 'Buka 24 jam untuk umum. Waktu terbaik berkunjung adalah sore hari saat matahari terbenam.'
-          },
-          EN: {
-            title: 'Barelang 1st Bridge',
-            category: 'Kepri Tourism Icon',
-            location: 'Barelang, Batam',
-            about: 'A magnificent 642-meter cable-stayed bridge connecting Batam and Tonton Islands, the proud icon of Batam city.',
-            facility: 'Local souvenir center, stalls selling roasted corn, and parking areas near the bridge.',
-            access: 'About 35 minutes drive from Batam Center downtown.',
-            hours: 'Open 24 hours to the public. Best visited during the afternoon for sunset.'
-          }
+  const API_URL = "https://wisatabatam-backend-production.up.railway.app/api/chat/";
+  const $ = id => document.getElementById(id);
+  const storage = {
+    get(key, fallback = null) {
+      try { return localStorage.getItem(key) ?? fallback; }
+      catch { return fallback; }
+    },
+    set(key, value) {
+      try { localStorage.setItem(key, value); return true; }
+      catch { return false; }
+    }
+  };
+
+  const words = {
+    brandSub:["Asisten perjalanan Anda","Your travel companion"],
+    home:["Beranda","Home"],chat:["Percakapan","Chat"],voice:["Suara","Voice"],
+    prefs:["Preferensi","Preferences"],destinations:["Destinasi","Places"],
+    heroTitle:["Ada cerita di setiap sudut.","A story around every corner."],
+    heroSub:["Mulai perjalanan Anda di Batam.","Begin your journey in Batam."],
+    eyebrow:["Kenali Batam lebih dekat","Discover more of Batam"],
+    welcome:["Mau jelajah Batam ke mana?","Where to next in Batam?"],
+    welcomeSub:["Temukan wisata alam, kuliner, dan ide perjalanan sesuai minat Anda.",
+      "Discover nature, local food, and travel ideas that fit your interests."],
+    start:["Mulai percakapan","Start a conversation"],
+    useVoice:["Tanya lewat suara","Ask by voice"],
+    inspiration:["Mulai dari rasa penasaran","Start with a little curiosity"],
+    try:["Coba tanyakan","Try asking"],
+    personalTitle:["Perjalanan Anda, pilihan Anda.","Your trip, your interests."],
+    personalSub:["Atur minat dan durasi kunjungan untuk melengkapi pertanyaan Anda.",
+      "Add your interests and trip duration to your questions."],
+    setPrefs:["Atur preferensi →","Set preferences →"],
+    hello:["Halo, mau ke mana hari ini?","Hello! Where shall we go today?"],
+    intro:["Tanyakan destinasi, kuliner, atau rencana perjalanan. Kita mulai dari yang Anda suka.",
+      "Ask about places, local food, or an itinerary. Let's start with what you enjoy."],
+    voiceBadge:["Percakapan suara","Voice conversation"],
+    voiceTitle:["Ceritakan rencana Anda.","Tell us your travel plans."],
+    ready:["Ketuk mikrofon untuk mulai berbicara.","Tap the microphone to start speaking."],
+    listening:["Mendengarkan… silakan bicara.","Listening… go ahead."],
+    starting:["Membuka mikrofon…","Opening microphone…"],
+    review:["Ucapan selesai. Periksa teks sebelum dikirim.","Finished listening. Review the text before sending."],
+    noSpeech:["Belum ada ucapan yang tertangkap. Silakan coba lagi.","No speech detected. Please try again."],
+    denied:["Akses mikrofon belum diizinkan. Izinkan melalui pengaturan browser atau gunakan teks.",
+      "Microphone access was denied. Allow access in browser settings or use text."],
+    voiceError:["Rekaman belum berhasil. Periksa mikrofon dan koneksi, lalu coba lagi.",
+      "Recording failed. Check your microphone and connection, then try again."],
+    unsupported:["Browser ini belum mendukung pengenalan suara. Gunakan percakapan teks.",
+      "This browser does not support speech recognition. Please use text chat."],
+    voiceLang:["Bahasa suara: Indonesia","Voice language: English"],
+    record:["Mulai merekam","Start recording"],stopRecord:["Selesai bicara","Finish speaking"],
+    transcript:["Hasil ucapan","Your transcript"],
+    transcriptPlaceholder:["Ucapan Anda akan muncul di sini…","Your words will appear here…"],
+    reviewVoice:["Anda dapat mengedit hasil ucapan sebelum mengirimnya.",
+      "You can edit the transcript before sending it."],
+    repeat:["Ulangi","Try again"],send:["Kirim","Send"],useText:["Gunakan teks saja","Use text instead"],
+    yourTrip:["Rencanakan sesuka Anda","Make it your own"],
+    prefsTitle:["Biar lebih sesuai selera.","A trip that feels like you."],
+    prefsSub:["Pilih minat dan durasi kunjungan untuk disertakan dalam pertanyaan berikutnya.",
+      "Choose interests and a trip duration to include with your next questions."],
+    interests:["Minat wisata","Travel interests"],multiple:["Boleh pilih lebih dari satu.","Choose as many as you like."],
+    duration:["Durasi kunjungan","Trip duration"],save:["Simpan preferensi","Save preferences"],
+    prefsNote:["Preferensi disimpan di browser ini. Anda bisa mengubahnya kapan saja.",
+      "Preferences are stored in this browser. You can change them anytime."],
+    saved:["Preferensi tersimpan.","Preferences saved."],
+    temporary:["Preferensi digunakan untuk sesi ini. Penyimpanan browser tidak tersedia.",
+      "Preferences will apply for this session. Browser storage is unavailable."],
+    explore:["Ide untuk perjalanan Anda","Ideas for your journey"],
+    destTitle:["Kenali destinasi Batam.","Discover places in Batam."],
+    destSub:["Pilih tempat untuk melihat informasi dan bertanya lebih lanjut.",
+      "Choose a place to explore its details and ask more questions."],
+    backDest:["Daftar destinasi","All destinations"],
+    about:["Tentang","About"],facility:["Fasilitas","Facilities"],
+    access:["Akses","Getting there"],hours:["Jam & tiket","Hours & tickets"],
+    map:["Buka peta","Open map"],askDest:["Tanyakan ke AI","Ask the AI"],
+    dataNote:["Informasi awal dari katalog aplikasi. Sumber terverifikasi, jam operasional, fasilitas, dan harga tiket masih perlu dilengkapi.",
+      "Initial information from the app catalog. Verified sources, opening hours, facilities, and ticket prices still need to be added."],
+    pendingFacility:["Daftar fasilitas terverifikasi belum tersedia. Konfirmasikan kebutuhan Anda kepada pengelola sebelum berkunjung.",
+      "A verified facilities list is not yet available. Confirm your needs with the operator before visiting."],
+    pendingHours:["Jam operasional dan harga tiket terverifikasi belum tersedia. Konfirmasikan kepada pengelola sebelum berkunjung.",
+      "Verified opening hours and ticket prices are not yet available. Confirm with the operator before visiting."],
+    accessText:["Gunakan tombol Buka peta untuk mencari lokasi dan menyusun rute dari titik keberangkatan Anda.",
+      "Use Open map to find the location and plan a route from your starting point."],
+    input:["Tanya tentang wisata Batam…","Ask about Batam…"],
+    chatHint:["Periksa sumber dan konfirmasikan informasi kunjungan yang dapat berubah.",
+      "Check sources and confirm travel details that may change."],
+    thinking:["Sedang menyiapkan jawaban…","Preparing your answer…"],
+    failed:["Jawaban belum berhasil dimuat. Silakan coba lagi.","The answer could not be loaded. Please try again."],
+    timeout:["Server membutuhkan waktu lebih lama. Silakan coba lagi.","The server took too long to respond. Please try again."],
+    retry:["Coba lagi","Try again"],you:["Anda","You"],
+    sources:["Sumber jawaban","Answer sources"],source:["Sumber","Source"],
+    listen:["Dengarkan","Listen"],stop:["Hentikan","Stop"],
+    ttsError:["Suara tidak tersedia. Silakan baca jawaban teks.","Speech is unavailable. Please read the text answer."],
+    navLabel:["Navigasi utama","Main navigation"],
+    askPlace:["Ceritakan tentang destinasi ini dan informasi apa yang perlu saya konfirmasikan sebelum berkunjung: ",
+      "Tell me about this destination and what I should confirm before visiting: "]
+  };
+
+  const prompts = [
+    {icon:"beach_access",label:["Pantai tenang untuk bersantai","A quiet beach to unwind"],
+      query:["Rekomendasikan pantai yang tenang di Nongsa, Batam.","Recommend quiet beaches in Nongsa, Batam."]},
+    {icon:"route",label:["Ide jalan-jalan sehari di Batam","Ideas for one day in Batam"],
+      query:["Bantu susun rencana perjalanan satu hari di Batam.","Help me plan a one-day itinerary in Batam."]},
+    {icon:"restaurant",label:["Mencicipi kuliner khas Batam","Discover local Batam food"],
+      query:["Apa kuliner khas Batam yang bisa saya coba dan di mana mencarinya?",
+        "What local Batam dishes should I try and where can I find them?"]}
+  ];
+  const interests = {
+    alam:["Alam & mangrove","Nature & mangroves"],
+    pantai:["Pantai","Beaches"],kuliner:["Kuliner","Food"],
+    budaya:["Budaya & sejarah","Culture & history"],belanja:["Belanja","Shopping"]
+  };
+  const durations = {
+    flexible:["Fleksibel","Flexible"],hours:["Beberapa jam","A few hours"],
+    "1day":["1 hari","1 day"],multiday:["2–3 hari","2–3 days"]
+  };
+  const places = [
+    {icon:"forest",name:["Pandang Tak Jemu (Kampung Terih)","Pandang Tak Jemu (Terih Village)"],
+      category:["Alam & mangrove","Nature & mangroves"],
+      about:["Destinasi wisata pesisir dan mangrove di Kampung Terih, Batam.",
+        "A coastal and mangrove destination in Kampung Terih, Batam."],
+      map:"Pandang Tak Jemu Kampung Terih Batam"},
+    {icon:"architecture",name:["Jembatan Barelang","Barelang Bridge"],
+      category:["Ikon Batam","Batam landmark"],
+      about:["Kawasan jembatan yang menjadi salah satu ikon wisata Batam.",
+        "A bridge area known as one of Batam's tourism landmarks."],
+      map:"Jembatan 1 Barelang Batam"}
+  ];
+
+  let lang = storage.get("wb_language") === "EN" ? "EN" : "ID";
+  let page = "home", busy = false, toastTimer, selectedPlace = 0, detailTab = "about";
+  let recognition = null, recording = false, voiceStatus = "ready", speaking = null;
+  let prefs = {interests:[],duration:"flexible"};
+  try {
+    const saved = JSON.parse(storage.get("wb_preferences","null"));
+    if (saved && Array.isArray(saved.interests)) {
+      prefs.interests = saved.interests.filter(v => Object.hasOwn(interests,v));
+      prefs.duration = Object.hasOwn(durations,saved.duration) ? saved.duration : "flexible";
+    }
+  } catch {}
+
+  let sessionId = storage.get("session_id");
+  if (!sessionId) {
+    sessionId = globalThis.crypto?.randomUUID?.() ||
+      "wb-" + Date.now().toString(36) + "-" + Math.random().toString(36).slice(2);
+    storage.set("session_id",sessionId);
+  }
+
+  const index = () => lang === "ID" ? 0 : 1;
+  const t = (key, language = lang) => words[key]?.[language === "ID" ? 0 : 1] || key;
+  const local = pair => pair[index()];
+  const node = (tag, className, text) => {
+    const el = document.createElement(tag);
+    if (className) el.className = className;
+    if (text !== undefined) el.textContent = text;
+    return el;
+  };
+
+  function toast(message) {
+    clearTimeout(toastTimer);
+    $("toast").textContent = message;
+    $("toast").hidden = false;
+    toastTimer = setTimeout(() => $("toast").hidden = true,3500);
+  }
+
+  function cancelSpeech() {
+    if ("speechSynthesis" in window) window.speechSynthesis.cancel();
+    if (speaking) speaking.button.textContent = t("listen");
+    speaking = null;
+  }
+
+  function abortRecording() {
+    const current = recognition;
+    recognition = null;
+    recording = false;
+    if (current) {
+      try { current.abort(); } catch {}
+    }
+    voiceStatus = $("transcript").value.trim() ? "review" : "ready";
+    renderVoice();
+  }
+
+  function showPage(next) {
+    if (next !== "voice" && recognition) abortRecording();
+    if (next !== page) cancelSpeech();
+    page = next;
+    document.querySelectorAll("main > section").forEach(el => el.hidden = el.id !== next);
+    $("composer").hidden = next !== "chat";
+    document.querySelectorAll("#nav button").forEach(btn => {
+      const active = btn.dataset.go === (next === "detail" ? "destinations" : next);
+      if (active) btn.setAttribute("aria-current","page");
+      else btn.removeAttribute("aria-current");
+    });
+    $("main").scrollTop = next === "chat" ? $("main").scrollHeight : 0;
+  }
+
+  function scrollChat() {
+    if (page === "chat") requestAnimationFrame(() => {
+      $("main").scrollTop = $("main").scrollHeight;
+    });
+  }
+
+  function renderPrompts(container) {
+    container.replaceChildren();
+    prompts.forEach(item => {
+      const button = node("button","prompt");
+      button.type = "button";
+      const iconWrap = node("span","prompt-icon");
+      iconWrap.append(node("span","icon",item.icon));
+      button.append(iconWrap,node("span","",local(item.label)),node("span","icon arrow","chevron_right"));
+      button.onclick = () => submit(local(item.query));
+      container.append(button);
+    });
+  }
+
+  function renderChoices() {
+    $("interest-options").replaceChildren();
+    Object.entries(interests).forEach(([value,label]) => {
+      const wrap = node("label","choice");
+      const input = node("input");
+      input.type = "checkbox"; input.name = "interest"; input.value = value;
+      input.checked = prefs.interests.includes(value);
+      wrap.append(input,node("span","",local(label)));
+      $("interest-options").append(wrap);
+    });
+    $("duration-options").replaceChildren();
+    Object.entries(durations).forEach(([value,label]) => {
+      const wrap = node("label","choice");
+      const input = node("input");
+      input.type = "radio"; input.name = "duration"; input.value = value;
+      input.checked = prefs.duration === value;
+      wrap.append(input,node("span","",local(label)));
+      $("duration-options").append(wrap);
+    });
+  }
+
+  function renderDestinations() {
+    $("dest-list").replaceChildren();
+    places.forEach((place,i) => {
+      const button = node("button","dest-card");
+      button.type = "button";
+      const art = node("div","dest-art");
+      art.setAttribute("aria-hidden","true");
+      art.append(node("span","icon",place.icon));
+      const copy = node("div","dest-copy");
+      copy.append(node("span","tag",local(place.category)),
+        node("h3","",local(place.name)),node("p","muted",local(place.about)));
+      button.append(art,copy);
+      button.onclick = () => {
+        selectedPlace = i; detailTab = "about"; renderDetail(); showPage("detail");
+      };
+      $("dest-list").append(button);
+    });
+  }
+
+  function renderDetail() {
+    const place = places[selectedPlace];
+    $("detail-icon").textContent = place.icon;
+    $("detail-title").textContent = local(place.name);
+    $("detail-category").textContent = local(place.category);
+    $("map-link").href = "https://www.google.com/maps/search/?api=1&query=" + encodeURIComponent(place.map);
+    $("detail-tabs").replaceChildren();
+    ["about","facility","access","hours"].forEach(tab => {
+      const button = node("button","",t(tab));
+      button.setAttribute("aria-pressed",String(tab === detailTab));
+      button.onclick = () => { detailTab = tab; renderDetail(); };
+      $("detail-tabs").append(button);
+    });
+    $("detail-body").textContent = detailTab === "about" ? local(place.about) :
+      t({facility:"pendingFacility",access:"accessText",hours:"pendingHours"}[detailTab]);
+  }
+
+  const Recognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+
+  function renderVoice() {
+    $("voice-status").textContent = t(Recognition ? voiceStatus : "unsupported");
+    $("voice-language").textContent = t("voiceLang");
+    $("record").disabled = !Recognition;
+    $("record").classList.toggle("recording",recording);
+    $("record").setAttribute("aria-label",t(recording ? "stopRecord" : "record"));
+    $("record").setAttribute("aria-pressed",String(recording));
+    $("record").firstElementChild.textContent = recording ? "stop" : "mic";
+    $("record-label").textContent = t(recording ? "stopRecord" : "record");
+    $("transcript").placeholder = t("transcriptPlaceholder");
+    $("transcript").disabled = !!recognition;
+    $("repeat").disabled = !Recognition || !!recognition;
+    $("send-voice").disabled = busy || !!recognition || !$("transcript").value.trim();
+  }
+
+  function startRecording() {
+    if (!Recognition || recognition) return;
+    cancelSpeech();
+    const rec = new Recognition();
+    recognition = rec;
+    rec.lang = lang === "ID" ? "id-ID" : "en-US";
+    rec.continuous = false;
+    rec.interimResults = true;
+    voiceStatus = "starting";
+    renderVoice();
+
+    rec.onstart = () => {
+      if (recognition !== rec) return;
+      recording = true; voiceStatus = "listening";
+      $("transcript").value = "";
+      renderVoice();
+    };
+    rec.onresult = event => {
+      if (recognition !== rec) return;
+      $("transcript").value = Array.from(event.results).map(result => result[0].transcript).join(" ");
+    };
+    rec.onerror = event => {
+      if (recognition !== rec) return;
+      voiceStatus = ["not-allowed","service-not-allowed"].includes(event.error) ? "denied" :
+        event.error === "no-speech" ? "noSpeech" : "voiceError";
+    };
+    rec.onend = () => {
+      if (recognition !== rec) return;
+      recognition = null; recording = false;
+      if (["starting","listening"].includes(voiceStatus)) {
+        voiceStatus = $("transcript").value.trim() ? "review" : "noSpeech";
+      }
+      renderVoice();
+    };
+    try { rec.start(); }
+    catch {
+      recognition = null; recording = false; voiceStatus = "voiceError"; renderVoice();
+    }
+  }
+
+  function updateSend() {
+    $("send").disabled = busy || !$("input").value.trim();
+    renderVoice();
+  }
+
+  function addMessage(role,text,language) {
+    $("chat-empty").hidden = true;
+    const wrapper = node("article","message " + role);
+    wrapper.append(node("span","message-label",role === "user" ? t("you",language) : "Wisata Batam AI"));
+    const bubble = node("div","bubble");
+    if (text !== undefined) bubble.textContent = text;
+    wrapper.append(bubble);
+    $("messages").append(wrapper);
+    scrollChat();
+    return {wrapper,bubble};
+  }
+
+  function safeURL(value) {
+    if (typeof value !== "string") return null;
+    try {
+      const url = new URL(value);
+      return ["https:","http:"].includes(url.protocol) ? url.href : null;
+    } catch { return null; }
+  }
+
+  function addSources(bubble,sources,language) {
+    if (!Array.isArray(sources) || !sources.length) return;
+    const wrap = node("div","sources");
+    wrap.append(node("small","",t("sources",language)));
+    sources.slice(0,20).forEach((source,i) => {
+      if (!source) return;
+      const object = typeof source === "object";
+      const candidate = object ? (source.url || source.link || source.source) : source;
+      const href = safeURL(candidate);
+      const label = object ? (source.title || source.name || source.source || href) : source;
+      const item = node(href ? "a" : "span","source",
+        String(label || `${t("source",language)} ${i + 1}`));
+      if (href) { item.href = href; item.target = "_blank"; item.rel = "noopener noreferrer"; }
+      wrap.append(item);
+    });
+    if (wrap.children.length > 1) bubble.append(wrap);
+  }
+
+  function showAnswer(data,requestLanguage) {
+    const {wrapper,bubble} = addMessage("assistant",undefined,requestLanguage);
+    const answer = node("div","answer");
+    if (window.marked && window.DOMPurify) {
+      answer.innerHTML = DOMPurify.sanitize(marked.parse(data.response), {
+        USE_PROFILES:{html:true},
+        FORBID_TAGS:["img","video","audio","iframe","form","input","button","style"],
+        FORBID_ATTR:["style"]
+      });
+      answer.querySelectorAll("a").forEach(link => {
+        const href = safeURL(link.getAttribute("href"));
+        if (href) {
+          link.href = href; link.target = "_blank"; link.rel = "noopener noreferrer";
+        } else link.removeAttribute("href");
+      });
+    } else {
+      answer.textContent = data.response;
+      answer.style.whiteSpace = "pre-wrap";
+    }
+    bubble.append(answer);
+    addSources(bubble,data.sources,requestLanguage);
+
+    const controls = node("div","message-tools");
+    const button = node("button","",t("listen"));
+    button.type = "button";
+    button.dataset.listen = "true";
+    button.onclick = () => {
+      if (!("speechSynthesis" in window)) { toast(t("ttsError")); return; }
+      if (speaking?.button === button) { cancelSpeech(); return; }
+      cancelSpeech();
+      const utterance = new SpeechSynthesisUtterance(answer.textContent);
+      const responseLanguage = String(data.language || requestLanguage).toLowerCase();
+      utterance.lang = responseLanguage.startsWith("en") ? "en-US" : "id-ID";
+      speaking = {button,utterance};
+      button.textContent = t("stop");
+      utterance.onend = () => {
+        if (speaking?.utterance === utterance) {
+          button.textContent = t("listen"); speaking = null;
         }
       };
-
-      const i18n = {
-        ID: {
-          headerStatus: "Live Assistant • Kepri",
-          tabWelcome: "Welcome",
-          tabChat: "Active Chat",
-          tabVoice: "Voice Mode",
-          tabPref: "Preferensi",
-          tabDetail: "Destinasi",
-          weatherTag: "29°C Tropis Nongsa",
-          welcomeTitle: "Mau menjelajah Batam ke mana hari ini?",
-          welcomeDesc: "Rekomendasi pantai eksotis, seafood Barelang legendaris, feri internasional Singapura, hingga hidden gems kepulauan.",
-          btnStartChat: "Mulai Percakapan",
-          quickPromptsTitle: "Inspirasi Pertanyaan",
-
-          p1Label: "Rekomendasikan pantai tenang & estetik di Nongsa",
-          p1Query: "Rekomendasikan pantai terbaik dan tidak terlalu ramai di Nongsa Batam",
-          p2Label: "Itinerary 1 hari trip keliling Batam paling optimal",
-          p2Query: "Kalau saya punya waktu satu hari di Batam, tempat apa yang cocok?",
-          p3Label: "Kuliner seafood gonggong legendaris di Barelang",
-          p3Query: "Rekomendasi seafood gonggong legendaris di sekitar Barelang dan Piayu",
-
-          backHome: "Kembali",
-          chatTrustHeader: "Data Disbudpar Batam",
-          chatIntro: "Halo! Silakan ketik pertanyaan Anda di bawah, saya siap membantu panduan wisata Batam Anda.",
-          voiceModeBadge: "Batam Voice Assistant",
-          voiceHeading: "Silakan bicara...",
-          voiceSub: '"Mau cari penginapan di Nongsa atau tempat kuliner seafood?"',
-          voiceListeningStatus: "Mendengarkan suara Anda dalam Bahasa Indonesia / English...",
-          voiceCancel: "Batalkan",
-          prefHeading: "Biar rekomendasinya lebih cocok",
-          prefSub: "AI akan memprioritaskan rekomendasi berdasarkan preferensi liburan Anda di Batam.",
-          prefCategoryInterest: "Minat Utama",
-          prefNature: "🌴 Alam & Mangrove",
-          prefFood: "🍜 Kuliner Seafood",
-          prefCulture: "🏛️ Budaya & Sejarah",
-          prefCategoryDuration: "Durasi Waktu",
-          durHours: "Beberapa Jam",
-          dur1Day: "1 Hari Penuh",
-          durMulti: "2 - 3 Hari",
-          btnSavePref: "Simpan Preferensi",
-          detailWhyYou: "Kenapa cocok untukmu?",
-          detailMatchText: "Sesuai preferensi alam & trip santai: suasana teduh mangrove tanpa hiruk-pikuk kota.",
-          subAbout: "Tentang",
-          subFacility: "Fasilitas",
-          subAccess: "Akses",
-          subHours: "Jam & Tiket",
-          inputPlaceholder: "Tanya tentang wisata Batam...",
-          toastPrefSaved: "Preferensi liburan Anda telah diperbarui!",
-          thinkingLabel: "Berpikir...",
-        },
-        EN: {
-          headerStatus: "Live Assistant • Kepri",
-          tabWelcome: "Welcome",
-          tabChat: "Active Chat",
-          tabVoice: "Voice Mode",
-          tabPref: "Preferences",
-          tabDetail: "Destination",
-          weatherTag: "29°C Tropical Nongsa",
-          welcomeTitle: "Where would you like to explore in Batam today?",
-          welcomeDesc: "Curated pristine beaches, legendary Barelang seafood, Singapore international ferry tips, and island hidden gems.",
-          btnStartChat: "Start Exploring",
-          quickPromptsTitle: "Quick Inspirations",
-
-          p1Label: "Recommend quiet & aesthetic beaches in Nongsa",
-          p1Query: "Recommend the best and uncrowded beaches in Nongsa Batam",
-          p2Label: "Optimal 1-day Batam travel itinerary",
-          p2Query: "If I have one day in Batam, what are the best places to visit?",
-          p3Label: "Legendary Gonggong seafood around Barelang",
-          p3Query: "Recommend legendary gonggong seafood around Barelang and Piayu",
-
-          backHome: "Back",
-          chatTrustHeader: "Disbudpar Batam Verified",
-          chatIntro: "Hello! Please type your question below, I'm ready to assist with your Batam travel guide.",
-          voiceModeBadge: "Batam Voice Assistant",
-          voiceHeading: "Listening now...",
-          voiceSub: '"Looking for beach resorts in Nongsa or fresh seafood spots?"',
-          voiceListeningStatus: "Listening for your voice in English / Bahasa Indonesia...",
-          voiceCancel: "Cancel",
-          prefHeading: "Personalize your journey",
-          prefSub: "The AI tailors every island recommendation according to your travel style.",
-          prefCategoryInterest: "Core Interests",
-          prefNature: "🌴 Nature & Mangrove",
-          prefFood: "🍜 Seafood Culinary",
-          prefCulture: "🏛️ Culture & History",
-          prefCategoryDuration: "Trip Duration",
-          durHours: "Few Hours",
-          dur1Day: "Full Day",
-          durMulti: "2 - 3 Days",
-          btnSavePref: "Save Preferences",
-          detailWhyYou: "Why it fits you?",
-          detailMatchText: "Matches your nature & relaxing vibe: shady mangrove away from city bustle.",
-          subAbout: "About",
-          subFacility: "Facilities",
-          subAccess: "Access",
-          subHours: "Hours & Fees",
-          inputPlaceholder: "Ask about Batam travel...",
-          toastPrefSaved: "Your travel preferences have been updated!",
-          thinkingLabel: "Thinking...",
+      utterance.onerror = () => {
+        if (speaking?.utterance === utterance) {
+          button.textContent = t("listen"); speaking = null; toast(t("ttsError"));
         }
       };
+      window.speechSynthesis.speak(utterance);
+    };
+    controls.append(button);
+    wrapper.append(controls);
+  }
 
-      const navPills = document.querySelectorAll('.nav-pill');
-      const screenPanes = document.querySelectorAll('.screen-pane');
-      const toastEl = document.getElementById('toast');
-      const toastText = document.getElementById('toast-text');
-      const mainChatInput = document.getElementById('main-chat-input');
-      const inputBarSend = document.getElementById('input-bar-send');
-      const inputBarMic = document.getElementById('input-bar-mic');
-      const btnLangId = document.getElementById('btn-lang-id');
-      const btnLangEn = document.getElementById('btn-lang-en');
+  function buildPayload(text,language) {
+    const i = language === "ID" ? 0 : 1;
+    const selected = prefs.interests.map(value => interests[value][i]).join(", ");
+    const parts = [];
+    if (selected) parts.push((i === 0 ? "Minat: " : "Interests: ") + selected);
+    if (prefs.duration !== "flexible") {
+      parts.push((i === 0 ? "Durasi: " : "Duration: ") + durations[prefs.duration][i]);
+    }
+    const context = parts.length ?
+      (i === 0 ? "\n\nPreferensi perjalanan pengguna (gunakan jika relevan): " :
+        "\n\nUser travel preferences (use when relevant): ") + parts.join("; ") : "";
+    return {
+      message:text + context,
+      language:language.toLowerCase(),
+      session_id:sessionId
+    };
+  }
 
-      const NAV_ACTIVE = "nav-pill active tap flex flex-col items-center justify-center gap-0.5 flex-1 py-1.5 rounded-xl text-leaf";
-      const NAV_INACTIVE = "nav-pill tap flex flex-col items-center justify-center gap-0.5 flex-1 py-1.5 rounded-xl text-ink/35";
+  async function submit(text, retry = null) {
+    text = String(text || "").trim();
+    if (!text || busy) return;
+    busy = true;
+    cancelSpeech();
+    const requestLanguage = retry?.language || lang;
+    const payload = retry?.payload || buildPayload(text,requestLanguage);
+    showPage("chat");
+    if (!retry) {
+      $("input").value = ""; $("input").style.height = "auto";
+      addMessage("user",text,requestLanguage);
+    }
+    const loading = node("div","loading",t("thinking",requestLanguage));
+    loading.setAttribute("role","status");
+    $("messages").append(loading);
+    updateSend(); scrollChat();
 
-      mainChatInput.addEventListener('input', (e) => {
-          if(e.target.value.trim() !== '') {
-              inputBarSend.classList.remove('opacity-70');
-          } else {
-              inputBarSend.classList.add('opacity-70');
-          }
+    const controller = new AbortController();
+    const timer = setTimeout(() => controller.abort(),60000);
+    try {
+      const response = await fetch(API_URL,{
+        method:"POST",
+        headers:{"Content-Type":"application/json"},
+        body:JSON.stringify(payload),
+        signal:controller.signal
       });
+      if (!response.ok) throw new Error("HTTP " + response.status);
+      const data = await response.json();
+      if (typeof data.response !== "string" || !data.response.trim()) throw new Error("Invalid response");
+      loading.remove();
+      showAnswer(data,requestLanguage);
+    } catch (error) {
+      loading.remove();
+      const result = addMessage("error",
+        t(error.name === "AbortError" ? "timeout" : "failed",requestLanguage),requestLanguage);
+      const button = node("button","button secondary",t("retry",requestLanguage));
+      button.style.marginTop = "12px";
+      button.onclick = () => {
+        if (busy) return;
+        result.wrapper.remove();
+        submit(text,{payload,language:requestLanguage});
+      };
+      result.bubble.append(document.createElement("br"),button);
+    } finally {
+      clearTimeout(timer);
+      busy = false; updateSend(); scrollChat();
+    }
+  }
 
-      function showToast(msg) {
-        toastText.textContent = msg;
-        toastEl.classList.remove('opacity-0', '-translate-y-2');
-        toastEl.classList.add('opacity-100', 'translate-y-0');
-        setTimeout(() => {
-          toastEl.classList.remove('opacity-100', 'translate-y-0');
-          toastEl.classList.add('opacity-0', '-translate-y-2');
-        }, 2200);
-      }
+  function translate() {
+    document.documentElement.lang = lang.toLowerCase();
+    document.querySelectorAll("[data-t]").forEach(el => el.textContent = t(el.dataset.t));
+    document.querySelectorAll("[data-lang]").forEach(el =>
+      el.setAttribute("aria-pressed",String(el.dataset.lang === lang)));
+    $("input").placeholder = t("input");
+    $("input").setAttribute("aria-label",t("input"));
+    $("send").setAttribute("aria-label",t("send"));
+    $("composer-mic").setAttribute("aria-label",t("useVoice"));
+    $("nav").setAttribute("aria-label",t("navLabel"));
+    document.querySelectorAll("[data-listen]").forEach(el => el.textContent = t("listen"));
+    renderPrompts($("home-prompts"));
+    renderPrompts($("chat-prompts"));
+    renderDestinations(); renderDetail(); renderVoice();
+    document.querySelectorAll("#interest-options label").forEach(label => {
+      label.lastElementChild.textContent = local(interests[label.firstElementChild.value]);
+    });
+    document.querySelectorAll("#duration-options label").forEach(label => {
+      label.lastElementChild.textContent = local(durations[label.firstElementChild.value]);
+    });
+  }
 
-      function speakText(text, langCode) {
-        if (!('speechSynthesis' in window)) {
-          showToast(currentLanguage === 'ID' ? 'Browser tidak mendukung suara' : 'Browser does not support speech');
-          return;
-        }
-        window.speechSynthesis.cancel();
-        const utterance = new SpeechSynthesisUtterance(text);
-        utterance.lang = langCode === 'en' ? 'en-US' : 'id-ID';
-        utterance.rate = 1;
-        window.speechSynthesis.speak(utterance);
-      }
+  document.querySelectorAll("[data-go]").forEach(button =>
+    button.addEventListener("click",() => showPage(button.dataset.go)));
 
-      function showScreen(screenId) {
-        currentScreen = screenId;
-        screenPanes.forEach(pane => {
-          if (pane.id === screenId) {
-            pane.classList.remove('hidden-state');
-            pane.classList.add('active-state');
-          } else {
-            pane.classList.remove('active-state');
-            pane.classList.add('hidden-state');
-          }
-        });
+  document.querySelectorAll("[data-lang]").forEach(button => {
+    button.onclick = () => {
+      if (button.dataset.lang === lang) return;
+      abortRecording(); cancelSpeech();
+      lang = button.dataset.lang;
+      storage.set("wb_language",lang);
+      translate();
+    };
+  });
 
-        navPills.forEach(pill => {
-          if (pill.getAttribute('data-target') === screenId) {
-            pill.className = NAV_ACTIVE;
-            const icon = pill.querySelector('.material-symbols-outlined');
-            if (icon) icon.classList.add('icon-fill');
-          } else {
-            pill.className = NAV_INACTIVE;
-            const icon = pill.querySelector('.material-symbols-outlined');
-            if (icon) icon.classList.remove('icon-fill');
-          }
-        });
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-      }
+  $("composer").onsubmit = event => {
+    event.preventDefault(); submit($("input").value);
+  };
+  $("input").oninput = () => {
+    $("input").style.height = "auto";
+    $("input").style.height = Math.min($("input").scrollHeight,120) + "px";
+    updateSend();
+  };
+  $("input").onkeydown = event => {
+    if (event.key === "Enter" && !event.shiftKey && !event.isComposing &&
+        window.matchMedia("(pointer:fine)").matches) {
+      event.preventDefault(); submit($("input").value);
+    }
+  };
+  $("record").onclick = () => {
+    if (recognition) {
+      try { recognition.stop(); } catch { abortRecording(); }
+    } else startRecording();
+  };
+  $("repeat").onclick = startRecording;
+  $("transcript").oninput = renderVoice;
+  $("send-voice").onclick = () => {
+    const text = $("transcript").value.trim();
+    if (!text || busy || recognition) return;
+    $("transcript").value = ""; voiceStatus = "ready";
+    submit(text);
+  };
+  $("prefs-form").onsubmit = event => {
+    event.preventDefault();
+    prefs = {
+      interests:Array.from(document.querySelectorAll('input[name="interest"]:checked')).map(el => el.value),
+      duration:document.querySelector('input[name="duration"]:checked')?.value || "flexible"
+    };
+    toast(t(storage.set("wb_preferences",JSON.stringify(prefs)) ? "saved" : "temporary"));
+  };
+  $("ask-dest").onclick = () => submit(t("askPlace") + local(places[selectedPlace].name));
+  document.addEventListener("visibilitychange",() => {
+    if (document.hidden) { abortRecording(); cancelSpeech(); }
+  });
 
-      navPills.forEach(pill => {
-        pill.addEventListener('click', () => {
-          showScreen(pill.getAttribute('data-target'));
-        });
-      });
-
-      document.getElementById('btn-start-chat').addEventListener('click', () => showScreen('screen-chat'));
-      document.getElementById('btn-back-from-chat').addEventListener('click', () => showScreen('screen-welcome'));
-      document.getElementById('btn-quick-voice').addEventListener('click', () => showScreen('screen-voice'));
-      document.getElementById('input-bar-mic').addEventListener('click', () => showScreen('screen-voice'));
-      document.getElementById('btn-close-voice').addEventListener('click', () => showScreen('screen-chat'));
-      document.getElementById('btn-cancel-voice').addEventListener('click', () => showScreen('screen-welcome'));
-      document.getElementById('btn-back-from-detail').addEventListener('click', () => showScreen('screen-chat'));
-
-      function populateDestinationDetail(key) {
-        const item = destinationCatalog[key] || destinationCatalog['pandang-tak-jemu'];
-        const langData = item[currentLanguage];
-
-        document.getElementById('screen-detail').setAttribute('data-current-dest', key);
-        document.getElementById('detail-hero-img').src = item.img;
-        document.getElementById('detail-title').textContent = langData.title;
-        document.getElementById('detail-category-badge').textContent = langData.category;
-        document.getElementById('detail-location').textContent = langData.location;
-        document.getElementById('detail-body-text').textContent = langData.about;
-
-        document.querySelectorAll('.detail-subtab').forEach(t => {
-          if (t.getAttribute('data-tab') === 'about') {
-            t.className = "detail-subtab active pb-2.5 pt-1 text-[12.5px] font-semibold text-ink border-b-2 border-leaf text-center transition-all";
-          } else {
-            t.className = "detail-subtab pb-2.5 pt-1 text-[12.5px] font-medium text-ink/45 border-b-2 border-transparent text-center transition-all hover:text-ink";
-          }
-        });
-      }
-
-      populateDestinationDetail('pandang-tak-jemu');
-
-      document.querySelectorAll('.detail-subtab').forEach(tab => {
-        tab.addEventListener('click', () => {
-          document.querySelectorAll('.detail-subtab').forEach(t => {
-            t.className = "detail-subtab pb-2.5 pt-1 text-[12.5px] font-medium text-ink/45 border-b-2 border-transparent text-center transition-all hover:text-ink";
-          });
-          tab.className = "detail-subtab active pb-2.5 pt-1 text-[12.5px] font-semibold text-ink border-b-2 border-leaf text-center transition-all";
-
-          const tabType = tab.getAttribute('data-tab');
-          const currentDestKey = document.getElementById('screen-detail').getAttribute('data-current-dest');
-          const langData = destinationCatalog[currentDestKey][currentLanguage];
-
-          if (tabType === 'about') document.getElementById('detail-body-text').textContent = langData.about;
-          if (tabType === 'facility') document.getElementById('detail-body-text').textContent = langData.facility;
-          if (tabType === 'access') document.getElementById('detail-body-text').textContent = langData.access;
-          if (tabType === 'hours') document.getElementById('detail-body-text').textContent = langData.hours;
-        });
-      });
-
-      document.querySelectorAll('.prompt-chip').forEach(chip => {
-        chip.addEventListener('click', () => {
-          const promptId = chip.getAttribute('data-prompt-id');
-          const query = i18n[currentLanguage][promptId + 'Query'];
-          submitNewUserQuery(query);
-        });
-      });
-
-      async function submitNewUserQuery(queryText) {
-        const text = queryText || mainChatInput.value.trim();
-        if (!text) return;
-
-        mainChatInput.value = '';
-        inputBarSend.classList.add('opacity-70');
-        showScreen('screen-chat');
-
-        const chatContainer = document.getElementById('chat-messages-container');
-        if (!chatContainer.classList.contains('chat-started')) {
-            chatContainer.innerHTML = '';
-            chatContainer.classList.add('chat-started');
-        }
-
-        // BUBBLE USER
-        const userBubble = `
-          <div class="flex justify-end w-full mb-2">
-            <div class="max-w-[85%] rounded-2xl rounded-tr-sm bg-leaf text-white p-3.5 shadow-md shadow-leaf/20">
-              <p class="text-[14.5px] leading-relaxed font-medium">${text}</p>
-            </div>
-          </div>
-        `;
-        chatContainer.insertAdjacentHTML('beforeend', userBubble);
-        chatContainer.lastElementChild.scrollIntoView({ behavior: "smooth" });
-
-        const loadingId = 'loading-' + Date.now();
-        const thinkingLabel = i18n[currentLanguage].thinkingLabel;
-        const loadingBubble = `
-          <div id="${loadingId}" class="flex flex-col gap-1.5 w-full mb-4">
-            <div class="flex items-center px-1">
-              <div class="flex items-center gap-2">
-                <div class="w-6 h-6 rounded-full bg-mint flex items-center justify-center animate-pulse">
-                  <svg width="12" height="12" viewBox="0 0 34 34" fill="none"><circle cx="17" cy="17" r="17" fill="#17B268"/><path d="M9.5 21C9.5 13.8 15 9 24.5 9C24.5 19.2 18.8 24.2 9.5 21Z" fill="#FFFFFF"/></svg>
-                </div>
-                <span class="text-[11px] font-bold text-ink/45 animate-pulse">${thinkingLabel}</span>
-              </div>
-            </div>
-          </div>
-        `;
-        chatContainer.insertAdjacentHTML('beforeend', loadingBubble);
-        chatContainer.lastElementChild.scrollIntoView({ behavior: "smooth" });
-
-        try {
-            const response = await fetch("https://wisatabatam-backend-production.up.railway.app/api/chat/", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ message: text, language: currentLanguage.toLowerCase() })
-            });
-
-            let data;
-            try {
-                data = await response.json();
-            } catch (err) {
-                data = { error: currentLanguage === 'ID' ? "Server mengembalikan format yang tidak dikenali." : "Server returned unrecognized format." };
-            }
-
-            const loadingEl = document.getElementById(loadingId);
-            if (loadingEl) loadingEl.remove();
-
-            if (response.ok && data.response) {
-                const formattedText = marked.parse(data.response);
-                
-                const tempDiv = document.createElement("div");
-                tempDiv.innerHTML = formattedText;
-                const rawTextForSpeech = tempDiv.textContent || tempDiv.innerText || "";
-                
-                const speakId = 'speak-' + Date.now();
-
-                const sourcesHtml = (data.sources && data.sources.length > 0)
-                  ? `<div class="flex flex-wrap gap-1.5 mt-4 pt-3 border-t border-ink/[0.06]">
-                       ${data.sources.map(src => `
-                         <span class="inline-flex items-center gap-1 px-2 py-1 rounded-md bg-white text-[10px] font-bold text-ink/50 border border-ink/[0.06]">
-                           <span class="material-symbols-outlined text-[13px] text-leaf icon-fill">verified</span>${src}
-                         </span>
-                       `).join('')}
-                     </div>`
-                  : '';
-
-                // BUBBLE AI
-                const aiBubble = `
-                  <div class="flex flex-col gap-1.5 w-full mb-6">
-                    <div class="flex items-center justify-between px-1">
-                      <div class="flex items-center gap-2">
-                        <div class="w-6 h-6 rounded-full bg-mint flex items-center justify-center">
-                          <svg width="12" height="12" viewBox="0 0 34 34" fill="none"><circle cx="17" cy="17" r="17" fill="#17B268"/><path d="M9.5 21C9.5 13.8 15 9 24.5 9C24.5 19.2 18.8 24.2 9.5 21Z" fill="#FFFFFF"/></svg>
-                        </div>
-                        <span class="text-[11px] font-bold text-ink/45">Wisata Batam AI</span>
-                      </div>
-                      <button class="tts-btn w-7 h-7 rounded-full bg-mist hover:bg-mint flex items-center justify-center text-leaf transition-colors" data-speak-id="${speakId}" aria-label="Dengarkan jawaban">
-                        <span class="material-symbols-outlined text-[16px]">volume_up</span>
-                      </button>
-                    </div>
-                    <div class="rounded-2xl rounded-tl-sm bg-mist p-4 w-fit max-w-[90%]">
-                      <div class="prose-ai text-[14.5px] leading-relaxed text-ink font-medium">${formattedText}</div>
-                      ${sourcesHtml}
-                    </div>
-                  </div>
-                `;
-                chatContainer.insertAdjacentHTML('beforeend', aiBubble);
-
-                const ttsBtn = chatContainer.querySelector(`[data-speak-id="${speakId}"]`);
-                if (ttsBtn) {
-                  ttsBtn.addEventListener('click', () => {
-                    speakText(rawTextForSpeech, data.language || currentLanguage.toLowerCase());
-                  });
-                }
-            } else {
-                const errorMessage = data.error || (currentLanguage === 'ID' ? "Gagal memproses data di server." : "Failed to process data on server.");
-                const errorBubble = `
-                  <div class="rounded-2xl bg-sysred/10 border border-sysred/25 p-4 mb-4 text-center w-fit max-w-[90%] mx-auto">
-                    <p class="text-[13px] text-sysred font-bold">Terjadi Kesalahan / Error</p>
-                    <p class="text-[12px] text-sysred/80 font-medium mt-1">${errorMessage}</p>
-                  </div>
-                `;
-                chatContainer.insertAdjacentHTML('beforeend', errorBubble);
-            }
-        } catch (error) {
-            const loadingEl = document.getElementById(loadingId);
-            if (loadingEl) loadingEl.remove();
-
-            const errorBubble = `
-              <div class="rounded-2xl bg-sysred/10 border border-sysred/25 p-4 mb-4 text-center w-fit max-w-[90%] mx-auto">
-                <p class="text-[13px] text-sysred font-bold">Koneksi Ke Server Gagal</p>
-                <p class="text-[12px] text-sysred/80 font-medium mt-1">Detail: ${error.message}</p>
-              </div>
-            `;
-            chatContainer.insertAdjacentHTML('beforeend', errorBubble);
-        }
-
-        chatContainer.lastElementChild.scrollIntoView({ behavior: "smooth" });
-      }
-
-      inputBarSend.addEventListener('click', () => submitNewUserQuery());
-      mainChatInput.addEventListener('keydown', (e) => {
-        if (e.key === 'Enter') submitNewUserQuery();
-      });
-
-      document.querySelectorAll('#group-interests .pref-chip').forEach(chip => {
-        chip.addEventListener('click', () => {
-          chip.classList.toggle('active');
-          if (chip.classList.contains('active')) {
-            chip.className = "pref-chip active px-4 py-2.5 rounded-full bg-leaf text-white font-semibold text-[12.5px] transition-all flex items-center gap-2";
-          } else {
-            chip.className = "pref-chip px-4 py-2.5 rounded-full bg-mist text-ink/50 font-medium text-[12.5px] transition-all flex items-center gap-2";
-          }
-        });
-      });
-
-      function setupSingleGroup(groupId) {
-        document.querySelectorAll(`#${groupId} .pref-single`).forEach(btn => {
-          btn.addEventListener('click', () => {
-            document.querySelectorAll(`#${groupId} .pref-single`).forEach(b => {
-              b.className = "pref-single px-2 py-2.5 rounded-xl text-ink/50 font-medium text-[12.5px] text-center transition-all";
-            });
-            btn.className = "pref-single active px-2 py-2.5 rounded-xl bg-white text-ink font-semibold text-[12.5px] text-center shadow-sm transition-all";
-          });
-        });
-      }
-      setupSingleGroup('group-duration');
-
-      document.getElementById('btn-save-pref').addEventListener('click', () => {
-        showToast(i18n[currentLanguage].toastPrefSaved);
-        setTimeout(() => showScreen('screen-chat'), 700);
-      });
-
-      function setLanguage(lang) {
-        currentLanguage = lang;
-        const dict = i18n[lang];
-
-        if (lang === 'ID') {
-          btnLangId.className = "px-2.5 py-1 rounded-full text-[11px] font-bold bg-white text-ink shadow-sm transition-all";
-          btnLangEn.className = "px-2.5 py-1 rounded-full text-[11px] font-semibold text-ink/40 hover:text-ink transition-all";
-        } else {
-          btnLangEn.className = "px-2.5 py-1 rounded-full text-[11px] font-bold bg-white text-ink shadow-sm transition-all";
-          btnLangId.className = "px-2.5 py-1 rounded-full text-[11px] font-semibold text-ink/40 hover:text-ink transition-all";
-        }
-
-        document.querySelectorAll('[data-i18n]').forEach(el => {
-          const key = el.getAttribute('data-i18n');
-          if (dict[key]) {
-            el.innerHTML = dict[key];
-          }
-        });
-
-        mainChatInput.placeholder = dict.inputPlaceholder;
-
-        const currentDestKey = document.getElementById('screen-detail').getAttribute('data-current-dest');
-        if (currentDestKey) {
-            populateDestinationDetail(currentDestKey);
-        }
-      }
-
-      btnLangId.addEventListener('click', () => setLanguage('ID'));
-      btnLangEn.addEventListener('click', () => setLanguage('EN'));
-
-      const voiceMicBtn = document.getElementById('voice-mic-main');
-      const transcriptEl = document.getElementById('voice-transcript-text');
-      const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-
-      if (SpeechRecognition) {
-        const recognition = new SpeechRecognition();
-        recognition.continuous = false;
-        recognition.interimResults = true;
-        let isRecording = false;
-
-        voiceMicBtn.addEventListener('click', () => {
-          if (isRecording) {
-            recognition.stop();
-            return;
-          }
-          recognition.lang = currentLanguage === 'ID' ? 'id-ID' : 'en-US';
-          recognition.start();
-        });
-
-        recognition.onstart = () => {
-          isRecording = true;
-          transcriptEl.textContent = currentLanguage === 'ID' ? "Mendengarkan suara Anda..." : "Listening...";
-          voiceMicBtn.classList.add('animate-pulse');
-        };
-
-        recognition.onresult = (event) => {
-          let interimTranscript = '';
-          let finalTranscript = '';
-
-          for (let i = event.resultIndex; i < event.results.length; ++i) {
-            if (event.results[i].isFinal) {
-              finalTranscript += event.results[i][0].transcript;
-            } else {
-              interimTranscript += event.results[i][0].transcript;
-            }
-          }
-
-          transcriptEl.textContent = finalTranscript || interimTranscript;
-
-          if (finalTranscript) {
-            setTimeout(() => {
-              showScreen('screen-chat');
-              submitNewUserQuery(finalTranscript);
-            }, 800);
-          }
-        };
-
-        recognition.onerror = (event) => {
-          console.error("Mic error:", event.error);
-          transcriptEl.textContent = currentLanguage === 'ID'
-            ? "Gagal merekam: " + event.error + ". Klik mic lagi."
-            : "Error: " + event.error + ". Try again.";
-          isRecording = false;
-          voiceMicBtn.classList.remove('animate-pulse');
-        };
-
-        recognition.onend = () => {
-          isRecording = false;
-          voiceMicBtn.classList.remove('animate-pulse');
-        };
-
-      } else {
-        voiceMicBtn.addEventListener('click', () => {
-          transcriptEl.textContent = currentLanguage === 'ID'
-            ? "Maaf, browser Anda tidak mendukung fitur suara."
-            : "Sorry, your browser doesn't support voice features.";
-        });
-      }
-    })();
-  </script>
+  renderChoices();
+  translate();
+  showPage("home");
+})();
+</script>
 </body>
 </html>
+```
