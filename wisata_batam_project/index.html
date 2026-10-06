@@ -1,10 +1,17 @@
+**Ganti seluruh isi `index.html` dengan kode berikut.** Nama sudah menjadi **Hallo Batam**, dan empat logo mitra tampil setelah bagian “Perjalanan Anda, pilihan Anda”, berurutan **Telyu → BTP → GreenTech → STH**.
+
+Path logo memakai nama file pada screenshot Anda: `telyu`, `btp`, `greentech`, dan `sth`, tanpa ekstensi, sejajar dengan `index.html`.
+
+[Unduh index.html lengkap](<C:/Users/fahmi/Documents/Codex/2026-10-05/files-pasted-by-the-user-konteks/outputs/index.html>). Sintaks JavaScript sudah diperiksa.
+
+```html
 <!DOCTYPE html>
 <html lang="id">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#087f5b">
-<title>Wisata Batam AI</title>
+<title>Hallo Batam AI</title>
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -161,6 +168,61 @@ p{font-size:14px;line-height:1.75}
   background:white;color:var(--muted);font-size:12px;
   line-height:1.7;margin-top:20px;
 }
+
+/* Logo mitra: selalu empat kolom dengan urutan yang sama. */
+.partners{
+  margin-top:24px;
+  padding:22px 16px;
+  background:white;
+  border:1px solid var(--line);
+  border-radius:20px;
+}
+.partners-title{
+  text-align:center;
+  font-size:12px;
+  font-weight:700;
+  color:var(--muted);
+  letter-spacing:.5px;
+  margin:0 0 18px;
+}
+.partner-grid{
+  display:grid;
+  grid-template-columns:repeat(4,minmax(0,1fr));
+  gap:12px;
+  list-style:none;
+  margin:0;
+  padding:0;
+}
+.partner-item{
+  min-width:0;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  gap:10px;
+  text-align:center;
+}
+.partner-image{
+  width:100%;
+  max-width:100px;
+  height:68px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+.partner-image img{
+  display:block;
+  max-width:100%;
+  width:100%;
+  height:100%;
+  object-fit:contain;
+}
+.partner-name{
+  font-size:11px;
+  font-weight:600;
+  color:var(--muted);
+  line-height:1.4;
+}
+
 .nav{
   display:flex;flex-shrink:0;background:white;
   border-top:1px solid var(--line);
@@ -220,7 +282,6 @@ p{font-size:14px;line-height:1.75}
   overflow:auto;background:var(--bg);padding:12px;border-radius:8px;
 }
 
-/* Tabel bergeser di dalam bubble, bukan melebar keluar layar. */
 .table-scroll{
   display:block;width:100%;max-width:100%;min-width:0;
   overflow-x:auto;overscroll-behavior-x:contain;
@@ -396,6 +457,10 @@ legend{font-size:14px;font-weight:700;margin-bottom:8px}
   .dest-copy{padding:15px}
   .composer{padding:8px 12px 10px}
   .card{padding:18px}
+  .partners{padding:18px 12px}
+  .partner-grid{gap:8px}
+  .partner-image{height:54px}
+  .partner-name{font-size:10px}
 }
 @media(prefers-reduced-motion:reduce){
   *,*:before,*:after{animation:none!important;scroll-behavior:auto!important}
@@ -409,13 +474,13 @@ legend{font-size:14px;font-weight:700;margin-bottom:8px}
     <div class="brand">
       <img
         class="brand-logo"
-        src="./Cuplikan%20layar%202026-09-23%20135856.png"
+        src="./greentech"
         alt="Logo GreenTech"
         width="46"
         height="46"
       >
       <div>
-        <strong>Wisata Batam <span class="ai">AI</span></strong>
+        <strong>Hallo Batam <span class="ai">AI</span></strong>
         <small data-t="brandSub"></small>
       </div>
     </div>
@@ -469,6 +534,72 @@ legend{font-size:14px;font-weight:700;margin-bottom:8px}
         <span data-t="personalSub"></span>
         <button class="text-button" data-go="prefs" data-t="setPrefs"></button>
       </div>
+
+      <section class="partners" aria-labelledby="partners-title">
+        <h2
+          class="partners-title"
+          id="partners-title"
+          data-t="partnersTitle"
+        >Mitra Kami</h2>
+
+        <ul class="partner-grid">
+          <li class="partner-item">
+            <div class="partner-image">
+              <img
+                src="./telyu"
+                alt="Logo Telyu"
+                width="100"
+                height="68"
+                loading="lazy"
+                decoding="async"
+              >
+            </div>
+            <span class="partner-name">Telyu</span>
+          </li>
+
+          <li class="partner-item">
+            <div class="partner-image">
+              <img
+                src="./btp"
+                alt="Logo BTP"
+                width="100"
+                height="68"
+                loading="lazy"
+                decoding="async"
+              >
+            </div>
+            <span class="partner-name">BTP</span>
+          </li>
+
+          <li class="partner-item">
+            <div class="partner-image">
+              <img
+                src="./greentech"
+                alt="Logo GreenTech"
+                width="100"
+                height="68"
+                loading="lazy"
+                decoding="async"
+              >
+            </div>
+            <span class="partner-name">GreenTech</span>
+          </li>
+
+          <li class="partner-item">
+            <div class="partner-image">
+              <img
+                src="./sth"
+                alt="Logo STH"
+                width="100"
+                height="68"
+                loading="lazy"
+                decoding="async"
+              >
+            </div>
+            <span class="partner-name">STH</span>
+          </li>
+        </ul>
+      </section>
     </section>
 
     <section class="page" id="chat" hidden>
@@ -476,7 +607,7 @@ legend{font-size:14px;font-weight:700;margin-bottom:8px}
         <h2 data-t="chat"></h2>
         <span class="tag">
           <span class="icon" style="font-size:16px">auto_awesome</span>
-          Wisata Batam AI
+          Hallo Batam AI
         </span>
       </div>
 
@@ -672,6 +803,7 @@ document.addEventListener("DOMContentLoaded", () => {
   };
 
   const words = {
+    partnersTitle:["Mitra Kami","Our Partners"],
     tableLabel:[
       "Tabel jawaban. Geser ke samping untuk melihat semua kolom.",
       "Answer table. Scroll horizontally to view all columns."
@@ -1201,7 +1333,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const wrapper = node("article","message " + role);
     wrapper.append(node(
       "span","message-label",
-      role === "user" ? t("you",language) : "Wisata Batam AI"
+      role === "user" ? t("you",language) : "Hallo Batam AI"
     ));
 
     const bubble = node("div","bubble");
@@ -1256,7 +1388,6 @@ document.addEventListener("DOMContentLoaded", () => {
     if (wrap.children.length > 1) bubble.append(wrap);
   }
 
-  /* Petunjuk geser hanya muncul jika tabel benar-benar meluap. */
   function refreshTables() {
     document.querySelectorAll(".table-scroll").forEach(region => {
       if (!region.clientWidth) return;
@@ -1336,7 +1467,6 @@ document.addEventListener("DOMContentLoaded", () => {
       answer.style.whiteSpace = "pre-wrap";
     }
 
-    // Ambil teks sebelum petunjuk geser ditambahkan agar tidak dibacakan.
     const speechText = answer.textContent;
     prepareTables(answer);
 
@@ -1647,3 +1777,4 @@ document.addEventListener("DOMContentLoaded", () => {
 </script>
 </body>
 </html>
+```
