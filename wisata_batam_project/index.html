@@ -448,6 +448,7 @@ legend{font-size:14px;font-weight:700;margin-bottom:8px}
 @media(prefers-reduced-motion:reduce){
   *,*:before,*:after{animation:none!important;scroll-behavior:auto!important}
 }
+.source{max-width:100%;overflow-wrap:anywhere;white-space:normal;line-height:1.5}
 </style>
 </head>
 
@@ -680,7 +681,7 @@ legend{font-size:14px;font-weight:700;margin-bottom:8px}
           data-go="voice" id="composer-mic">
           <span class="icon">mic</span>
         </button>
-        <textarea id="input" rows="1" maxlength="4000"></textarea>
+        <textarea id="input" rows="1" maxlength="2000"></textarea>
         <button class="icon-button send" type="submit" id="send" disabled>
           <span class="icon">arrow_upward</span>
         </button>
@@ -883,7 +884,7 @@ document.addEventListener("DOMContentLoaded", () => {
     ],
     retry:["Coba lagi","Try again"],
     you:["Anda","You"],
-    sources:["Sumber jawaban","Answer sources"],
+    sources:["Sumber resmi","Official sources"],
     source:["Sumber","Source"],
     listen:["Dengarkan","Listen"],
     stop:["Hentikan","Stop"],
@@ -941,30 +942,639 @@ document.addEventListener("DOMContentLoaded", () => {
   };
 
   const places = [
-    {
-      icon:"forest",
-      name:[
-        "Pandang Tak Jemu (Kampung Terih)",
-        "Pandang Tak Jemu (Terih Village)"
-      ],
-      category:["Alam & mangrove","Nature & mangroves"],
-      about:[
-        "Destinasi wisata pesisir dan mangrove di Kampung Terih, Batam.",
-        "A coastal and mangrove destination in Kampung Terih, Batam."
-      ],
-      map:"Pandang Tak Jemu Kampung Terih Batam"
+  {
+    "icon": "forest",
+    "name": [
+      "Mangrove Pandang Tak Jemu",
+      "Mangrove Pandang Tak Jemu"
+    ],
+    "category": [
+      "Alam & mangrove",
+      "Nature & mangroves"
+    ],
+    "about": [
+      "Ekowisata mangrove di Kampung Tua Bakau Serip, Sambau, Nongsa. JADesta mencantumkan wisata pesisir serta kegiatan edukasi kelestarian mangrove.",
+      "Mangrove ecotourism in Kampung Tua Bakau Serip, Sambau, Nongsa. JADesta describes coastal tourism and mangrove conservation education."
+    ],
+    "map": "Mangrove Pandang Tak Jemu Jl. Hang Lekiu KM 4, Kampung Tua Bakau Serip, Sambau, Nongsa, Batam.",
+    "source": {
+      "title": "JADesta Kemenpar · Mangrove Pandang Tak Jemu",
+      "url": "https://jadesta.kemenpar.go.id/atraksi/ekowisata_alam_mangrove_pandang_tak_jemu",
+      "checked_at": "2026-10-28"
     },
-    {
-      icon:"architecture",
-      name:["Jembatan Barelang","Barelang Bridge"],
-      category:["Ikon Batam","Batam landmark"],
-      about:[
-        "Kawasan jembatan yang menjadi salah satu ikon wisata Batam.",
-        "A bridge area known as one of Batam's tourism landmarks."
-      ],
-      map:"Jembatan 1 Barelang Batam"
+    "facts": {
+      "summary": {
+        "id": "Ekowisata mangrove di Kampung Tua Bakau Serip, Sambau, Nongsa. JADesta mencantumkan wisata pesisir serta kegiatan edukasi kelestarian mangrove.",
+        "en": "Mangrove ecotourism in Kampung Tua Bakau Serip, Sambau, Nongsa. JADesta describes coastal tourism and mangrove conservation education."
+      },
+      "location": {
+        "id": "Jl. Hang Lekiu KM 4, Kampung Tua Bakau Serip, Sambau, Nongsa, Batam.",
+        "en": "Jl. Hang Lekiu KM 4, Kampung Tua Bakau Serip, Sambau, Nongsa, Batam."
+      },
+      "facilities": {
+        "id": "JADesta mencantumkan tempat makan seafood, musholla, kamar mandi umum, area foto, dan Wi-Fi. Konfirmasikan ketersediaannya kepada pengelola.",
+        "en": "JADesta lists seafood dining, a prayer room, public toilets, photo areas and Wi-Fi. Confirm availability with the operator."
+      },
+      "price": {
+        "id": "Halaman JADesta menampilkan harga mulai Rp50.000, tetapi tidak menjelaskan bahwa angka ini adalah tiket masuk per orang. Jenis paket, cakupan layanan, dan tarif berlaku perlu dikonfirmasi ke pengelola.",
+        "en": "JADesta displays a starting price of IDR 50,000, but does not identify it as a per-person admission ticket. Confirm the package, inclusions and current rate with the operator.",
+        "checked_at": "2026-10-28"
+      },
+      "hours": null
     }
-  ];
+  },
+  {
+    "icon": "museum",
+    "name": [
+      "Desa Wisata Kampung Terih",
+      "Desa Wisata Kampung Terih"
+    ],
+    "category": [
+      "Budaya & sejarah",
+      "Culture & history"
+    ],
+    "about": [
+      "Desa wisata yang memiliki entri tersendiri di JADesta. Alamatnya berada di Kampung Terih, Kelurahan Sambau, Kecamatan Nongsa.",
+      "A tourism village with its own JADesta entry, located in Kampung Terih, Sambau, Nongsa."
+    ],
+    "map": "Desa Wisata Kampung Terih RT 002 RW 005, Kampung Terih, Sambau, Nongsa, Batam.",
+    "source": {
+      "title": "JADesta Kemenpar · Desa Wisata Kampung Terih",
+      "url": "https://jadesta.kemenpar.go.id/desa/_kampung_terih",
+      "checked_at": "2026-10-28"
+    },
+    "facts": {
+      "summary": {
+        "id": "Desa wisata yang memiliki entri tersendiri di JADesta. Alamatnya berada di Kampung Terih, Kelurahan Sambau, Kecamatan Nongsa.",
+        "en": "A tourism village with its own JADesta entry, located in Kampung Terih, Sambau, Nongsa."
+      },
+      "location": {
+        "id": "RT 002 RW 005, Kampung Terih, Sambau, Nongsa, Batam.",
+        "en": "RT 002 RW 005, Kampung Terih, Sambau, Nongsa, Batam."
+      },
+      "facilities": null,
+      "price": null,
+      "hours": null
+    }
+  },
+  {
+    "icon": "architecture",
+    "name": [
+      "Jembatan Barelang",
+      "Jembatan Barelang"
+    ],
+    "category": [
+      "Ikon Batam",
+      "Batam landmarks"
+    ],
+    "about": [
+      "Rangkaian jembatan yang menjadi ikon Batam dan menawarkan pemandangan laut.",
+      "An iconic Batam bridge network with sea views."
+    ],
+    "map": "Jembatan Barelang Kawasan Barelang, Batam.",
+    "source": {
+      "title": "BP Batam · Jembatan Barelang",
+      "url": "https://bpbatam.go.id/about-batam/travel-destinations/",
+      "checked_at": "2026-10-28"
+    },
+    "facts": {
+      "summary": {
+        "id": "Rangkaian jembatan yang menjadi ikon Batam dan menawarkan pemandangan laut.",
+        "en": "An iconic Batam bridge network with sea views."
+      },
+      "location": {
+        "id": "Kawasan Barelang, Batam.",
+        "en": "Barelang area, Batam."
+      },
+      "facilities": null,
+      "price": null,
+      "hours": null
+    }
+  },
+  {
+    "icon": "beach_access",
+    "name": [
+      "Pantai Nongsa",
+      "Pantai Nongsa"
+    ],
+    "category": [
+      "Pantai",
+      "Beaches"
+    ],
+    "about": [
+      "BP Batam menampilkan Pantai Nongsa sebagai destinasi pantai berpasir putih dengan pemandangan ke arah Singapura.",
+      "BP Batam lists Nongsa Beach as a white-sand coastal destination overlooking Singapore."
+    ],
+    "map": "Pantai Nongsa Nongsa, Batam.",
+    "source": {
+      "title": "BP Batam · Pantai Nongsa",
+      "url": "https://bpbatam.go.id/about-batam/travel-destinations/",
+      "checked_at": "2026-10-28"
+    },
+    "facts": {
+      "summary": {
+        "id": "BP Batam menampilkan Pantai Nongsa sebagai destinasi pantai berpasir putih dengan pemandangan ke arah Singapura.",
+        "en": "BP Batam lists Nongsa Beach as a white-sand coastal destination overlooking Singapore."
+      },
+      "location": {
+        "id": "Nongsa, Batam.",
+        "en": "Nongsa, Batam."
+      },
+      "facilities": null,
+      "price": null,
+      "hours": null
+    }
+  },
+  {
+    "icon": "park",
+    "name": [
+      "Mega Wisata Ocarina",
+      "Mega Wisata Ocarina"
+    ],
+    "category": [
+      "Wisata keluarga",
+      "Family attractions"
+    ],
+    "about": [
+      "Taman rekreasi yang ditampilkan BP Batam untuk wisata keluarga.",
+      "A recreation park listed by BP Batam as a family attraction."
+    ],
+    "map": "Mega Wisata Ocarina Batam.",
+    "source": {
+      "title": "BP Batam · Mega Wisata Ocarina",
+      "url": "https://bpbatam.go.id/about-batam/travel-destinations/",
+      "checked_at": "2026-10-28"
+    },
+    "facts": {
+      "summary": {
+        "id": "Taman rekreasi yang ditampilkan BP Batam untuk wisata keluarga.",
+        "en": "A recreation park listed by BP Batam as a family attraction."
+      },
+      "location": {
+        "id": "Batam.",
+        "en": "Batam."
+      },
+      "facilities": null,
+      "price": null,
+      "hours": null
+    }
+  },
+  {
+    "icon": "architecture",
+    "name": [
+      "Welcome to Batam",
+      "Welcome to Batam"
+    ],
+    "category": [
+      "Ikon Batam",
+      "Batam landmarks"
+    ],
+    "about": [
+      "Landmark bertuliskan Welcome to Batam yang ditampilkan BP Batam sebagai lokasi berfoto.",
+      "The Welcome to Batam landmark is listed by BP Batam as a photo spot."
+    ],
+    "map": "Welcome to Batam Batam.",
+    "source": {
+      "title": "BP Batam · Welcome to Batam",
+      "url": "https://bpbatam.go.id/about-batam/travel-destinations/",
+      "checked_at": "2026-10-28"
+    },
+    "facts": {
+      "summary": {
+        "id": "Landmark bertuliskan Welcome to Batam yang ditampilkan BP Batam sebagai lokasi berfoto.",
+        "en": "The Welcome to Batam landmark is listed by BP Batam as a photo spot."
+      },
+      "location": {
+        "id": "Batam.",
+        "en": "Batam."
+      },
+      "facilities": null,
+      "price": null,
+      "hours": null
+    }
+  },
+  {
+    "icon": "museum",
+    "name": [
+      "Eks Kamp Pengungsi Vietnam",
+      "Eks Kamp Pengungsi Vietnam"
+    ],
+    "category": [
+      "Budaya & sejarah",
+      "Culture & history"
+    ],
+    "about": [
+      "Situs sejarah di Pulau Galang yang dahulu menjadi tempat penampungan sementara pengungsi Vietnam pada era 1970-an hingga 1990-an.",
+      "A historic site on Galang Island that sheltered Vietnamese refugees from the 1970s to the 1990s."
+    ],
+    "map": "Eks Kamp Pengungsi Vietnam Pulau Galang, Batam.",
+    "source": {
+      "title": "Pemkot Batam · Eks Kamp Pengungsi Vietnam",
+      "url": "https://batam.go.id/batam-memulai-langkah-bersejarah-camp-vietnam-di-pulau-galang-dicanangkan-sebagai-kawasan-cagar-budaya-dan-destinasi-wisata-unggulan/",
+      "checked_at": "2026-10-28"
+    },
+    "facts": {
+      "summary": {
+        "id": "Situs sejarah di Pulau Galang yang dahulu menjadi tempat penampungan sementara pengungsi Vietnam pada era 1970-an hingga 1990-an.",
+        "en": "A historic site on Galang Island that sheltered Vietnamese refugees from the 1970s to the 1990s."
+      },
+      "location": {
+        "id": "Pulau Galang, Batam.",
+        "en": "Galang Island, Batam."
+      },
+      "facilities": null,
+      "price": null,
+      "hours": null
+    }
+  },
+  {
+    "icon": "park",
+    "name": [
+      "Taman Rusa Sekupang",
+      "Taman Rusa Sekupang"
+    ],
+    "category": [
+      "Wisata keluarga",
+      "Family attractions"
+    ],
+    "about": [
+      "Taman rekreasi di Sekupang dengan lintasan jogging dan area rusa, sebagaimana dijelaskan BP Batam.",
+      "A recreation park in Sekupang with a jogging track and deer area, described by BP Batam."
+    ],
+    "map": "Taman Rusa Sekupang Jl. RE. Martadinata, Sekupang, Batam; berseberangan dengan Guest House Sekupang.",
+    "source": {
+      "title": "BP Batam · Taman Rusa Sekupang",
+      "url": "https://bpbatam.go.id/indah-dan-megah-taman-rusa-sekupang-kini-resmi-dibuka/",
+      "checked_at": "2026-10-28"
+    },
+    "facts": {
+      "summary": {
+        "id": "Taman rekreasi di Sekupang dengan lintasan jogging dan area rusa, sebagaimana dijelaskan BP Batam.",
+        "en": "A recreation park in Sekupang with a jogging track and deer area, described by BP Batam."
+      },
+      "location": {
+        "id": "Jl. RE. Martadinata, Sekupang, Batam; berseberangan dengan Guest House Sekupang.",
+        "en": "Jl. RE. Martadinata, Sekupang, Batam, opposite Guest House Sekupang."
+      },
+      "facilities": null,
+      "price": null,
+      "hours": null
+    }
+  },
+  {
+    "icon": "forest",
+    "name": [
+      "Kebun Raya Batam",
+      "Kebun Raya Batam"
+    ],
+    "category": [
+      "Alam & mangrove",
+      "Nature & mangroves"
+    ],
+    "about": [
+      "Kebun raya dengan tema konservasi tumbuhan pesisir dan pulau-pulau kecil Indonesia. Profil resminya menjelaskan fungsi konservasi, pendidikan, penelitian, dan rekreasi.",
+      "A botanical garden focused on conserving Indonesian coastal and small-island plants. Its official profile describes conservation, education, research and recreation."
+    ],
+    "map": "Kebun Raya Batam Jl. Hang Lekiu KM 4, Sambau, Nongsa, Batam.",
+    "source": {
+      "title": "UPTD Kebun Raya Batam · Kebun Raya Batam",
+      "url": "https://kebunraya.batam.go.id/web/?page_id=142",
+      "checked_at": "2026-10-28"
+    },
+    "facts": {
+      "summary": {
+        "id": "Kebun raya dengan tema konservasi tumbuhan pesisir dan pulau-pulau kecil Indonesia. Profil resminya menjelaskan fungsi konservasi, pendidikan, penelitian, dan rekreasi.",
+        "en": "A botanical garden focused on conserving Indonesian coastal and small-island plants. Its official profile describes conservation, education, research and recreation."
+      },
+      "location": {
+        "id": "Jl. Hang Lekiu KM 4, Sambau, Nongsa, Batam.",
+        "en": "Jl. Hang Lekiu KM 4, Sambau, Nongsa, Batam."
+      },
+      "facilities": null,
+      "price": null,
+      "hours": null
+    }
+  },
+  {
+    "icon": "museum",
+    "name": [
+      "Museum Batam Raja Ali Haji",
+      "Museum Batam Raja Ali Haji"
+    ],
+    "category": [
+      "Budaya & sejarah",
+      "Culture & history"
+    ],
+    "about": [
+      "Museum di Batam Center yang menempati bekas gedung astaka MTQ Nasional. Disbudpar mencatat pembukaannya pada 18 Desember 2020.",
+      "A museum in Batam Center housed in the former national MTQ astaka building. Disbudpar records its opening on 18 December 2020."
+    ],
+    "map": "Museum Batam Raja Ali Haji Batam Center, Batam.",
+    "source": {
+      "title": "Disbudpar Batam · Museum Batam Raja Ali Haji",
+      "url": "https://disbudpar.batam.go.id/2022/01/31/museum-batam-raja-ali-haji-jadi-rujukan-pembangunan-museum-di-belitung-timur/",
+      "checked_at": "2026-10-28"
+    },
+    "facts": {
+      "summary": {
+        "id": "Museum di Batam Center yang menempati bekas gedung astaka MTQ Nasional. Disbudpar mencatat pembukaannya pada 18 Desember 2020.",
+        "en": "A museum in Batam Center housed in the former national MTQ astaka building. Disbudpar records its opening on 18 December 2020."
+      },
+      "location": {
+        "id": "Batam Center, Batam.",
+        "en": "Batam Center, Batam."
+      },
+      "facilities": null,
+      "price": null,
+      "hours": null
+    }
+  },
+  {
+    "icon": "account_balance",
+    "name": [
+      "Masjid Agung Raja Hamidah",
+      "Masjid Agung Raja Hamidah"
+    ],
+    "category": [
+      "Wisata religi",
+      "Religious sites"
+    ],
+    "about": [
+      "Masjid agung Kota Batam yang tercatat dalam sistem informasi masjid Kementerian Agama.",
+      "Batam grand mosque listed in the Ministry of Religious Affairs mosque information system."
+    ],
+    "map": "Masjid Agung Raja Hamidah Jl. Engku Putri, Teluk Tering, Batam Kota, Batam Centre.",
+    "source": {
+      "title": "SIMAS Kemenag · Masjid Agung Raja Hamidah",
+      "url": "https://simas.kemenag.go.id/profil/masjid/01.2.10.06.10.000113",
+      "checked_at": "2026-10-28"
+    },
+    "facts": {
+      "summary": {
+        "id": "Masjid agung Kota Batam yang tercatat dalam sistem informasi masjid Kementerian Agama.",
+        "en": "Batam grand mosque listed in the Ministry of Religious Affairs mosque information system."
+      },
+      "location": {
+        "id": "Jl. Engku Putri, Teluk Tering, Batam Kota, Batam Centre.",
+        "en": "Jl. Engku Putri, Teluk Tering, Batam Kota, Batam Centre."
+      },
+      "facilities": {
+        "id": "SIMAS mencantumkan tempat wudhu, toilet, parkir, dan jalur kursi roda. Konfirmasikan akses kunjungan kepada pengelola.",
+        "en": "SIMAS lists ablution areas, toilets, parking and wheelchair access. Confirm visitor access with the mosque management."
+      },
+      "price": null,
+      "hours": null
+    }
+  },
+  {
+    "icon": "account_balance",
+    "name": [
+      "Masjid Sultan Mahmud Riayat Syah",
+      "Masjid Sultan Mahmud Riayat Syah"
+    ],
+    "category": [
+      "Wisata religi",
+      "Religious sites"
+    ],
+    "about": [
+      "Masjid di Tanjung Uncang yang diperkenalkan Kemenag Batam sebagai ikon wisata religi.",
+      "A mosque in Tanjung Uncang introduced by Kemenag Batam as a religious-tourism landmark."
+    ],
+    "map": "Masjid Sultan Mahmud Riayat Syah Jl. Brigjen Katamso, Tanjung Uncang, Batu Aji, Batam.",
+    "source": {
+      "title": "Kemenag Kota Batam · Masjid Sultan Mahmud Riayat Syah",
+      "url": "https://batam.kemenag.go.id/main/detail/besok-masjid-sultan-mahmud-riayat-syah-diresmikan",
+      "checked_at": "2026-10-28"
+    },
+    "facts": {
+      "summary": {
+        "id": "Masjid di Tanjung Uncang yang diperkenalkan Kemenag Batam sebagai ikon wisata religi.",
+        "en": "A mosque in Tanjung Uncang introduced by Kemenag Batam as a religious-tourism landmark."
+      },
+      "location": {
+        "id": "Jl. Brigjen Katamso, Tanjung Uncang, Batu Aji, Batam.",
+        "en": "Jl. Brigjen Katamso, Tanjung Uncang, Batu Aji, Batam."
+      },
+      "facilities": null,
+      "price": null,
+      "hours": null
+    }
+  },
+  {
+    "icon": "account_balance",
+    "name": [
+      "Maha Vihara Duta Maitreya",
+      "Maha Vihara Duta Maitreya"
+    ],
+    "category": [
+      "Wisata religi",
+      "Religious sites"
+    ],
+    "about": [
+      "Vihara di Sei Panas yang disebut Disbudpar dalam kunjungan wisata religi di Batam.",
+      "A monastery in Sei Panas mentioned by Disbudpar in a Batam religious-tourism visit."
+    ],
+    "map": "Maha Vihara Duta Maitreya Sei Panas, Batam.",
+    "source": {
+      "title": "Disbudpar Batam · Maha Vihara Duta Maitreya",
+      "url": "https://disbudpar.batam.go.id/2019/11/21/tour-operator-dan-media-srilanka-kunjungi-masjid-sultan/",
+      "checked_at": "2026-10-28"
+    },
+    "facts": {
+      "summary": {
+        "id": "Vihara di Sei Panas yang disebut Disbudpar dalam kunjungan wisata religi di Batam.",
+        "en": "A monastery in Sei Panas mentioned by Disbudpar in a Batam religious-tourism visit."
+      },
+      "location": {
+        "id": "Sei Panas, Batam.",
+        "en": "Sei Panas, Batam."
+      },
+      "facilities": null,
+      "price": null,
+      "hours": null
+    }
+  },
+  {
+    "icon": "hotel",
+    "name": [
+      "Montigo Resorts Nongsa",
+      "Montigo Resorts Nongsa"
+    ],
+    "category": [
+      "Penginapan",
+      "Accommodation"
+    ],
+    "about": [
+      "Resor di Nongsa yang pada situs resminya menawarkan akomodasi, tempat makan, dan aktivitas rekreasi.",
+      "A Nongsa resort whose official website offers accommodation, dining and leisure activities."
+    ],
+    "map": "Montigo Resorts Nongsa Jl. Hang Lekir, Sambau, Nongsa, Batam.",
+    "source": {
+      "title": "Montigo Resorts · Montigo Resorts Nongsa",
+      "url": "https://nongsa.montigoresorts.com/",
+      "checked_at": "2026-10-28"
+    },
+    "facts": {
+      "summary": {
+        "id": "Resor di Nongsa yang pada situs resminya menawarkan akomodasi, tempat makan, dan aktivitas rekreasi.",
+        "en": "A Nongsa resort whose official website offers accommodation, dining and leisure activities."
+      },
+      "location": {
+        "id": "Jl. Hang Lekir, Sambau, Nongsa, Batam.",
+        "en": "Jl. Hang Lekir, Sambau, Nongsa, Batam."
+      },
+      "facilities": {
+        "id": "Situs operator mencantumkan beberapa jenis akomodasi dengan kolam pribadi serta pilihan tempat makan dan wellness. Fasilitas bergantung pada jenis kamar atau paket.",
+        "en": "The operator lists accommodation types with private pools, dining and wellness options. Facilities depend on the room or package."
+      },
+      "price": null,
+      "hours": null
+    }
+  },
+  {
+    "icon": "shopping_bag",
+    "name": [
+      "Grand Batam Mall",
+      "Grand Batam Mall"
+    ],
+    "category": [
+      "Belanja",
+      "Shopping"
+    ],
+    "about": [
+      "Pusat belanja yang pada situs operatornya menyediakan pilihan retail, tempat makan, dan hiburan.",
+      "A shopping mall whose operator website lists retail, dining and entertainment."
+    ],
+    "map": "Grand Batam Mall Batam.",
+    "source": {
+      "title": "Grand Batam Mall · Grand Batam Mall",
+      "url": "https://grandbatam.com/",
+      "checked_at": "2026-10-28"
+    },
+    "facts": {
+      "summary": {
+        "id": "Pusat belanja yang pada situs operatornya menyediakan pilihan retail, tempat makan, dan hiburan.",
+        "en": "A shopping mall whose operator website lists retail, dining and entertainment."
+      },
+      "location": {
+        "id": "Batam.",
+        "en": "Batam."
+      },
+      "facilities": {
+        "id": "Operator mencantumkan layanan concierge, penitipan bagasi, dan Wi-Fi. Periksa ketentuan layanan pada operator.",
+        "en": "The operator lists concierge, luggage services and Wi-Fi. Check service conditions with the operator."
+      },
+      "price": null,
+      "hours": {
+        "id": "Situs operator mencantumkan 10.00–22.00 WIB saat diperiksa pada 28 Oktober 2026. Jam khusus hari libur atau perubahan operasional perlu dikonfirmasi.",
+        "en": "The operator website listed 10:00–22:00 WIB when checked on 28 October 2026. Confirm holiday hours or operational changes.",
+        "checked_at": "2026-10-28"
+      }
+    }
+  },
+  {
+    "icon": "beach_access",
+    "name": [
+      "Pantai Elyora",
+      "Pantai Elyora"
+    ],
+    "category": [
+      "Pantai",
+      "Beaches"
+    ],
+    "about": [
+      "SISPEK Disbudpar mencatat Pantai Elyora sebagai destinasi pantai di Kecamatan Galang.",
+      "SISPEK Disbudpar lists Elyora as a beach destination in Galang district."
+    ],
+    "map": "Pantai Elyora Kawasan Jembatan 6, Galang, Batam, sebagaimana tercantum pada SISPEK.",
+    "source": {
+      "title": "SISPEK Disbudpar Batam · Pantai Elyora",
+      "url": "https://sispek.batam.go.id/bydestination/54",
+      "checked_at": "2026-10-28"
+    },
+    "facts": {
+      "summary": {
+        "id": "SISPEK Disbudpar mencatat Pantai Elyora sebagai destinasi pantai di Kecamatan Galang.",
+        "en": "SISPEK Disbudpar lists Elyora as a beach destination in Galang district."
+      },
+      "location": {
+        "id": "Kawasan Jembatan 6, Galang, Batam, sebagaimana tercantum pada SISPEK.",
+        "en": "Bridge 6 area, Galang, Batam, as listed by SISPEK."
+      },
+      "facilities": null,
+      "price": null,
+      "hours": null
+    }
+  },
+  {
+    "icon": "beach_access",
+    "name": [
+      "Pantai Tanjung Memban",
+      "Pantai Tanjung Memban"
+    ],
+    "category": [
+      "Pantai",
+      "Beaches"
+    ],
+    "about": [
+      "SISPEK Disbudpar mencatat Tanjung Memban sebagai destinasi pantai di Nongsa.",
+      "SISPEK Disbudpar lists Tanjung Memban as a beach destination in Nongsa."
+    ],
+    "map": "Pantai Tanjung Memban Tanjung Memban, Nongsa, Batam.",
+    "source": {
+      "title": "SISPEK Disbudpar Batam · Pantai Tanjung Memban",
+      "url": "https://sispek.batam.go.id/bydestination/20",
+      "checked_at": "2026-10-28"
+    },
+    "facts": {
+      "summary": {
+        "id": "SISPEK Disbudpar mencatat Tanjung Memban sebagai destinasi pantai di Nongsa.",
+        "en": "SISPEK Disbudpar lists Tanjung Memban as a beach destination in Nongsa."
+      },
+      "location": {
+        "id": "Tanjung Memban, Nongsa, Batam.",
+        "en": "Tanjung Memban, Nongsa, Batam."
+      },
+      "facilities": null,
+      "price": null,
+      "hours": null
+    }
+  },
+  {
+    "icon": "account_balance",
+    "name": [
+      "Masjid Tanjak Bandara",
+      "Masjid Tanjak Bandara"
+    ],
+    "category": [
+      "Wisata religi",
+      "Religious sites"
+    ],
+    "about": [
+      "SISPEK Disbudpar mencatat Masjid Tanjak Bandara sebagai destinasi wisata religi di Nongsa.",
+      "SISPEK Disbudpar lists Masjid Tanjak Bandara as a religious-tourism destination in Nongsa."
+    ],
+    "map": "Masjid Tanjak Bandara Nongsa, Batam.",
+    "source": {
+      "title": "SISPEK Disbudpar Batam · Masjid Tanjak Bandara",
+      "url": "https://sispek.batam.go.id/bydestination/107",
+      "checked_at": "2026-10-28"
+    },
+    "facts": {
+      "summary": {
+        "id": "SISPEK Disbudpar mencatat Masjid Tanjak Bandara sebagai destinasi wisata religi di Nongsa.",
+        "en": "SISPEK Disbudpar lists Masjid Tanjak Bandara as a religious-tourism destination in Nongsa."
+      },
+      "location": {
+        "id": "Nongsa, Batam.",
+        "en": "Nongsa, Batam."
+      },
+      "facilities": null,
+      "price": null,
+      "hours": null
+    }
+  }
+];
 
   let lang = storage.get("wb_language") === "EN" ? "EN" : "ID";
   let page = "home";
@@ -1165,13 +1775,15 @@ document.addEventListener("DOMContentLoaded", () => {
       $("detail-tabs").append(button);
     });
 
-    $("detail-body").textContent = detailTab === "about"
-      ? local(place.about)
-      : t({
-          facility:"pendingFacility",
-          access:"accessText",
-          hours:"pendingHours"
-        }[detailTab]);
+    const body = $('detail-body');
+    const language = lang === 'EN' ? 'en' : 'id';
+    const field = detailTab === 'facility' ? place.facts?.facilities
+      : detailTab === 'hours' ? place.facts?.hours : null;
+    const current = field && (detailTab !== 'hours' || (field.checked_at && Date.now()-Date.parse(field.checked_at+'T00:00:00Z')<=7*86400000));
+    body.textContent = detailTab === 'about' ? local(place.about)
+      : detailTab === 'access' ? (place.facts?.location?.[language] || t('accessText'))
+      : current ? field[language] : t(detailTab === 'hours' ? 'pendingHours' : 'pendingFacility');
+    if (place.source) addSources(body,[place.source],lang);
   }
 
   const Recognition =
@@ -1364,35 +1976,31 @@ document.addEventListener("DOMContentLoaded", () => {
 
   function addSources(bubble,sources,language) {
     if (!Array.isArray(sources) || !sources.length) return;
-
-    const wrap = node("div","sources");
-    wrap.append(node("small","",t("sources",language)));
-
-    sources.slice(0,20).forEach((source,i) => {
-      if (!source) return;
-      const object = typeof source === "object";
-      const candidate = object
-        ? (source.url || source.link || source.source)
-        : source;
-      const href = safeURL(candidate);
-      const label = object
-        ? (source.title || source.name || source.source || href)
-        : source;
-
-      const item = node(
-        href ? "a" : "span",
-        "source",
-        String(label || `${t("source",language)} ${i + 1}`)
-      );
-
-      if (href) {
-        item.href = href;
-        item.target = "_blank";
-        item.rel = "noopener noreferrer";
+    const wrap = node('div','sources');
+    wrap.append(node('small','',t('sources',language)));
+    const seen = new Set();
+    for (const source of sources.slice(0,20)) {
+      if (!source) continue;
+      const object = typeof source === 'object';
+      const href = safeURL(object ? (source.url || source.link) : source);
+      if (!href || !href.startsWith('https:') || seen.has(href + (object ? source.title : ''))) continue;
+      let label = object ? (source.title || source.publisher || new URL(href).hostname) : new URL(href).hostname;
+      if (/data_wisata|\.txt\b|materi proyek|belum diverifikasi|project material|not independently verified/i.test(String(label))) label = new URL(href).hostname;
+      const item = node('a','source',String(label));
+      item.href = href;
+      item.target = '_blank';
+      item.rel = 'noopener noreferrer';
+      if (object && /^\d{4}-\d{2}-\d{2}$/.test(source.checked_at || '')) {
+        const date = new Date(source.checked_at + 'T00:00:00Z');
+        if (Number.isFinite(date.getTime())) {
+          const locale = language === 'EN' || (!language && lang === 'EN') ? 'en-GB' : 'id-ID';
+          item.title = (locale === 'en-GB' ? 'Source checked: ' : 'Sumber diperiksa: ') + date.toLocaleDateString(locale,{day:'numeric',month:'long',year:'numeric',timeZone:'UTC'});
+          item.setAttribute('aria-label',String(label) + '. ' + item.title);
+        }
       }
+      seen.add(href + (object ? source.title : ''));
       wrap.append(item);
-    });
-
+    }
     if (wrap.children.length > 1) bubble.append(wrap);
   }
 
@@ -1778,5 +2386,4 @@ document.addEventListener("DOMContentLoaded", () => {
 </script>
 </body>
 </html>
-```
 
