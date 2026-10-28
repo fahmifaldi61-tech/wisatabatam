@@ -719,7 +719,7 @@ legend{font-size:14px;font-weight:700;margin-bottom:8px}
 document.addEventListener("DOMContentLoaded", () => {
   "use strict";
 
-  const API_URL = "https://wisatabatam-backend-production.up.railway.app/api/chat/";
+  const API_URL = "https://eucjlbumklqhmscwixvr.supabase.co/functions/v1/chat";
   const $ = id => document.getElementById(id);
 
   const storage = {
@@ -1290,6 +1290,78 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
+
+  // A random session bearer token is issued by the backend. No AI or admin keys are sent to the browser.
+  let apiSession = null;
+  let apiSessionPromise = null;
+  function forgetApiSession() {
+    apiSession = null;
+    storage.set('hb_api_session_v1','');
+  }
+  async function apiFailure(response,language) {
+    let details = {};
+    try { details = await response.json(); } catch {}
+    const error = new Error('HTTP ' + response.status);
+    error.code = details.code || 'backend_unavailable';
+    const messages = {
+      rate_limit:['Demo sedang ramai. Tunggu sebentar lalu coba lagi.','The demo is busy. Please wait briefly and try again.'],
+      ai_quota:['Kuota AI gratis sedang terbatas. Silakan coba lagi nanti.','The free AI quota is temporarily unavailable. Please try again later.'],
+      session_busy:['Pertanyaan sebelumnya masih diproses. Tunggu sebentar.','Your previous question is still being processed. Please wait.'],
+      invalid_message:['Pertanyaan harus berisi 1–2.000 karakter.','Your question must contain 1–2,000 characters.'],
+      ai_not_configured:['Asisten sementara belum tersedia. Silakan coba lagi nanti.','The assistant is temporarily unavailable. Please try again later.']
+    };
+    const pair = messages[error.code];
+    if (pair) error.userMessage = pair[language === 'en' ? 1 : 0];
+    console.warn('Hallo Batam request failed',response.status,error.code);
+    return error;
+  }
+  async function getApiSession(signal,language) {
+    if (apiSession) return apiSession;
+    if (!apiSessionPromise) {
+      apiSessionPromise = (async () => {
+        let saved = null;
+        try { saved = JSON.parse(storage.get('hb_api_session_v1','null')); } catch {}
+        if (saved && typeof saved.session_token === 'string' && /^[a-f0-9]{64}$/.test(saved.session_token)) {
+          apiSession = saved;
+          return saved;
+        }
+        const response = await fetch(API_URL,{
+          method:'POST',headers:{'Content-Type':'application/json'},
+          body:JSON.stringify({action:'session'}),signal
+        });
+        if (!response.ok) throw await apiFailure(response,language);
+        const result = await response.json();
+        if (typeof result.session_token !== 'string' || !/^[a-f0-9]{64}$/.test(result.session_token)) throw new Error('Invalid session response');
+        apiSession = {session_id:result.session_id,session_token:result.session_token};
+        storage.set('hb_api_session_v1',JSON.stringify(apiSession));
+        sessionId = result.session_id;
+        storage.set('session_id',sessionId);
+        return apiSession;
+      })().finally(() => {apiSessionPromise = null;});
+    }
+    return apiSessionPromise;
+  }
+  function apiRequestId() {
+    if (crypto.randomUUID) return crypto.randomUUID();
+    const b = crypto.getRandomValues(new Uint8Array(16));
+    b[6] = (b[6] & 15) | 64; b[8] = (b[8] & 63) | 128;
+    const h = Array.from(b,n => n.toString(16).padStart(2,'0')).join('');
+    return h.slice(0,8)+'-'+h.slice(8,12)+'-'+h.slice(12,16)+'-'+h.slice(16,20)+'-'+h.slice(20);
+  }
+  async function fetchChat(payload,signal) {
+    if (!payload.request_id) payload.request_id = apiRequestId();
+    for (let attempt=0;attempt<2;attempt++) {
+      const session = await getApiSession(signal,payload.language);
+      const response = await fetch(API_URL,{
+        method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer ' + session.session_token},
+        body:JSON.stringify({...payload,session_id:session.session_id}),signal
+      });
+      if (response.status === 401 && attempt === 0) {forgetApiSession();continue;}
+      return response;
+    }
+    throw new Error('Session unavailable');
+  }
+
   function addSources(bubble,sources,language) {
     if (!Array.isArray(sources) || !sources.length) return;
 
@@ -1521,14 +1593,9 @@ document.addEventListener("DOMContentLoaded", () => {
     const timer = setTimeout(() => controller.abort(),60000);
 
     try {
-      const response = await fetch(API_URL,{
-        method:"POST",
-        headers:{"Content-Type":"application/json"},
-        body:JSON.stringify(payload),
-        signal:controller.signal
-      });
+      const response = await fetchChat(payload,controller.signal);
 
-      if (!response.ok) throw new Error("HTTP " + response.status);
+      if (!response.ok) throw await apiFailure(response,requestLanguage);
 
       const data = await response.json();
       if (typeof data.response !== "string" || !data.response.trim()) {
@@ -1540,7 +1607,7 @@ document.addEventListener("DOMContentLoaded", () => {
     } catch (error) {
       const result = addMessage(
         "error",
-        t(
+        error.userMessage || t(
           error.name === "AbortError" ? "timeout" : "failed",
           requestLanguage
         ),
@@ -1712,3 +1779,4 @@ document.addEventListener("DOMContentLoaded", () => {
 </body>
 </html>
 ```
+
