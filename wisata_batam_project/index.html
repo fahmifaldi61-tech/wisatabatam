@@ -587,6 +587,7 @@ legend{font-size:14px;font-weight:700;margin-bottom:8px}
       <h1 style="font-size:32px" data-t="voiceTitle"></h1>
       <p class="muted" id="voice-status" role="status"></p>
       <span class="tag" id="voice-language"></span>
+      <p class="muted" style="font-size:12px;max-width:460px;margin:12px auto 0;line-height:1.6" data-t="audioNotice"></p>
 
       <button class="voice-circle" id="record" type="button">
         <span class="icon">mic</span>
@@ -941,6 +942,13 @@ document.addEventListener("DOMContentLoaded", () => {
     multiday:["2–3 hari","2–3 days"]
   };
 
+  words.noMicrophone = ["Mikrofon tidak ditemukan. Sambungkan mikrofon, lalu coba lagi.","No microphone found. Connect one and try again."];
+  words.microphoneBusy = ["Mikrofon tidak bisa dibuka. Tutup aplikasi lain yang memakainya dan periksa pengaturan suara Windows.","The microphone cannot be opened. Close other apps using it and check your system sound settings."];
+  words.voiceLimit = ["Kuota transkripsi sedang penuh. Coba lagi sebentar atau ketik pertanyaan Anda.","Transcription quota is busy. Try again shortly or type your question."];
+  words.transcribing = ["Mengubah suara menjadi teks…","Transcribing your recording…"];
+  words.shortRecording = ["Rekam ucapan selama 1–45 detik, lalu tekan selesai.","Record 1–45 seconds of speech, then press stop."];
+  words.audioNotice = ["Rekam maksimal 45 detik. Audio dikirim ke Groq untuk transkripsi dan tidak disimpan oleh Hallo Batam. Periksa teks, lalu tekan Kirim.","Record up to 45 seconds. Audio is sent to Groq for transcription and is not stored by Hallo Batam. Review the text, then press Send."];
+  words.denied=['Izin mikrofon ditolak. Di Chrome, klik ikon pengaturan di sebelah alamat situs → Izin situs → Mikrofon → Izinkan. Periksa juga akses mikrofon di pengaturan Windows, lalu muat ulang halaman.','Microphone permission was denied. In Chrome, open site controls beside the address → Site settings → Microphone → Allow. Also check system microphone access, then reload.'];
   const places = [
   {
     "icon": "forest",
@@ -1573,6 +1581,906 @@ document.addEventListener("DOMContentLoaded", () => {
       "price": null,
       "hours": null
     }
+  },
+  {
+    "icon": "hotel",
+    "name": [
+      "Batam Marriott Hotel Harbour Bay",
+      "Batam Marriott Hotel Harbour Bay"
+    ],
+    "category": [
+      "Penginapan",
+      "Accommodation"
+    ],
+    "about": [
+      "Hotel tepi Harbour Bay dengan akses langsung ke terminal feri dari lobi.",
+      "Harbour Bay waterfront hotel with direct ferry-terminal access from its lobby."
+    ],
+    "map": "Batam Marriott Hotel Harbour Bay Harbour Bay, Batam.",
+    "source": {
+      "title": "Marriott · Batam Marriott Hotel Harbour Bay",
+      "url": "https://www.marriott.com/en-us/hotels/bthmc-batam-marriott-hotel-harbour-bay/overview/",
+      "checked_at": "2026-10-28"
+    },
+    "facts": {
+      "summary": {
+        "id": "Hotel tepi Harbour Bay dengan akses langsung ke terminal feri dari lobi.",
+        "en": "Harbour Bay waterfront hotel with direct ferry-terminal access from its lobby."
+      },
+      "location": {
+        "id": "Harbour Bay, Batam.",
+        "en": "Harbour Bay, Batam."
+      },
+      "facilities": {
+        "id": "Kolam luar ruang, pusat kebugaran, restoran, dan ruang pertemuan.",
+        "en": "Outdoor pool, fitness centre, restaurants and meeting spaces."
+      },
+      "hours": {
+        "id": "Check-in 15.00; check-out 12.00, sesuai halaman hotel.",
+        "en": "Check-in 15:00; check-out 12:00, as listed by the hotel.",
+        "checked_at": "2026-10-28"
+      }
+    }
+  },
+  {
+    "icon": "hotel",
+    "name": [
+      "Swiss-Belhotel Harbour Bay",
+      "Swiss-Belhotel Harbour Bay"
+    ],
+    "category": [
+      "Penginapan",
+      "Accommodation"
+    ],
+    "about": [
+      "Hotel di kawasan Harbour Bay, Batu Ampar.",
+      "Hotel in the Harbour Bay district of Batu Ampar."
+    ],
+    "map": "Swiss-Belhotel Harbour Bay Harbour Bay Complex, Jl. Duyung, Sei Jodoh, Batu Ampar, Batam.",
+    "source": {
+      "title": "Swiss-Belhotel International · Swiss-Belhotel Harbour Bay",
+      "url": "https://www.swiss-belhotel.com/hotels/swiss-belhotel-harbour-bay-batam",
+      "checked_at": "2026-10-28"
+    },
+    "facts": {
+      "summary": {
+        "id": "Hotel di kawasan Harbour Bay, Batu Ampar.",
+        "en": "Hotel in the Harbour Bay district of Batu Ampar."
+      },
+      "location": {
+        "id": "Harbour Bay Complex, Jl. Duyung, Sei Jodoh, Batu Ampar, Batam.",
+        "en": "Harbour Bay Complex, Jl. Duyung, Sei Jodoh, Batu Ampar, Batam."
+      },
+      "facilities": {
+        "id": "Kolam renang, spa, pusat kebugaran, Wi-Fi, dan layanan kamar.",
+        "en": "Swimming pool, spa, fitness centre, Wi-Fi and room service."
+      }
+    }
+  },
+  {
+    "icon": "hotel",
+    "name": [
+      "ibis Styles Batam Nagoya",
+      "ibis Styles Batam Nagoya"
+    ],
+    "category": [
+      "Penginapan",
+      "Accommodation"
+    ],
+    "about": [
+      "Hotel Accor di Bengkong Laut; namanya menggunakan Batam Nagoya.",
+      "Accor hotel in Bengkong Laut, branded Batam Nagoya."
+    ],
+    "map": "ibis Styles Batam Nagoya Jl. Yos Sudarso, Bengkong Laut, Batam.",
+    "source": {
+      "title": "ALL Accor · ibis Styles Batam Nagoya",
+      "url": "https://all.accor.com/hotel/9758/index.en.shtml",
+      "checked_at": "2026-10-28"
+    },
+    "facts": {
+      "summary": {
+        "id": "Hotel Accor di Bengkong Laut; namanya menggunakan Batam Nagoya.",
+        "en": "Accor hotel in Bengkong Laut, branded Batam Nagoya."
+      },
+      "location": {
+        "id": "Jl. Yos Sudarso, Bengkong Laut, Batam.",
+        "en": "Jl. Yos Sudarso, Bengkong Laut, Batam."
+      },
+      "facilities": {
+        "id": "Kolam renang, gym, spa, taman anak, dan Wi-Fi.",
+        "en": "Swimming pool, gym, spa, kids park and Wi-Fi."
+      }
+    }
+  },
+  {
+    "icon": "hotel",
+    "name": [
+      "HARRIS Hotel Batam Center",
+      "HARRIS Hotel Batam Center"
+    ],
+    "category": [
+      "Penginapan",
+      "Accommodation"
+    ],
+    "about": [
+      "Hotel HARRIS di kawasan Batam Center.",
+      "HARRIS hotel in the Batam Center area."
+    ],
+    "map": "HARRIS Hotel Batam Center Jl. Engku Putri, Batam Center, Batam.",
+    "source": {
+      "title": "HARRIS / Ascott · HARRIS Hotel Batam Center",
+      "url": "https://www.discoverasr.com/en/harris/indonesia/harris-hotel-batam-center-batam",
+      "checked_at": "2026-10-28"
+    },
+    "facts": {
+      "summary": {
+        "id": "Hotel HARRIS di kawasan Batam Center.",
+        "en": "HARRIS hotel in the Batam Center area."
+      },
+      "location": {
+        "id": "Jl. Engku Putri, Batam Center, Batam.",
+        "en": "Jl. Engku Putri, Batam Center, Batam."
+      },
+      "facilities": {
+        "id": "Kolam renang, area kebugaran, dan resepsionis 24 jam.",
+        "en": "Swimming pool, fitness area and 24-hour reception."
+      },
+      "hours": {
+        "id": "Check-in mulai 14.00; check-out sebelum 12.00.",
+        "en": "Check-in from 14:00; check-out before 12:00.",
+        "checked_at": "2026-10-28"
+      }
+    }
+  },
+  {
+    "icon": "hotel",
+    "name": [
+      "HARRIS Resort Batam Waterfront",
+      "HARRIS Resort Batam Waterfront"
+    ],
+    "category": [
+      "Penginapan",
+      "Accommodation"
+    ],
+    "about": [
+      "Resor di pesisir barat Batam yang menghadap Selat Singapura.",
+      "Resort on Batam’s western coast facing the Singapore Strait."
+    ],
+    "map": "HARRIS Resort Batam Waterfront Waterfront City, Batam.",
+    "source": {
+      "title": "HARRIS / Ascott · HARRIS Resort Batam Waterfront",
+      "url": "https://www.discoverasr.com/en/harris/indonesia/harris-resort-batam-waterfront",
+      "checked_at": "2026-10-28"
+    },
+    "facts": {
+      "summary": {
+        "id": "Resor di pesisir barat Batam yang menghadap Selat Singapura.",
+        "en": "Resort on Batam’s western coast facing the Singapore Strait."
+      },
+      "location": {
+        "id": "Waterfront City, Batam.",
+        "en": "Waterfront City, Batam."
+      }
+    }
+  },
+  {
+    "icon": "hotel",
+    "name": [
+      "HARRIS Resort Barelang Batam",
+      "HARRIS Resort Barelang Batam"
+    ],
+    "category": [
+      "Penginapan",
+      "Accommodation"
+    ],
+    "about": [
+      "Resor HARRIS di koridor wisata Barelang.",
+      "HARRIS resort in the Barelang tourism corridor."
+    ],
+    "map": "HARRIS Resort Barelang Batam Jl. Trans Barelang, Batam.",
+    "source": {
+      "title": "HARRIS / Ascott · HARRIS Resort Barelang Batam",
+      "url": "https://www.discoverasr.com/en/harris/indonesia/harris-resort-barelang-batam",
+      "checked_at": "2026-10-28"
+    },
+    "facts": {
+      "summary": {
+        "id": "Resor HARRIS di koridor wisata Barelang.",
+        "en": "HARRIS resort in the Barelang tourism corridor."
+      },
+      "location": {
+        "id": "Jl. Trans Barelang, Batam.",
+        "en": "Jl. Trans Barelang, Batam."
+      }
+    }
+  },
+  {
+    "icon": "hotel",
+    "name": [
+      "Nagoya Hill Hotel",
+      "Nagoya Hill Hotel"
+    ],
+    "category": [
+      "Penginapan",
+      "Accommodation"
+    ],
+    "about": [
+      "Hotel perkotaan di kawasan Nagoya Hill dengan akses ke pusat belanja.",
+      "City hotel in Nagoya Hill with shopping-centre access."
+    ],
+    "map": "Nagoya Hill Hotel Jl. Teuku Umar, Kawasan Nagoya Hill Superblok No. 1, Batam.",
+    "source": {
+      "title": "Nagoya Hill Hotel · Nagoya Hill Hotel",
+      "url": "https://nagoyahillhotel.com/",
+      "checked_at": "2026-10-28"
+    },
+    "facts": {
+      "summary": {
+        "id": "Hotel perkotaan di kawasan Nagoya Hill dengan akses ke pusat belanja.",
+        "en": "City hotel in Nagoya Hill with shopping-centre access."
+      },
+      "location": {
+        "id": "Jl. Teuku Umar, Kawasan Nagoya Hill Superblok No. 1, Batam.",
+        "en": "Jl. Teuku Umar, Kawasan Nagoya Hill Superblok No. 1, Batam."
+      },
+      "facilities": {
+        "id": "Restoran dan ruang pertemuan.",
+        "en": "Restaurants and meeting spaces."
+      }
+    }
+  },
+  {
+    "icon": "hotel",
+    "name": [
+      "Radisson Golf & Convention Center Batam",
+      "Radisson Golf & Convention Center Batam"
+    ],
+    "category": [
+      "Penginapan",
+      "Accommodation"
+    ],
+    "about": [
+      "Hotel di sebelah Padang Golf Sukajadi dengan fasilitas keluarga.",
+      "Hotel beside Padang Golf Sukajadi with family facilities."
+    ],
+    "map": "Radisson Golf & Convention Center Batam Bukit Indah, Sukajadi Residential Area, Batam.",
+    "source": {
+      "title": "Radisson Hotels · Radisson Golf & Convention Center Batam",
+      "url": "https://www.radissonhotels.com/en-us/hotels/radisson-batam-golf-convention",
+      "checked_at": "2026-10-28"
+    },
+    "facts": {
+      "summary": {
+        "id": "Hotel di sebelah Padang Golf Sukajadi dengan fasilitas keluarga.",
+        "en": "Hotel beside Padang Golf Sukajadi with family facilities."
+      },
+      "location": {
+        "id": "Bukit Indah, Sukajadi Residential Area, Batam.",
+        "en": "Bukit Indah, Sukajadi Residential Area, Batam."
+      },
+      "facilities": {
+        "id": "Kolam luar ruang, gym, spa, restoran, dan kids club.",
+        "en": "Outdoor pool, gym, spa, restaurants and kids club."
+      },
+      "hours": {
+        "id": "Check-in 15.00; check-out 12.00.",
+        "en": "Check-in 15:00; check-out 12:00.",
+        "checked_at": "2026-10-28"
+      }
+    }
+  },
+  {
+    "icon": "hotel",
+    "name": [
+      "Hotel Santika Batam",
+      "Hotel Santika Batam"
+    ],
+    "category": [
+      "Penginapan",
+      "Accommodation"
+    ],
+    "about": [
+      "Hotel Santika di kawasan Teluk Tering, Batam Center.",
+      "Santika hotel in Teluk Tering, Batam Center."
+    ],
+    "map": "Hotel Santika Batam Jl. Engku Putri No. 9, Teluk Tering, Batam Center.",
+    "source": {
+      "title": "Santika Indonesia · Hotel Santika Batam",
+      "url": "https://www.mysantika.com/indonesia/batam/hotel-santika-batam",
+      "checked_at": "2026-10-28"
+    },
+    "facts": {
+      "summary": {
+        "id": "Hotel Santika di kawasan Teluk Tering, Batam Center.",
+        "en": "Santika hotel in Teluk Tering, Batam Center."
+      },
+      "location": {
+        "id": "Jl. Engku Putri No. 9, Teluk Tering, Batam Center.",
+        "en": "Jl. Engku Putri No. 9, Teluk Tering, Batam Center."
+      },
+      "facilities": {
+        "id": "Kolam luar ruang, kamar keluarga, Wi-Fi area publik, dan penyimpanan bagasi.",
+        "en": "Outdoor pool, family rooms, public-area Wi-Fi and luggage storage."
+      }
+    }
+  },
+  {
+    "icon": "hotel",
+    "name": [
+      "Turi Beach Resort",
+      "Turi Beach Resort"
+    ],
+    "category": [
+      "Penginapan",
+      "Accommodation"
+    ],
+    "about": [
+      "Resor Nongsa dengan pilihan kamar beachfront dan balkon.",
+      "Nongsa resort offering beachfront room types and balconies."
+    ],
+    "map": "Turi Beach Resort Jl. Hang Lekiu, Sambau, Nongsa, Batam.",
+    "source": {
+      "title": "Turi Beach Resort · Turi Beach Resort",
+      "url": "https://www.turibeach.com/",
+      "checked_at": "2026-10-28"
+    },
+    "facts": {
+      "summary": {
+        "id": "Resor Nongsa dengan pilihan kamar beachfront dan balkon.",
+        "en": "Nongsa resort offering beachfront room types and balconies."
+      },
+      "location": {
+        "id": "Jl. Hang Lekiu, Sambau, Nongsa, Batam.",
+        "en": "Jl. Hang Lekiu, Sambau, Nongsa, Batam."
+      }
+    }
+  },
+  {
+    "icon": "hotel",
+    "name": [
+      "Nongsa Point Marina & Resort",
+      "Nongsa Point Marina & Resort"
+    ],
+    "category": [
+      "Penginapan",
+      "Accommodation"
+    ],
+    "about": [
+      "Resor di teluk Nongsa dengan kamar hotel dan chalet.",
+      "Resort around a Nongsa cove with hotel rooms and chalets."
+    ],
+    "map": "Nongsa Point Marina & Resort Jl. Hang Lekiu, Sambau, Nongsa, Batam.",
+    "source": {
+      "title": "Nongsa Point Marina & Resort · Nongsa Point Marina & Resort",
+      "url": "https://www.nongsapointmarina.com/",
+      "checked_at": "2026-10-28"
+    },
+    "facts": {
+      "summary": {
+        "id": "Resor di teluk Nongsa dengan kamar hotel dan chalet.",
+        "en": "Resort around a Nongsa cove with hotel rooms and chalets."
+      },
+      "location": {
+        "id": "Jl. Hang Lekiu, Sambau, Nongsa, Batam.",
+        "en": "Jl. Hang Lekiu, Sambau, Nongsa, Batam."
+      },
+      "facilities": {
+        "id": "Kolam renang; tipe akomodasi termasuk chalet dua atau tiga kamar.",
+        "en": "Swimming pool; accommodation options include two- or three-bedroom chalets."
+      }
+    }
+  },
+  {
+    "icon": "hotel",
+    "name": [
+      "Wyndham Panbil Batam",
+      "Wyndham Panbil Batam"
+    ],
+    "category": [
+      "Penginapan",
+      "Accommodation"
+    ],
+    "about": [
+      "Hotel Wyndham di kawasan Panbil dengan akses rekreasi alam sekitar.",
+      "Wyndham hotel in Panbil with nearby nature recreation."
+    ],
+    "map": "Wyndham Panbil Batam Panbil, Batam.",
+    "source": {
+      "title": "Wyndham Hotels · Wyndham Panbil Batam",
+      "url": "https://www.wyndhamhotels.com/wyndham/batam-indonesia/wyndham-panbil-batam/overview",
+      "checked_at": "2026-10-28"
+    },
+    "facts": {
+      "summary": {
+        "id": "Hotel Wyndham di kawasan Panbil dengan akses rekreasi alam sekitar.",
+        "en": "Wyndham hotel in Panbil with nearby nature recreation."
+      },
+      "location": {
+        "id": "Panbil, Batam.",
+        "en": "Panbil, Batam."
+      },
+      "facilities": {
+        "id": "Infinity pool luar ruang, spa, pusat kebugaran, serta restoran dan bar.",
+        "en": "Outdoor infinity pool, spa, fitness centre, restaurants and bars."
+      }
+    }
+  },
+  {
+    "icon": "hotel",
+    "name": [
+      "Zest Harbour Bay Batam",
+      "Zest Harbour Bay Batam"
+    ],
+    "category": [
+      "Penginapan",
+      "Accommodation"
+    ],
+    "about": [
+      "Hotel dalam kompleks Harbour Bay, dekat kawasan terminal dan belanja.",
+      "Hotel within the Harbour Bay complex near the terminal and shopping area."
+    ],
+    "map": "Zest Harbour Bay Batam Harbour Bay Complex, Jl. Duyung, Sei Jodoh, Batu Ampar, Batam.",
+    "source": {
+      "title": "Zest Hotels · Zest Harbour Bay Batam",
+      "url": "https://www.zesthotel.com/id-id/zest-hotel-harbour-bay-batam",
+      "checked_at": "2026-10-28"
+    },
+    "facts": {
+      "summary": {
+        "id": "Hotel dalam kompleks Harbour Bay, dekat kawasan terminal dan belanja.",
+        "en": "Hotel within the Harbour Bay complex near the terminal and shopping area."
+      },
+      "location": {
+        "id": "Harbour Bay Complex, Jl. Duyung, Sei Jodoh, Batu Ampar, Batam.",
+        "en": "Harbour Bay Complex, Jl. Duyung, Sei Jodoh, Batu Ampar, Batam."
+      }
+    }
+  },
+  {
+    "icon": "hotel",
+    "name": [
+      "Swiss-Belinn Baloi Batam",
+      "Swiss-Belinn Baloi Batam"
+    ],
+    "category": [
+      "Penginapan",
+      "Accommodation"
+    ],
+    "about": [
+      "Hotel Swiss-Belinn di kawasan Baloi, Batam.",
+      "Swiss-Belinn hotel in Baloi, Batam."
+    ],
+    "map": "Swiss-Belinn Baloi Batam Baloi, Batam.",
+    "source": {
+      "title": "Swiss-Belhotel International · Swiss-Belinn Baloi Batam",
+      "url": "https://www.swiss-belhotel.com/hotels/swiss-belinn-baloi-batam",
+      "checked_at": "2026-10-28"
+    },
+    "facts": {
+      "summary": {
+        "id": "Hotel Swiss-Belinn di kawasan Baloi, Batam.",
+        "en": "Swiss-Belinn hotel in Baloi, Batam."
+      },
+      "location": {
+        "id": "Baloi, Batam.",
+        "en": "Baloi, Batam."
+      },
+      "facilities": {
+        "id": "Swiss-Bistro dan ruang pertemuan.",
+        "en": "Swiss-Bistro and meeting rooms."
+      }
+    }
+  },
+  {
+    "icon": "restaurant",
+    "name": [
+      "Sei Enam Seafood",
+      "Sei Enam Seafood"
+    ],
+    "category": [
+      "Kuliner",
+      "Food & dining"
+    ],
+    "about": [
+      "Restoran seafood di Batam Center.",
+      "Seafood restaurant in Batam Center."
+    ],
+    "map": "Sei Enam Seafood Kompleks Mahkota Raya, Batam Center.",
+    "source": {
+      "title": "Indonesia Travel / Kemenpar · Sei Enam Seafood",
+      "url": "https://www.indonesia.travel/id/id/travel-ideas/gastronomy/need-an-additional-dose-of-vitamin-sea-try-these-delicious-seafood-at-these-restaurants-in-batam",
+      "checked_at": "2026-10-28"
+    },
+    "facts": {
+      "summary": {
+        "id": "Restoran seafood di Batam Center.",
+        "en": "Seafood restaurant in Batam Center."
+      },
+      "location": {
+        "id": "Kompleks Mahkota Raya, Batam Center.",
+        "en": "Kompleks Mahkota Raya, Batam Center."
+      }
+    }
+  },
+  {
+    "icon": "restaurant",
+    "name": [
+      "Wey Wey Live Seafood",
+      "Wey Wey Live Seafood"
+    ],
+    "category": [
+      "Kuliner",
+      "Food & dining"
+    ],
+    "about": [
+      "Restoran seafood tepi laut di Harbour Bay.",
+      "Waterfront seafood restaurant in Harbour Bay."
+    ],
+    "map": "Wey Wey Live Seafood Harbour Bay, Jl. Duyung, Sei Jodoh.",
+    "source": {
+      "title": "Indonesia Travel / Kemenpar · Wey Wey Live Seafood",
+      "url": "https://www.indonesia.travel/id/id/travel-ideas/gastronomy/need-an-additional-dose-of-vitamin-sea-try-these-delicious-seafood-at-these-restaurants-in-batam",
+      "checked_at": "2026-10-28"
+    },
+    "facts": {
+      "summary": {
+        "id": "Restoran seafood tepi laut di Harbour Bay.",
+        "en": "Waterfront seafood restaurant in Harbour Bay."
+      },
+      "location": {
+        "id": "Harbour Bay, Jl. Duyung, Sei Jodoh.",
+        "en": "Harbour Bay, Jl. Duyung, Sei Jodoh."
+      }
+    }
+  },
+  {
+    "icon": "restaurant",
+    "name": [
+      "Harbour Bay Seafood Restaurant",
+      "Harbour Bay Seafood Restaurant"
+    ],
+    "category": [
+      "Kuliner",
+      "Food & dining"
+    ],
+    "about": [
+      "Restoran seafood di kawasan Promenade Harbour Bay.",
+      "Seafood restaurant at Harbour Bay Promenade."
+    ],
+    "map": "Harbour Bay Seafood Restaurant The Promenade Blok 8E, Harbour Bay.",
+    "source": {
+      "title": "Indonesia Travel / Kemenpar · Harbour Bay Seafood Restaurant",
+      "url": "https://www.indonesia.travel/id/id/travel-ideas/gastronomy/need-an-additional-dose-of-vitamin-sea-try-these-delicious-seafood-at-these-restaurants-in-batam",
+      "checked_at": "2026-10-28"
+    },
+    "facts": {
+      "summary": {
+        "id": "Restoran seafood di kawasan Promenade Harbour Bay.",
+        "en": "Seafood restaurant at Harbour Bay Promenade."
+      },
+      "location": {
+        "id": "The Promenade Blok 8E, Harbour Bay.",
+        "en": "The Promenade Blok 8E, Harbour Bay."
+      }
+    }
+  },
+  {
+    "icon": "restaurant",
+    "name": [
+      "Golden Prawn 933",
+      "Golden Prawn 933"
+    ],
+    "category": [
+      "Kuliner",
+      "Food & dining"
+    ],
+    "about": [
+      "Restoran seafood dengan hidangan udang di Bengkong.",
+      "Seafood restaurant serving prawns in Bengkong."
+    ],
+    "map": "Golden Prawn 933 Jl. Golden Prawn, Tanjung Buntung, Bengkong.",
+    "source": {
+      "title": "Indonesia Travel / Kemenpar · Golden Prawn 933",
+      "url": "https://www.indonesia.travel/id/id/travel-ideas/gastronomy/need-an-additional-dose-of-vitamin-sea-try-these-delicious-seafood-at-these-restaurants-in-batam",
+      "checked_at": "2026-10-28"
+    },
+    "facts": {
+      "summary": {
+        "id": "Restoran seafood dengan hidangan udang di Bengkong.",
+        "en": "Seafood restaurant serving prawns in Bengkong."
+      },
+      "location": {
+        "id": "Jl. Golden Prawn, Tanjung Buntung, Bengkong.",
+        "en": "Jl. Golden Prawn, Tanjung Buntung, Bengkong."
+      }
+    }
+  },
+  {
+    "icon": "restaurant",
+    "name": [
+      "Kelong Baba",
+      "Kelong Baba"
+    ],
+    "category": [
+      "Kuliner",
+      "Food & dining"
+    ],
+    "about": [
+      "Restoran seafood di kawasan Tiban.",
+      "Seafood restaurant in Tiban."
+    ],
+    "map": "Kelong Baba Green Bay Complex, Kav. Kelong Tiban.",
+    "source": {
+      "title": "Indonesia Travel / Kemenpar · Kelong Baba",
+      "url": "https://www.indonesia.travel/id/id/travel-ideas/gastronomy/need-an-additional-dose-of-vitamin-sea-try-these-delicious-seafood-at-these-restaurants-in-batam",
+      "checked_at": "2026-10-28"
+    },
+    "facts": {
+      "summary": {
+        "id": "Restoran seafood di kawasan Tiban.",
+        "en": "Seafood restaurant in Tiban."
+      },
+      "location": {
+        "id": "Green Bay Complex, Kav. Kelong Tiban.",
+        "en": "Green Bay Complex, Kav. Kelong Tiban."
+      }
+    }
+  },
+  {
+    "icon": "restaurant",
+    "name": [
+      "Kampung Tanjung Piayu Seafood",
+      "Kampung Tanjung Piayu Seafood"
+    ],
+    "category": [
+      "Kuliner",
+      "Food & dining"
+    ],
+    "about": [
+      "Restoran seafood di Tanjung Piayu Laut.",
+      "Seafood restaurant in Tanjung Piayu Laut."
+    ],
+    "map": "Kampung Tanjung Piayu Seafood Jl. Tanjung Piayu Laut No. 57.",
+    "source": {
+      "title": "Indonesia Travel / Kemenpar · Kampung Tanjung Piayu Seafood",
+      "url": "https://www.indonesia.travel/id/id/travel-ideas/gastronomy/need-an-additional-dose-of-vitamin-sea-try-these-delicious-seafood-at-these-restaurants-in-batam",
+      "checked_at": "2026-10-28"
+    },
+    "facts": {
+      "summary": {
+        "id": "Restoran seafood di Tanjung Piayu Laut.",
+        "en": "Seafood restaurant in Tanjung Piayu Laut."
+      },
+      "location": {
+        "id": "Jl. Tanjung Piayu Laut No. 57.",
+        "en": "Jl. Tanjung Piayu Laut No. 57."
+      }
+    }
+  },
+  {
+    "icon": "beach_access",
+    "name": [
+      "Pulau Ranoh",
+      "Pulau Ranoh"
+    ],
+    "category": [
+      "Pantai",
+      "Beaches"
+    ],
+    "about": [
+      "Pulau wisata di selatan Batam dengan pantai dan aktivitas air.",
+      "Tourism island south of Batam with beaches and water activities."
+    ],
+    "map": "Pulau Ranoh Perairan selatan Batam; akses melalui kawasan Galang Baru dan speedboat.",
+    "source": {
+      "title": "Indonesia Travel / Kemenpar · Pulau Ranoh",
+      "url": "https://www.indonesia.travel/id/id/travel-ideas/adventure/4-rekomendasi-tempat-wisata-batam-yang-unik-dan-seru",
+      "checked_at": "2026-10-28"
+    },
+    "facts": {
+      "summary": {
+        "id": "Pulau wisata di selatan Batam dengan pantai dan aktivitas air.",
+        "en": "Tourism island south of Batam with beaches and water activities."
+      },
+      "location": {
+        "id": "Perairan selatan Batam; akses melalui kawasan Galang Baru dan speedboat.",
+        "en": "South of Batam; access through Galang Baru and onward by speedboat."
+      }
+    }
+  },
+  {
+    "icon": "account_balance",
+    "name": [
+      "Masjid Muhammad Cheng Ho",
+      "Masjid Muhammad Cheng Ho"
+    ],
+    "category": [
+      "Wisata religi",
+      "Religious sites"
+    ],
+    "about": [
+      "Masjid di Golden City dengan arsitektur bergaya Tionghoa.",
+      "Mosque in Golden City featuring Chinese-influenced architecture."
+    ],
+    "map": "Masjid Muhammad Cheng Ho Golden City, Tanjung Buntung, Bengkong.",
+    "source": {
+      "title": "Indonesia Travel / Kemenpar · Masjid Muhammad Cheng Ho",
+      "url": "https://www.indonesia.travel/id/id/travel-ideas/adventure/4-rekomendasi-tempat-wisata-batam-yang-unik-dan-seru",
+      "checked_at": "2026-10-28"
+    },
+    "facts": {
+      "summary": {
+        "id": "Masjid di Golden City dengan arsitektur bergaya Tionghoa.",
+        "en": "Mosque in Golden City featuring Chinese-influenced architecture."
+      },
+      "location": {
+        "id": "Golden City, Tanjung Buntung, Bengkong.",
+        "en": "Golden City, Tanjung Buntung, Bengkong."
+      }
+    }
+  },
+  {
+    "icon": "forest",
+    "name": [
+      "Pulau Abang",
+      "Pulau Abang"
+    ],
+    "category": [
+      "Alam & mangrove",
+      "Nature & mangroves"
+    ],
+    "about": [
+      "Pulau di Kecamatan Galang yang dikenal sebagai tujuan snorkeling.",
+      "Island in Galang district known as a snorkelling destination."
+    ],
+    "map": "Pulau Abang Kecamatan Galang, Batam.",
+    "source": {
+      "title": "Disbudpar Batam · Pulau Abang",
+      "url": "https://disbudpar.batam.go.id/2020/01/15/snorkeling-di-pulau-abang-diminati-wisatawan/",
+      "checked_at": "2026-10-28"
+    },
+    "facts": {
+      "summary": {
+        "id": "Pulau di Kecamatan Galang yang dikenal sebagai tujuan snorkeling.",
+        "en": "Island in Galang district known as a snorkelling destination."
+      },
+      "location": {
+        "id": "Kecamatan Galang, Batam.",
+        "en": "Galang district, Batam."
+      }
+    }
+  },
+  {
+    "icon": "forest",
+    "name": [
+      "Panbil Nature Reserve",
+      "Panbil Nature Reserve"
+    ],
+    "category": [
+      "Alam & mangrove",
+      "Nature & mangroves"
+    ],
+    "about": [
+      "Kawasan rekreasi alam dengan aktivitas edukasi dan kegiatan kelompok.",
+      "Nature recreation site offering education and group activities."
+    ],
+    "map": "Panbil Nature Reserve Panbil, Batam.",
+    "source": {
+      "title": "Panbil Hospitality · Panbil Nature Reserve",
+      "url": "https://panbilhospitality.com/panbil-nature-reserve/",
+      "checked_at": "2026-10-28"
+    },
+    "facts": {
+      "summary": {
+        "id": "Kawasan rekreasi alam dengan aktivitas edukasi dan kegiatan kelompok.",
+        "en": "Nature recreation site offering education and group activities."
+      },
+      "location": {
+        "id": "Panbil, Batam.",
+        "en": "Panbil, Batam."
+      },
+      "facilities": {
+        "id": "Pengelola mencantumkan aktivitas team building dan paintball.",
+        "en": "The operator lists team-building and paintball activities."
+      }
+    }
+  },
+  {
+    "icon": "park",
+    "name": [
+      "Taman Kolam Sekupang",
+      "Taman Kolam Sekupang"
+    ],
+    "category": [
+      "Wisata keluarga",
+      "Family attractions"
+    ],
+    "about": [
+      "Taman rekreasi di Tanjung Pinggir, Sekupang.",
+      "Recreation park in Tanjung Pinggir, Sekupang."
+    ],
+    "map": "Taman Kolam Sekupang Jl. RE Martadinata, Tanjung Pinggir, Sekupang, Batam.",
+    "source": {
+      "title": "SISPARNAS Kemenpar · Taman Kolam Sekupang",
+      "url": "https://sisparnas.kemenpar.go.id/p/78839",
+      "checked_at": "2026-10-28"
+    },
+    "facts": {
+      "summary": {
+        "id": "Taman rekreasi di Tanjung Pinggir, Sekupang.",
+        "en": "Recreation park in Tanjung Pinggir, Sekupang."
+      },
+      "location": {
+        "id": "Jl. RE Martadinata, Tanjung Pinggir, Sekupang, Batam.",
+        "en": "Jl. RE Martadinata, Tanjung Pinggir, Sekupang, Batam."
+      },
+      "facilities": {
+        "id": "Halaman mencantumkan toilet umum, parkir, pusat informasi, dan tempat ibadah.",
+        "en": "The listing includes public toilets, parking, an information point and prayer facilities."
+      }
+    }
+  },
+  {
+    "icon": "beach_access",
+    "name": [
+      "Pantai Melayu Barelang",
+      "Pantai Melayu Barelang"
+    ],
+    "category": [
+      "Pantai",
+      "Beaches"
+    ],
+    "about": [
+      "Pantai dalam koridor wisata Trans Barelang.",
+      "Beach in the Trans Barelang tourism corridor."
+    ],
+    "map": "Pantai Melayu Barelang Jalan Trans Barelang, Batam.",
+    "source": {
+      "title": "SISPARNAS Kemenpar · Pantai Melayu Barelang",
+      "url": "https://sisparnas.kemenpar.go.id/p/128694",
+      "checked_at": "2026-10-28"
+    },
+    "facts": {
+      "summary": {
+        "id": "Pantai dalam koridor wisata Trans Barelang.",
+        "en": "Beach in the Trans Barelang tourism corridor."
+      },
+      "location": {
+        "id": "Jalan Trans Barelang, Batam.",
+        "en": "Trans Barelang road, Batam."
+      }
+    }
+  },
+  {
+    "icon": "architecture",
+    "name": [
+      "Dendang Melayu Barelang",
+      "Dendang Melayu Barelang"
+    ],
+    "category": [
+      "Ikon Batam",
+      "Batam landmarks"
+    ],
+    "about": [
+      "Kawasan wisata Dendang Melayu di sekitar Jembatan 1 Barelang.",
+      "Dendang Melayu tourism area around Barelang Bridge One."
+    ],
+    "map": "Dendang Melayu Barelang Kawasan Jembatan 1 Barelang, Batam.",
+    "source": {
+      "title": "SISPEK Disbudpar Batam · Dendang Melayu Barelang",
+      "url": "https://sispek.batam.go.id/bydestination/49",
+      "checked_at": "2026-10-28"
+    },
+    "facts": {
+      "summary": {
+        "id": "Kawasan wisata Dendang Melayu di sekitar Jembatan 1 Barelang.",
+        "en": "Dendang Melayu tourism area around Barelang Bridge One."
+      },
+      "location": {
+        "id": "Kawasan Jembatan 1 Barelang, Batam.",
+        "en": "Around Barelang Bridge One, Batam."
+      }
+    }
   }
 ];
 
@@ -1791,9 +2699,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
   function renderVoice() {
     $("voice-status").textContent =
-      t(Recognition ? voiceStatus : "unsupported");
+      t((Recognition || CanRecordAudio) ? voiceStatus : "unsupported");
     $("voice-language").textContent = t("voiceLang");
-    $("record").disabled = !Recognition || (!!recognition && !recording);
+    $("record").disabled = !(Recognition || CanRecordAudio) || busy || (!!recognition && !recording);
     $("record").classList.toggle("recording",recording);
     $("record").setAttribute(
       "aria-label",t(recording ? "stopRecord" : "record")
@@ -1803,13 +2711,14 @@ document.addEventListener("DOMContentLoaded", () => {
     $("record-label").textContent =
       t(recording ? "stopRecord" : "record");
     $("transcript").placeholder = t("transcriptPlaceholder");
+    $("transcript").maxLength = 2000;
     $("transcript").disabled = !!recognition;
-    $("repeat").disabled = !Recognition || !!recognition;
+    $("repeat").disabled = !(Recognition || CanRecordAudio) || busy || !!recognition;
     $("send-voice").disabled =
       busy || !!recognition || !$("transcript").value.trim();
   }
 
-  function startRecording() {
+  function startBrowserRecording() {
     if (!Recognition || recognition) return;
     cancelSpeech();
 
@@ -1863,6 +2772,89 @@ document.addEventListener("DOMContentLoaded", () => {
       recording = false;
       voiceStatus = "voiceError";
       renderVoice();
+    }
+  }
+
+  const CanRecordAudio = Boolean(navigator.mediaDevices?.getUserMedia && window.MediaRecorder && (window.AudioContext || window.webkitAudioContext));
+  function voiceFailureKey(error) {
+    if (['NotAllowedError','SecurityError'].includes(error?.name)) return 'denied';
+    if (['NotFoundError','DevicesNotFoundError'].includes(error?.name)) return 'noMicrophone';
+    if (['NotReadableError','TrackStartError'].includes(error?.name)) return 'microphoneBusy';
+    if (error?.code === 'no_speech') return 'noSpeech';
+    if (error?.code === 'voice_limit' || error?.status === 429) return 'voiceLimit';
+    if (error?.code === 'audio_too_large' || error?.code === 'invalid_audio') return 'shortRecording';
+    return 'voiceError';
+  }
+  async function encodeVoiceWav(blob) {
+    const AudioCtx = window.AudioContext || window.webkitAudioContext;
+    const context = new AudioCtx();
+    try {
+      const decoded = await context.decodeAudioData(await blob.arrayBuffer());
+      const count = Math.min(Math.floor(decoded.duration * 16000), 45 * 16000);
+      if (count < 6400) throw Object.assign(new Error('Short recording'),{code:'invalid_audio'});
+      const channels = Array.from({length:decoded.numberOfChannels},(_,i)=>decoded.getChannelData(i));
+      const bytes = new ArrayBuffer(44 + count * 2), view = new DataView(bytes);
+      const string = (p,s) => { for(let i=0;i<s.length;i++) view.setUint8(p+i,s.charCodeAt(i)); };
+      string(0,'RIFF');view.setUint32(4,bytes.byteLength-8,true);string(8,'WAVE');string(12,'fmt ');view.setUint32(16,16,true);view.setUint16(20,1,true);view.setUint16(22,1,true);view.setUint32(24,16000,true);view.setUint32(28,32000,true);view.setUint16(32,2,true);view.setUint16(34,16,true);string(36,'data');view.setUint32(40,count*2,true);
+      const ratio=decoded.sampleRate/16000;
+      for(let i=0;i<count;i++) {
+        const start=Math.floor(i*ratio),end=Math.min(decoded.length,Math.max(start+1,Math.floor((i+1)*ratio)));
+        let value=0;for(const channel of channels)for(let p=start;p<end;p++)value+=channel[p];
+        value=Math.max(-1,Math.min(1,value/((end-start)*channels.length)));
+        view.setInt16(44+i*2,Math.round(value*(value<0?32768:32767)),true);
+      }
+      return new Blob([bytes],{type:'audio/wav'});
+    } finally { await context.close().catch(()=>{}); }
+  }
+  async function transcribeAudio(wav,signal,language) {
+    for(let attempt=0;attempt<2;attempt++) {
+      const session=await getApiSession(signal,language);
+      const form=new FormData();form.append('audio',wav,'question.wav');form.append('language',language);
+      const url=new URL(API_URL);url.searchParams.set('action','transcribe');
+      const response=await fetch(url,{method:'POST',headers:{Authorization:'Bearer '+session.session_token},body:form,signal});
+      if(response.status===401&&attempt===0){forgetApiSession();continue;}
+      if(!response.ok){const data=await response.json().catch(()=>({}));throw Object.assign(new Error('Transcription failed'),{code:data.code,status:response.status});}
+      const data=await response.json();if(typeof data.transcript!=='string'||!data.transcript.trim())throw Object.assign(new Error('Empty speech'),{code:'no_speech'});
+      return data.transcript.trim().slice(0,2000);
+    }
+    throw new Error('Session unavailable');
+  }
+  async function startRecording() {
+    if(recognition || busy)return;
+    if(!CanRecordAudio){startBrowserRecording();return;}
+    cancelSpeech();
+    let stream=null,recorder=null,timer=null,cancelled=false,permissionTimer=null;
+    const aborter=new AbortController();const recordingLanguage=lang==='EN'?'en':'id';
+    const stopTracks=()=>stream?.getTracks().forEach(track=>track.stop());
+    const current={abort(){cancelled=true;clearTimeout(timer);clearTimeout(permissionTimer);aborter.abort();if(recorder?.state==='recording')recorder.stop();stopTracks();},stop(){if(recorder?.state==='recording')recorder.stop();}};
+    recognition=current;voiceStatus='starting';recording=false;renderVoice();
+    try {
+      const pending=navigator.mediaDevices.getUserMedia({audio:{channelCount:1,echoCancellation:true,noiseSuppression:true},video:false});
+      pending.then(result=>{if(cancelled)result.getTracks().forEach(track=>track.stop());},()=>{});
+      stream=await Promise.race([pending,new Promise((_,reject)=>{permissionTimer=setTimeout(()=>{cancelled=true;reject(Object.assign(new Error('Permission timeout'),{name:'NotAllowedError'}));},20000);})]);
+      clearTimeout(permissionTimer);if(cancelled||recognition!==current){stopTracks();return;}
+      const type=['audio/webm;codecs=opus','audio/webm','audio/mp4','audio/ogg;codecs=opus'].find(value=>window.MediaRecorder.isTypeSupported?.(value));
+      recorder=new window.MediaRecorder(stream,type?{mimeType:type,audioBitsPerSecond:64000}:undefined);
+      const chunks=[];
+      recorder.ondataavailable=event=>{if(event.data?.size)chunks.push(event.data);};
+      recorder.onerror=()=>{voiceStatus='voiceError';current.abort();if(recognition===current){recognition=null;recording=false;renderVoice();}};
+      recorder.onstop=async()=>{
+        clearTimeout(timer);stopTracks();if(cancelled||recognition!==current)return;
+        recording=false;voiceStatus='transcribing';renderVoice();
+        const timeout=setTimeout(()=>aborter.abort(),35000);
+        try {
+          const blob=new Blob(chunks,{type:recorder.mimeType||'audio/webm'});
+          const wav=await encodeVoiceWav(blob);if(cancelled||recognition!==current)return;
+          const text=await transcribeAudio(wav,aborter.signal,recordingLanguage);
+          if(!cancelled&&recognition===current){$('transcript').value=text;voiceStatus='review';}
+        } catch(error) { if(!cancelled&&recognition===current)voiceStatus=voiceFailureKey(error); }
+        finally {clearTimeout(timeout);if(recognition===current){recognition=null;recording=false;renderVoice();if(voiceStatus==='review')$('send-voice').focus();}}
+      };
+      recorder.start();recording=true;voiceStatus='listening';$('transcript').value='';renderVoice();
+      for(const track of stream.getAudioTracks())track.onended=()=>current.stop();
+      timer=setTimeout(()=>current.stop(),45000);
+    } catch(error) {
+      clearTimeout(permissionTimer);stopTracks();if(recognition===current){recognition=null;recording=false;voiceStatus=voiceFailureKey(error);renderVoice();}
     }
   }
 
@@ -2334,6 +3326,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   };
 
+  $("composer-mic").addEventListener("click",startRecording);
   $("repeat").onclick = startRecording;
   $("transcript").oninput = renderVoice;
 
