@@ -947,7 +947,8 @@ document.addEventListener("DOMContentLoaded", () => {
   words.voiceLimit = ["Kuota transkripsi sedang penuh. Coba lagi sebentar atau ketik pertanyaan Anda.","Transcription quota is busy. Try again shortly or type your question."];
   words.transcribing = ["Mengubah suara menjadi teks…","Transcribing your recording…"];
   words.shortRecording = ["Rekam ucapan selama 1–45 detik, lalu tekan selesai.","Record 1–45 seconds of speech, then press stop."];
-  words.audioNotice = ["Rekam maksimal 45 detik. Audio dikirim ke Groq untuk transkripsi dan tidak disimpan oleh Hallo Batam. Periksa teks, lalu tekan Kirim.","Record up to 45 seconds. Audio is sent to Groq for transcription and is not stored by Hallo Batam. Review the text, then press Send."];
+  words.audioNotice = ["Rekam maksimal 45 detik. Bicara setelah mikrofon aktif. Periksa hasil ucapan, lalu tekan Kirim.","Record up to 45 seconds. Speak after the microphone is ready. Review the transcript, then press Send."];
+  words.reviewUncertain = ["Sebagian ucapan kurang jelas. Periksa atau edit teks; Anda juga bisa merekam ulang.","Some speech was unclear. Review or edit the text, or record again."];
   words.denied=['Izin mikrofon ditolak. Di Chrome, klik ikon pengaturan di sebelah alamat situs → Izin situs → Mikrofon → Izinkan. Periksa juga akses mikrofon di pengaturan Windows, lalu muat ulang halaman.','Microphone permission was denied. In Chrome, open site controls beside the address → Site settings → Microphone → Allow. Also check system microphone access, then reload.'];
   const places = [
   {
@@ -4460,20 +4461,50 @@ document.addEventListener("DOMContentLoaded", () => {
   }
   async function encodeVoiceWav(blob) {
     const AudioCtx = window.AudioContext || window.webkitAudioContext;
-    const context = new AudioCtx();
+    let context;
+    try { context = new AudioCtx({sampleRate:16000}); }
+    catch { context = new AudioCtx(); }
     try {
-      const decoded = await context.decodeAudioData(await blob.arrayBuffer());
-      const count = Math.min(Math.floor(decoded.duration * 16000), 45 * 16000);
-      if (count < 6400) throw Object.assign(new Error('Short recording'),{code:'invalid_audio'});
+      let decoded = await context.decodeAudioData(await blob.arrayBuffer());
+      const total = Math.min(Math.floor(decoded.duration * 16000), 45 * 16000);
+      if (total < 6400) throw Object.assign(new Error('Short recording'),{code:'invalid_audio'});
+      // Use the browser resampler rather than dropping samples from the microphone.
+      const OfflineCtx = window.OfflineAudioContext || window.webkitOfflineAudioContext;
+      if (decoded.sampleRate !== 16000 && OfflineCtx) {
+        const offline = new OfflineCtx(1,total,16000);
+        const source = offline.createBufferSource(); source.buffer = decoded;
+        source.connect(offline.destination); source.start();
+        decoded = await offline.startRendering();
+      }
       const channels = Array.from({length:decoded.numberOfChannels},(_,i)=>decoded.getChannelData(i));
+      const samples = new Float32Array(total), ratio = decoded.sampleRate/16000;
+      for(let i=0;i<total;i++) {
+        const start=Math.min(decoded.length-1,Math.floor(i*ratio));
+        const end=Math.min(decoded.length,Math.max(start+1,Math.floor((i+1)*ratio)));
+        let sum=0; for(const channel of channels)for(let p=start;p<end;p++)sum+=channel[p];
+        samples[i]=sum/((end-start)*channels.length);
+      }
+      // Remove only edge silence, retaining padding so quiet syllables are preserved.
+      const frame=320,padding=4000;
+      let first=-1,last=-1;
+      for(let start=0;start<total;start+=frame) {
+        const end=Math.min(total,start+frame); let energy=0;
+        for(let i=start;i<end;i++)energy+=samples[i]*samples[i];
+        if(Math.sqrt(energy/(end-start))>=0.0025){if(first<0)first=start;last=end;}
+      }
+      if(first<0)throw Object.assign(new Error('No audible speech'),{code:'no_speech'});
+      const from=Math.max(0,first-padding),to=Math.min(total,last+padding),count=to-from;
+      if(count<6400)throw Object.assign(new Error('Short recording'),{code:'invalid_audio'});
+      let energy=0,peak=0;
+      for(let i=from;i<to;i++){energy+=samples[i]*samples[i];peak=Math.max(peak,Math.abs(samples[i]));}
+      const rms=Math.sqrt(energy/count);
+      if(rms<0.0015)throw Object.assign(new Error('No audible speech'),{code:'no_speech'});
+      const gain=Math.min(0.9/peak,rms<0.04?Math.min(3,0.08/rms):1);
       const bytes = new ArrayBuffer(44 + count * 2), view = new DataView(bytes);
       const string = (p,s) => { for(let i=0;i<s.length;i++) view.setUint8(p+i,s.charCodeAt(i)); };
       string(0,'RIFF');view.setUint32(4,bytes.byteLength-8,true);string(8,'WAVE');string(12,'fmt ');view.setUint32(16,16,true);view.setUint16(20,1,true);view.setUint16(22,1,true);view.setUint32(24,16000,true);view.setUint32(28,32000,true);view.setUint16(32,2,true);view.setUint16(34,16,true);string(36,'data');view.setUint32(40,count*2,true);
-      const ratio=decoded.sampleRate/16000;
       for(let i=0;i<count;i++) {
-        const start=Math.floor(i*ratio),end=Math.min(decoded.length,Math.max(start+1,Math.floor((i+1)*ratio)));
-        let value=0;for(const channel of channels)for(let p=start;p<end;p++)value+=channel[p];
-        value=Math.max(-1,Math.min(1,value/((end-start)*channels.length)));
+        const value=Math.max(-1,Math.min(1,samples[from+i]*gain));
         view.setInt16(44+i*2,Math.round(value*(value<0?32768:32767)),true);
       }
       return new Blob([bytes],{type:'audio/wav'});
@@ -4488,7 +4519,7 @@ document.addEventListener("DOMContentLoaded", () => {
       if(response.status===401&&attempt===0){forgetApiSession();continue;}
       if(!response.ok){const data=await response.json().catch(()=>({}));throw Object.assign(new Error('Transcription failed'),{code:data.code,status:response.status});}
       const data=await response.json();if(typeof data.transcript!=='string'||!data.transcript.trim())throw Object.assign(new Error('Empty speech'),{code:'no_speech'});
-      return data.transcript.trim().slice(0,2000);
+      return {transcript:data.transcript.trim().slice(0,2000),reviewRecommended:data.review_recommended===true};
     }
     throw new Error('Session unavailable');
   }
@@ -4502,12 +4533,12 @@ document.addEventListener("DOMContentLoaded", () => {
     const current={abort(){cancelled=true;clearTimeout(timer);clearTimeout(permissionTimer);aborter.abort();if(recorder?.state==='recording')recorder.stop();stopTracks();},stop(){if(recorder?.state==='recording')recorder.stop();}};
     recognition=current;voiceStatus='starting';recording=false;renderVoice();
     try {
-      const pending=navigator.mediaDevices.getUserMedia({audio:{channelCount:1,echoCancellation:true,noiseSuppression:true},video:false});
+      const pending=navigator.mediaDevices.getUserMedia({audio:{channelCount:1,echoCancellation:true,noiseSuppression:true,autoGainControl:true},video:false});
       pending.then(result=>{if(cancelled)result.getTracks().forEach(track=>track.stop());},()=>{});
       stream=await Promise.race([pending,new Promise((_,reject)=>{permissionTimer=setTimeout(()=>{cancelled=true;reject(Object.assign(new Error('Permission timeout'),{name:'NotAllowedError'}));},20000);})]);
       clearTimeout(permissionTimer);if(cancelled||recognition!==current){stopTracks();return;}
       const type=['audio/webm;codecs=opus','audio/webm','audio/mp4','audio/ogg;codecs=opus'].find(value=>window.MediaRecorder.isTypeSupported?.(value));
-      recorder=new window.MediaRecorder(stream,type?{mimeType:type,audioBitsPerSecond:64000}:undefined);
+      recorder=new window.MediaRecorder(stream,type?{mimeType:type,audioBitsPerSecond:128000}:undefined);
       const chunks=[];
       recorder.ondataavailable=event=>{if(event.data?.size)chunks.push(event.data);};
       recorder.onerror=()=>{voiceStatus='voiceError';current.abort();if(recognition===current){recognition=null;recording=false;renderVoice();}};
@@ -4518,10 +4549,10 @@ document.addEventListener("DOMContentLoaded", () => {
         try {
           const blob=new Blob(chunks,{type:recorder.mimeType||'audio/webm'});
           const wav=await encodeVoiceWav(blob);if(cancelled||recognition!==current)return;
-          const text=await transcribeAudio(wav,aborter.signal,recordingLanguage);
-          if(!cancelled&&recognition===current){$('transcript').value=text;voiceStatus='review';}
+          const result=await transcribeAudio(wav,aborter.signal,recordingLanguage);
+          if(!cancelled&&recognition===current){$('transcript').value=result.transcript;voiceStatus=result.reviewRecommended?'reviewUncertain':'review';}
         } catch(error) { if(!cancelled&&recognition===current)voiceStatus=voiceFailureKey(error); }
-        finally {clearTimeout(timeout);if(recognition===current){recognition=null;recording=false;renderVoice();if(voiceStatus==='review')$('send-voice').focus();}}
+        finally {clearTimeout(timeout);if(recognition===current){recognition=null;recording=false;renderVoice();if(['review','reviewUncertain'].includes(voiceStatus))$('send-voice').focus();}}
       };
       recorder.start();recording=true;voiceStatus='listening';$('transcript').value='';renderVoice();
       for(const track of stream.getAudioTracks())track.onended=()=>current.stop();
@@ -5052,4 +5083,5 @@ document.addEventListener("DOMContentLoaded", () => {
 </script>
 </body>
 </html>
+
 
