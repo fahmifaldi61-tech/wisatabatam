@@ -589,22 +589,33 @@ legend{font-size:14px;font-weight:700;margin-bottom:8px}
       <span class="tag" id="voice-language"></span>
       <p class="muted" style="font-size:12px;max-width:460px;margin:12px auto 0;line-height:1.6" data-t="audioNotice"></p>
 
+      <div class="card" style="text-align:left;padding:14px 18px;margin:18px auto 0">
+        <label for="microphone-select" class="small" data-t="microphone"></label>
+        <select id="microphone-select" style="display:block;width:100%;max-width:100%;margin-top:8px;padding:10px;border:1px solid var(--line);border-radius:10px;background:var(--surface);color:inherit;font:inherit">
+          <option value="" data-t="defaultMicrophone"></option>
+        </select>
+        <div id="voice-level-wrap" hidden style="margin-top:10px">
+          <progress id="voice-level" max="1" value="0" style="width:100%;accent-color:#008565" aria-label="Microphone level"></progress>
+          <p id="voice-level-label" class="small muted" style="margin:6px 0 0"></p>
+        </div>
+      </div>
       <button class="voice-circle" id="record" type="button">
         <span class="icon">mic</span>
       </button>
       <p class="small muted" id="record-label"></p>
 
       <div class="card">
+        <div id="voice-preview" hidden style="margin-bottom:16px">
+          <p class="small muted" data-t="listenRecording"></p>
+          <audio id="voice-playback" controls preload="metadata" style="width:100%;max-width:100%"></audio>
+        </div>
         <label for="transcript" class="voice-label" data-t="transcript"></label>
-        <textarea id="transcript" class="voice-text"></textarea>
+        <textarea id="transcript" class="voice-text" readonly></textarea>
         <p class="small muted"
           style="text-align:left;margin:9px 0 16px" data-t="reviewVoice"></p>
         <div class="actions">
           <button class="button secondary" id="repeat" data-t="repeat"></button>
-          <button class="button primary" id="send-voice" disabled>
-            <span class="icon">arrow_upward</span>
-            <span data-t="send"></span>
-          </button>
+
         </div>
       </div>
 
@@ -947,7 +958,17 @@ document.addEventListener("DOMContentLoaded", () => {
   words.voiceLimit = ["Kuota transkripsi sedang penuh. Coba lagi sebentar atau ketik pertanyaan Anda.","Transcription quota is busy. Try again shortly or type your question."];
   words.transcribing = ["Mengubah suara menjadi teks…","Transcribing your recording…"];
   words.shortRecording = ["Rekam ucapan selama 1–45 detik, lalu tekan selesai.","Record 1–45 seconds of speech, then press stop."];
-  words.audioNotice = ["Bicara setelah mikrofon aktif. Rekaman selesai otomatis saat Anda berhenti bicara. Periksa teks, lalu tekan Kirim. Maksimal 45 detik.","Speak after the microphone is ready. Recording stops automatically after you finish speaking. Review the text, then press Send. Maximum 45 seconds."];
+  words.audioNotice = ['Bicara setelah mikrofon aktif. Selesai bicara, pertanyaan langsung dikirim dan dijawab. Maksimal 45 detik.','Speak after the microphone is ready. Your question is sent and answered automatically when you finish. Maximum 45 seconds.'];
+  words.microphone=['Mikrofon','Microphone'];
+  words.defaultMicrophone=['Mikrofon bawaan browser','Browser default microphone'];
+  words.voiceAudible=['Suara terdengar.','Your voice is audible.'];
+  words.voiceQuiet=['Suara masih pelan. Dekatkan mikrofon atau pilih mikrofon lain.','Your voice is quiet. Move closer or select another microphone.'];
+  words.voiceTooLoud=['Suara terlalu keras. Jauhkan sedikit mikrofon.','The sound is too loud. Move the microphone slightly farther away.'];
+  words.listenRecording=['Dengarkan rekaman untuk memeriksa suara yang tertangkap.','Play the recording to check the captured audio.'];
+  words.unclearSpeech=['Ucapan belum terbaca dengan jelas dan belum dikirim. Periksa mikrofon atau dengarkan rekaman, lalu ulangi.','The speech was unclear and has not been sent. Check the microphone or play the recording, then try again.'];
+  words.autoSending=['Mengirim pertanyaan Anda…','Sending your question…'];
+  words.review=['Ucapan terakhir sudah dikirim ke percakapan.','Your last spoken question was sent to the chat.'];
+  words.reviewVoice=['Ucapan yang terbaca jelas langsung dikirim ke percakapan.','Clearly transcribed speech is sent directly to the chat.'];
   words.reviewUncertain = ["Sebagian ucapan kurang jelas. Periksa atau edit teks; Anda juga bisa merekam ulang.","Some speech was unclear. Review or edit the text, or record again."];
   words.denied=['Izin mikrofon ditolak. Di Chrome, klik ikon pengaturan di sebelah alamat situs → Izin situs → Mikrofon → Izinkan. Periksa juga akses mikrofon di pengaturan Windows, lalu muat ulang halaman.','Microphone permission was denied. In Chrome, open site controls beside the address → Site settings → Microphone → Allow. Also check system microphone access, then reload.'];
   const places = [
@@ -4368,152 +4389,165 @@ document.addEventListener("DOMContentLoaded", () => {
     if (place.source) addSources(body,[place.source],lang);
   }
 
-  const Recognition =
-    window.SpeechRecognition || window.webkitSpeechRecognition;
+  const Recognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+  const CanRecordAudio = Boolean(navigator.mediaDevices?.getUserMedia && (window.AudioContext || window.webkitAudioContext) && (window.AudioWorkletNode || window.MediaRecorder));
+  let selectedMicrophone=storage.get('hb_microphone_v1','');
+  let previewAudioURL=null;
 
-  function renderVoice() {
-    $("voice-status").textContent =
-      t((Recognition || CanRecordAudio) ? voiceStatus : "unsupported");
-    $("voice-language").textContent = t("voiceLang");
-    $("record").disabled = !(Recognition || CanRecordAudio) || busy || (!!recognition && !recording);
-    $("record").classList.toggle("recording",recording);
-    $("record").setAttribute(
-      "aria-label",t(recording ? "stopRecord" : "record")
-    );
-    $("record").setAttribute("aria-pressed",String(recording));
-    $("record").firstElementChild.textContent = recording ? "stop" : "mic";
-    $("record-label").textContent =
-      t(recording ? "stopRecord" : "record");
-    $("transcript").placeholder = t("transcriptPlaceholder");
-    $("transcript").maxLength = 2000;
-    $("transcript").disabled = !!recognition;
-    $("repeat").disabled = !(Recognition || CanRecordAudio) || busy || !!recognition;
-    $("send-voice").disabled =
-      busy || !!recognition || !$("transcript").value.trim();
-  }
-
-  function startBrowserRecording() {
-    if (!Recognition || recognition) return;
-    cancelSpeech();
-
-    const rec = new Recognition();
-    recognition = rec;
-    rec.lang = lang === "ID" ? "id-ID" : "en-US";
-    rec.continuous = false;
-    rec.interimResults = true;
-    voiceStatus = "starting";
-    renderVoice();
-
-    rec.onstart = () => {
-      if (recognition !== rec) return;
-      recording = true;
-      voiceStatus = "listening";
-      $("transcript").value = "";
-      renderVoice();
-    };
-
-    rec.onresult = event => {
-      if (recognition !== rec) return;
-      $("transcript").value = Array.from(event.results)
-        .map(result => result[0].transcript)
-        .join(" ");
-    };
-
-    rec.onerror = event => {
-      if (recognition !== rec) return;
-      voiceStatus = ["not-allowed","service-not-allowed"].includes(event.error)
-        ? "denied"
-        : event.error === "no-speech" ? "noSpeech" : "voiceError";
-      recording = false;
-      renderVoice();
-    };
-
-    rec.onend = () => {
-      if (recognition !== rec) return;
-      recognition = null;
-      recording = false;
-
-      if (["starting","listening"].includes(voiceStatus)) {
-        voiceStatus = $("transcript").value.trim() ? "review" : "noSpeech";
-      }
-      renderVoice();
-    };
-
+  async function refreshMicrophones(activeId) {
+    if(!navigator.mediaDevices?.enumerateDevices)return;
     try {
-      rec.start();
-    } catch {
-      recognition = null;
-      recording = false;
-      voiceStatus = "voiceError";
-      renderVoice();
-    }
+      const devices=(await navigator.mediaDevices.enumerateDevices()).filter(d=>d.kind==='audioinput');
+      const select=$('microphone-select');select.replaceChildren();
+      const fallback=node('option','',t('defaultMicrophone'));fallback.value='';select.append(fallback);
+      devices.filter(d=>d.deviceId&&d.deviceId!=='default'&&d.deviceId!=='communications').forEach((d,i)=>{
+        const option=node('option','',d.label||t('microphone')+' '+(i+1));option.value=d.deviceId;select.append(option);
+      });
+      if(activeId&&Array.from(select.options).some(o=>o.value===activeId)){selectedMicrophone=activeId;storage.set('hb_microphone_v1',activeId);}
+      select.value=Array.from(select.options).some(o=>o.value===selectedMicrophone)?selectedMicrophone:'';
+    } catch {}
   }
-
-  const CanRecordAudio = Boolean(navigator.mediaDevices?.getUserMedia && window.MediaRecorder && (window.AudioContext || window.webkitAudioContext));
+  function clearVoicePreview() {
+    const player=$('voice-playback');player.pause();player.removeAttribute('src');player.load();
+    if(previewAudioURL)URL.revokeObjectURL(previewAudioURL);previewAudioURL=null;$('voice-preview').hidden=true;
+  }
+  function setVoicePreview(wav) {
+    clearVoicePreview();previewAudioURL=URL.createObjectURL(wav);$('voice-playback').src=previewAudioURL;$('voice-preview').hidden=false;
+  }
+  function updateVoiceLevel(rms,peak) {
+    $('voice-level').value=Math.min(1,rms*12);
+    const key=peak>0.98?'voiceTooLoud':rms>=0.0035?'voiceAudible':'voiceQuiet';
+    const label=t(key);if($('voice-level-label').textContent!==label)$('voice-level-label').textContent=label;
+  }
+  function renderVoice() {
+    $('voice-status').textContent=t((Recognition||CanRecordAudio)?voiceStatus:'unsupported');
+    $('voice-language').textContent=t('voiceLang');
+    $('record').disabled=!(Recognition||CanRecordAudio)||busy||(!!recognition&&!recording);
+    $('record').classList.toggle('recording',recording);
+    $('record').setAttribute('aria-label',t(recording?'stopRecord':'record'));
+    $('record').setAttribute('aria-pressed',String(recording));
+    $('record').firstElementChild.textContent=recording?'stop':'mic';
+    $('record-label').textContent=t(recording?'stopRecord':'record');
+    $('transcript').placeholder=t('transcriptPlaceholder');$('transcript').readOnly=true;
+    $('repeat').disabled=!(Recognition||CanRecordAudio)||busy||!!recognition;
+    $('microphone-select').disabled=busy||!!recognition;
+    $('voice-level-wrap').hidden=!recording;
+    if(!recording)$('voice-level').value=0;
+  }
+  async function deliverVoiceText(text) {
+    text=String(text||'').trim();if(!text||busy)return;
+    $('transcript').value=text;voiceStatus='autoSending';renderVoice();
+    await submit(text);
+    voiceStatus='ready';renderVoice();
+  }
+  function startBrowserRecording() {
+    if(!Recognition||recognition||busy)return;
+    cancelSpeech();clearVoicePreview();
+    const rec=new Recognition();recognition=rec;rec.lang=lang==='ID'?'id-ID':'en-US';
+    rec.continuous=false;rec.interimResults=true;let finalText='',uncertain=false;
+    voiceStatus='starting';renderVoice();
+    rec.onstart=()=>{if(recognition!==rec)return;recording=true;voiceStatus='listening';$('transcript').value='';renderVoice();};
+    rec.onresult=event=>{
+      if(recognition!==rec)return;
+      $('transcript').value=Array.from(event.results).map(r=>r[0].transcript).join(' ');
+      for(let i=event.resultIndex;i<event.results.length;i++)if(event.results[i].isFinal){
+        finalText+=event.results[i][0].transcript+' ';
+        const confidence=event.results[i][0].confidence;if(confidence>0&&confidence<0.5)uncertain=true;
+      }
+    };
+    rec.onerror=event=>{if(recognition!==rec)return;voiceStatus=['not-allowed','service-not-allowed'].includes(event.error)?'denied':event.error==='no-speech'?'noSpeech':'voiceError';recording=false;renderVoice();};
+    rec.onend=()=>{
+      if(recognition!==rec)return;recognition=null;recording=false;
+      if(!['starting','listening'].includes(voiceStatus)){renderVoice();return;}
+      if(uncertain){$('transcript').value='';voiceStatus='unclearSpeech';renderVoice();return;}
+      const text=finalText.trim();voiceStatus=text?'autoSending':'noSpeech';renderVoice();if(text)void deliverVoiceText(text);
+    };
+    try{rec.start();}catch{recognition=null;recording=false;voiceStatus='voiceError';renderVoice();}
+  }
   function voiceFailureKey(error) {
-    if (['NotAllowedError','SecurityError'].includes(error?.name)) return 'denied';
-    if (['NotFoundError','DevicesNotFoundError'].includes(error?.name)) return 'noMicrophone';
-    if (['NotReadableError','TrackStartError'].includes(error?.name)) return 'microphoneBusy';
-    if (error?.code === 'no_speech') return 'noSpeech';
-    if (error?.code === 'voice_limit' || error?.status === 429) return 'voiceLimit';
-    if (error?.code === 'audio_too_large' || error?.code === 'invalid_audio') return 'shortRecording';
+    if(['NotAllowedError','SecurityError'].includes(error?.name))return 'denied';
+    if(['NotFoundError','DevicesNotFoundError','OverconstrainedError'].includes(error?.name))return 'noMicrophone';
+    if(['NotReadableError','TrackStartError'].includes(error?.name))return 'microphoneBusy';
+    if(error?.code==='no_speech')return 'noSpeech';
+    if(error?.code==='voice_limit'||error?.status===429)return 'voiceLimit';
+    if(['audio_too_large','invalid_audio'].includes(error?.code))return 'shortRecording';
     return 'voiceError';
   }
-  async function encodeVoiceWav(blob) {
-    const AudioCtx = window.AudioContext || window.webkitAudioContext;
-    let context;
-    try { context = new AudioCtx({sampleRate:16000}); }
-    catch { context = new AudioCtx(); }
+  function createSpeechPauseDetector(startedAt,onEnd) {
+    let previous=startedAt,lastSpeech=startedAt,voicedMs=0,heardSpeech=false,ended=false,peak=0,noise=0.0008;
+    return {sample(level,now){
+      if(ended)return;const elapsed=Math.max(0,Math.min(150,now-previous));previous=now;
+      peak=Math.max(level,peak*0.995);
+      const threshold=Math.max(0.0035,Math.min(0.01,noise*2.5),peak*0.1);
+      if(level>=threshold){voicedMs+=elapsed;lastSpeech=now;if(voicedMs>=180)heardSpeech=true;}
+      else{noise=noise*0.94+level*0.06;if(!heardSpeech)voicedMs=Math.max(0,voicedMs-elapsed*0.5);}
+      if(heardSpeech&&now-lastSpeech>=1500){ended=true;onEnd('speech_end');}
+      else if(!heardSpeech&&now-startedAt>=8000){ended=true;onEnd('no_speech');}
+    }};
+  }
+  async function encodePcmWav(samples,sampleRate) {
+    let mono=samples.slice(0,Math.floor(sampleRate*45));
+    if(mono.length/sampleRate<0.4)throw Object.assign(new Error('Short audio'),{code:'invalid_audio'});
+    if(sampleRate!==16000){
+      const OfflineCtx=window.OfflineAudioContext||window.webkitOfflineAudioContext;
+      const offline=new OfflineCtx(1,Math.floor(mono.length*16000/sampleRate),16000);
+      const buffer=offline.createBuffer(1,mono.length,sampleRate);buffer.copyToChannel(mono,0);
+      const source=offline.createBufferSource();source.buffer=buffer;source.connect(offline.destination);source.start();
+      mono=(await offline.startRendering()).getChannelData(0);
+    }
+    let energy=0,peak=0;for(const value of mono){energy+=value*value;peak=Math.max(peak,Math.abs(value));}
+    const rms=Math.sqrt(energy/mono.length);
+    if(!Number.isFinite(rms)||rms<0.0015)throw Object.assign(new Error('No audible speech'),{code:'no_speech'});
+    const gain=Math.min(0.95/Math.max(peak,0.001),rms<0.02?Math.min(2,0.04/rms):1);
+    const bytes=new ArrayBuffer(44+mono.length*2),view=new DataView(bytes);
+    const string=(p,s)=>{for(let i=0;i<s.length;i++)view.setUint8(p+i,s.charCodeAt(i));};
+    string(0,'RIFF');view.setUint32(4,bytes.byteLength-8,true);string(8,'WAVE');string(12,'fmt ');view.setUint32(16,16,true);view.setUint16(20,1,true);view.setUint16(22,1,true);view.setUint32(24,16000,true);view.setUint32(28,32000,true);view.setUint16(32,2,true);view.setUint16(34,16,true);string(36,'data');view.setUint32(40,mono.length*2,true);
+    for(let i=0;i<mono.length;i++){const value=Math.max(-1,Math.min(1,mono[i]*gain));view.setInt16(44+i*2,Math.round(value*(value<0?32768:32767)),true);}
+    return new Blob([bytes],{type:'audio/wav'});
+  }
+  async function createPcmCapture(stream,onLevel,signal) {
+    const AudioCtx=window.AudioContext||window.webkitAudioContext;
+    let context;try{context=new AudioCtx({sampleRate:16000});}catch{context=new AudioCtx();}
+    let source,processor,mute,moduleURL,settled=false,started=false,stopTimer;
+    const chunks=[];let resolveFinished,rejectFinished;
+    const finished=new Promise((resolve,reject)=>{resolveFinished=resolve;rejectFinished=reject;});
+    // Attach a rejection handler before asynchronous setup so cancellation cannot leak a rejection.
+    finished.catch(()=>{});
+    function cleanup(){clearTimeout(stopTimer);signal.removeEventListener('abort',cancel);for(const n of [source,processor,mute])try{n?.disconnect();}catch{}if(moduleURL)URL.revokeObjectURL(moduleURL);if(context.state!=='closed')context.close().catch(()=>{});}
+    function finish(){if(settled)return;settled=true;const length=chunks.reduce((n,a)=>n+a.length,0),samples=new Float32Array(length);let p=0;for(const chunk of chunks){samples.set(chunk,p);p+=chunk.length;}const sampleRate=context.sampleRate;cleanup();resolveFinished({samples,sampleRate});}
+    function fail(error){if(settled)return;settled=true;cleanup();rejectFinished(error);}
+    function cancel(){fail(new DOMException('Recording cancelled','AbortError'));}
+    signal.addEventListener('abort',cancel,{once:true});
     try {
-      let decoded = await context.decodeAudioData(await blob.arrayBuffer());
-      const total = Math.min(Math.floor(decoded.duration * 16000), 45 * 16000);
-      if (total < 6400) throw Object.assign(new Error('Short recording'),{code:'invalid_audio'});
-      // Use the browser resampler rather than dropping samples from the microphone.
-      const OfflineCtx = window.OfflineAudioContext || window.webkitOfflineAudioContext;
-      if (decoded.sampleRate !== 16000 && OfflineCtx) {
-        const offline = new OfflineCtx(1,total,16000);
-        const source = offline.createBufferSource(); source.buffer = decoded;
-        source.connect(offline.destination); source.start();
-        decoded = await offline.startRendering();
-      }
-      const channels = Array.from({length:decoded.numberOfChannels},(_,i)=>decoded.getChannelData(i));
-      const samples = new Float32Array(total), ratio = decoded.sampleRate/16000;
-      for(let i=0;i<total;i++) {
-        const start=Math.min(decoded.length-1,Math.floor(i*ratio));
-        const end=Math.min(decoded.length,Math.max(start+1,Math.floor((i+1)*ratio)));
-        let sum=0; for(const channel of channels)for(let p=start;p<end;p++)sum+=channel[p];
-        samples[i]=sum/((end-start)*channels.length);
-      }
-      // Remove only edge silence, retaining padding so quiet syllables are preserved.
-      const frame=320,padding=4000;
-      let first=-1,last=-1;
-      for(let start=0;start<total;start+=frame) {
-        const end=Math.min(total,start+frame); let energy=0;
-        for(let i=start;i<end;i++)energy+=samples[i]*samples[i];
-        if(Math.sqrt(energy/(end-start))>=0.0025){if(first<0)first=start;last=end;}
-      }
-      if(first<0)throw Object.assign(new Error('No audible speech'),{code:'no_speech'});
-      const from=Math.max(0,first-padding),to=Math.min(total,last+padding),count=to-from;
-      if(count<6400)throw Object.assign(new Error('Short recording'),{code:'invalid_audio'});
-      let energy=0,peak=0;
-      for(let i=from;i<to;i++){energy+=samples[i]*samples[i];peak=Math.max(peak,Math.abs(samples[i]));}
-      const rms=Math.sqrt(energy/count);
-      if(rms<0.0015)throw Object.assign(new Error('No audible speech'),{code:'no_speech'});
-      const gain=Math.min(0.9/peak,rms<0.04?Math.min(3,0.08/rms):1);
-      const bytes = new ArrayBuffer(44 + count * 2), view = new DataView(bytes);
-      const string = (p,s) => { for(let i=0;i<s.length;i++) view.setUint8(p+i,s.charCodeAt(i)); };
-      string(0,'RIFF');view.setUint32(4,bytes.byteLength-8,true);string(8,'WAVE');string(12,'fmt ');view.setUint32(16,16,true);view.setUint16(20,1,true);view.setUint16(22,1,true);view.setUint32(24,16000,true);view.setUint32(28,32000,true);view.setUint16(32,2,true);view.setUint16(34,16,true);string(36,'data');view.setUint32(40,count*2,true);
-      for(let i=0;i<count;i++) {
-        const value=Math.max(-1,Math.min(1,samples[from+i]*gain));
-        view.setInt16(44+i*2,Math.round(value*(value<0?32768:32767)),true);
-      }
-      return new Blob([bytes],{type:'audio/wav'});
-    } finally { await context.close().catch(()=>{}); }
+      if(signal.aborted)throw new DOMException('Recording cancelled','AbortError');
+      await context.resume();
+      if(!context.audioWorklet||!window.AudioWorkletNode)throw new Error('PCM capture unavailable');
+      const workletCode=`class HalloBatamPCM extends AudioWorkletProcessor {
+        constructor(options){super();this.buffer=new Float32Array(1024);this.offset=0;this.frames=0;this.limit=options.processorOptions.maxFrames;this.active=false;this.alive=true;this.port.onmessage=e=>{if(e.data==='start')this.active=true;if(e.data==='stop')this.finish();};}
+        flush(){if(this.offset){const data=this.buffer.slice(0,this.offset);this.port.postMessage({type:'samples',data},[data.buffer]);this.offset=0;}}
+        finish(){if(!this.alive)return;this.active=false;this.flush();this.port.postMessage({type:'stopped'});this.alive=false;}
+        process(inputs){const input=inputs[0]&&inputs[0][0];if(this.active&&input)for(let i=0;i<input.length;i++){this.buffer[this.offset++]=input[i];this.frames++;if(this.offset===this.buffer.length)this.flush();if(this.frames>=this.limit){this.finish();break;}}return this.alive;}
+      }registerProcessor('hallo-batam-pcm',HalloBatamPCM);`;
+      moduleURL=URL.createObjectURL(new Blob([workletCode],{type:'text/javascript'}));await context.audioWorklet.addModule(moduleURL);URL.revokeObjectURL(moduleURL);moduleURL=null;
+      if(signal.aborted)throw new DOMException('Recording cancelled','AbortError');
+      source=context.createMediaStreamSource(stream);
+      processor=new AudioWorkletNode(context,'hallo-batam-pcm',{numberOfInputs:1,numberOfOutputs:1,outputChannelCount:[1],channelCount:1,channelCountMode:'explicit',processorOptions:{maxFrames:Math.floor(context.sampleRate*45)}});
+      processor.port.onmessage=event=>{
+        if(settled)return;
+        if(event.data.type==='samples'){
+          const samples=event.data.data;chunks.push(samples);let energy=0,peak=0;
+          for(const value of samples){energy+=value*value;peak=Math.max(peak,Math.abs(value));}
+          onLevel(Math.sqrt(energy/samples.length),peak);
+        }else if(event.data.type==='stopped')finish();
+      };
+      processor.onprocessorerror=()=>fail(new Error('Microphone processing failed'));
+      mute=context.createGain();mute.gain.value=0;source.connect(processor);processor.connect(mute);mute.connect(context.destination);
+      return {finished,start(){if(settled)return;started=true;processor.port.postMessage('start');},stop(){if(settled)return;if(!started){cancel();return;}processor.port.postMessage('stop');stopTimer=setTimeout(()=>fail(new Error('Microphone did not finish')),2000);},cancel};
+    } catch(error){fail(error);throw error;}
   }
   async function transcribeAudio(wav,signal,language) {
-    for(let attempt=0;attempt<2;attempt++) {
-      const session=await getApiSession(signal,language);
-      const form=new FormData();form.append('audio',wav,'question.wav');form.append('language',language);
+    for(let attempt=0;attempt<2;attempt++){
+      const session=await getApiSession(signal,language),form=new FormData();form.append('audio',wav,'question.wav');form.append('language',language);
       const url=new URL(API_URL);url.searchParams.set('action','transcribe');
       const response=await fetch(url,{method:'POST',headers:{Authorization:'Bearer '+session.session_token},body:form,signal});
       if(response.status===401&&attempt===0){forgetApiSession();continue;}
@@ -4523,94 +4557,70 @@ document.addEventListener("DOMContentLoaded", () => {
     }
     throw new Error('Session unavailable');
   }
-  function createSpeechPauseDetector(startedAt,onEnd) {
-    let previous=startedAt,lastSpeech=startedAt,voicedMs=0,heardSpeech=false,ended=false;
-    let peak=0,noiseFloor=0.0015;
-    return {
-      sample(level,now) {
-        if(ended)return;
-        const elapsed=Math.max(0,Math.min(100,now-previous));previous=now;
-        peak=Math.max(level,peak*0.995);
-        const threshold=Math.max(0.006,Math.min(0.014,noiseFloor*2.4),peak*0.16);
-        if(level>=threshold) {
-          voicedMs+=elapsed;lastSpeech=now;
-          if(voicedMs>=160)heardSpeech=true;
-        } else {
-          noiseFloor=noiseFloor*0.94+level*0.06;
-          if(!heardSpeech)voicedMs=Math.max(0,voicedMs-elapsed*0.5);
-        }
-        if(heardSpeech&&now-lastSpeech>=1200){ended=true;onEnd('speech_end');}
-        else if(!heardSpeech&&now-startedAt>=8000){ended=true;onEnd('no_speech');}
-      }
-    };
-  }
-  async function createSpeechPauseMonitor(stream,onEnd) {
-    let context,source,analyser,mute,interval;
-    const dispose=()=>{
-      clearInterval(interval);
-      for(const node of [source,analyser,mute])try{node?.disconnect();}catch{}
-      if(context&&context.state!=='closed')context.close().catch(()=>{});
-    };
+  async function createCompressedCapture(stream,onLevel,signal) {
+    const AudioCtx=window.AudioContext||window.webkitAudioContext;
+    const context=new AudioCtx({sampleRate:16000});
+    let recorder,source,analyser,mute,interval,settled=false,resolveFinished,rejectFinished;
+    const chunks=[],finished=new Promise((resolve,reject)=>{resolveFinished=resolve;rejectFinished=reject;});finished.catch(()=>{});
+    const cleanup=()=>{clearInterval(interval);signal.removeEventListener('abort',cancel);for(const n of [source,analyser,mute])try{n?.disconnect();}catch{}if(context.state!=='closed')context.close().catch(()=>{});};
+    const cancel=()=>{if(settled)return;settled=true;if(recorder?.state==='recording')recorder.stop();cleanup();rejectFinished(new DOMException('Recording cancelled','AbortError'));};
+    signal.addEventListener('abort',cancel,{once:true});
     try {
-      const AudioCtx=window.AudioContext||window.webkitAudioContext;
-      context=new AudioCtx();
-      await context.resume();
-      source=context.createMediaStreamSource(stream);analyser=context.createAnalyser();
-      analyser.fftSize=2048;
-      mute=context.createGain();mute.gain.value=0;
-      source.connect(analyser);analyser.connect(mute);mute.connect(context.destination);
-      const samples=new Float32Array(analyser.fftSize);
-      return {dispose,start(){
-        const detector=createSpeechPauseDetector(performance.now(),onEnd);
-        interval=setInterval(()=>{
-          if(context.state!=='running')return;
-          analyser.getFloatTimeDomainData(samples);
-          let energy=0;for(const sample of samples)energy+=sample*sample;
-          detector.sample(Math.sqrt(energy/samples.length),performance.now());
-        },50);
-      }};
-    } catch {dispose();return null;}
+      if(signal.aborted)throw new DOMException('Recording cancelled','AbortError');await context.resume();
+      source=context.createMediaStreamSource(stream);analyser=context.createAnalyser();analyser.fftSize=2048;mute=context.createGain();mute.gain.value=0;source.connect(analyser);analyser.connect(mute);mute.connect(context.destination);
+      const type=['audio/webm;codecs=opus','audio/webm','audio/mp4'].find(t=>MediaRecorder.isTypeSupported(t));
+      recorder=new MediaRecorder(stream,type?{mimeType:type,audioBitsPerSecond:128000}:undefined);
+      recorder.ondataavailable=e=>{if(e.data.size)chunks.push(e.data);};
+      recorder.onerror=()=>{if(settled)return;settled=true;cleanup();rejectFinished(new Error('Recording failed'));};
+      recorder.onstop=async()=>{if(settled)return;try{const buffer=await context.decodeAudioData(await new Blob(chunks,{type:recorder.mimeType}).arrayBuffer());if(settled)return;const samples=new Float32Array(buffer.length);for(let c=0;c<buffer.numberOfChannels;c++){const channel=buffer.getChannelData(c);for(let i=0;i<samples.length;i++)samples[i]+=channel[i]/buffer.numberOfChannels;}settled=true;cleanup();resolveFinished({samples,sampleRate:buffer.sampleRate});}catch(e){if(!settled){settled=true;cleanup();rejectFinished(e);}}};
+      return {finished,start(){recorder.start();const samples=new Float32Array(analyser.fftSize);interval=setInterval(()=>{analyser.getFloatTimeDomainData(samples);let e=0,peak=0;for(const v of samples){e+=v*v;peak=Math.max(peak,Math.abs(v));}onLevel(Math.sqrt(e/samples.length),peak);},50);},stop(){if(recorder.state==='recording'){clearInterval(interval);recorder.stop();}},cancel};
+    }catch(error){cancel();throw error;}
+  }
+  async function createAudioCapture(stream,onLevel,signal) {
+    if(window.AudioWorkletNode){try{return await createPcmCapture(stream,onLevel,signal);}catch(error){if(signal.aborted||!window.MediaRecorder)throw error;}}
+    if(window.MediaRecorder)return await createCompressedCapture(stream,onLevel,signal);
+    throw new Error('Microphone capture unavailable');
   }
   async function startRecording() {
-    if(recognition || busy)return;
+    if(recognition||busy)return;
     if(!CanRecordAudio){startBrowserRecording();return;}
-    cancelSpeech();
-    let stream=null,recorder=null,timer=null,cancelled=false,permissionTimer=null,pauseMonitor=null,noSpeechDetected=false;
-    const aborter=new AbortController();const recordingLanguage=lang==='EN'?'en':'id';
-    const stopTracks=()=>{pauseMonitor?.dispose();pauseMonitor=null;stream?.getTracks().forEach(track=>track.stop());};
-    const current={abort(){cancelled=true;clearTimeout(timer);clearTimeout(permissionTimer);aborter.abort();if(recorder?.state==='recording')recorder.stop();stopTracks();},stop(){if(recorder?.state==='recording'){clearTimeout(timer);pauseMonitor?.dispose();pauseMonitor=null;recording=false;voiceStatus='transcribing';renderVoice();recorder.stop();}}};
-    recognition=current;voiceStatus='starting';recording=false;renderVoice();
+    cancelSpeech();clearVoicePreview();
+    let stream=null,capture=null,hardTimer,permissionTimer,deadlineTimer,noSpeech=false,cancelled=false,stopping=false,detector,queuedText='';
+    const aborter=new AbortController(),recordingLanguage=lang==='EN'?'en':'id';
+    const stopTracks=()=>stream?.getTracks().forEach(track=>track.stop());
+    const current={abort(){cancelled=true;clearTimeout(hardTimer);clearTimeout(permissionTimer);aborter.abort();capture?.cancel();stopTracks();},stop(){if(stopping||!capture)return;stopping=true;recording=false;voiceStatus='transcribing';renderVoice();capture.stop();}};
+    recognition=current;voiceStatus='starting';renderVoice();
     try {
-      const pending=navigator.mediaDevices.getUserMedia({audio:{channelCount:1,echoCancellation:true,noiseSuppression:true,autoGainControl:true},video:false});
-      pending.then(result=>{if(cancelled)result.getTracks().forEach(track=>track.stop());},()=>{});
+      const audio={channelCount:{ideal:1},echoCancellation:true,noiseSuppression:true,autoGainControl:false};
+      if(selectedMicrophone)audio.deviceId={exact:selectedMicrophone};
+      const pending=navigator.mediaDevices.getUserMedia({audio,video:false});
+      pending.then(s=>{if(cancelled)s.getTracks().forEach(t=>t.stop());},()=>{});
       stream=await Promise.race([pending,new Promise((_,reject)=>{permissionTimer=setTimeout(()=>{cancelled=true;reject(Object.assign(new Error('Permission timeout'),{name:'NotAllowedError'}));},20000);})]);
       clearTimeout(permissionTimer);if(cancelled||recognition!==current){stopTracks();return;}
-      const type=['audio/webm;codecs=opus','audio/webm','audio/mp4','audio/ogg;codecs=opus'].find(value=>window.MediaRecorder.isTypeSupported?.(value));
-      recorder=new window.MediaRecorder(stream,type?{mimeType:type,audioBitsPerSecond:128000}:undefined);
-      const chunks=[];
-      recorder.ondataavailable=event=>{if(event.data?.size)chunks.push(event.data);};
-      recorder.onerror=()=>{voiceStatus='voiceError';current.abort();if(recognition===current){recognition=null;recording=false;renderVoice();}};
-      recorder.onstop=async()=>{
-        clearTimeout(timer);stopTracks();if(cancelled||recognition!==current)return;
-        if(noSpeechDetected){recognition=null;recording=false;voiceStatus='noSpeech';renderVoice();return;}
-        recording=false;voiceStatus='transcribing';renderVoice();
-        const timeout=setTimeout(()=>aborter.abort(),35000);
-        try {
-          const blob=new Blob(chunks,{type:recorder.mimeType||'audio/webm'});
-          const wav=await encodeVoiceWav(blob);if(cancelled||recognition!==current)return;
-          const result=await transcribeAudio(wav,aborter.signal,recordingLanguage);
-          if(!cancelled&&recognition===current){$('transcript').value=result.transcript;voiceStatus=result.reviewRecommended?'reviewUncertain':'review';}
-        } catch(error) { if(!cancelled&&recognition===current)voiceStatus=voiceFailureKey(error); }
-        finally {clearTimeout(timeout);if(recognition===current){recognition=null;recording=false;renderVoice();if(['review','reviewUncertain'].includes(voiceStatus))$('send-voice').focus();}}
-      };
-      pauseMonitor=await createSpeechPauseMonitor(stream,reason=>{noSpeechDetected=reason==='no_speech';current.stop();});
-      if(cancelled||recognition!==current){stopTracks();return;}
-      recorder.start();pauseMonitor?.start();recording=true;voiceStatus='listening';$('transcript').value='';renderVoice();
+      void refreshMicrophones(stream.getAudioTracks()[0]?.getSettings().deviceId);
+      capture=await createAudioCapture(stream,(rms,peak)=>{if(cancelled||stopping)return;updateVoiceLevel(rms,peak);detector?.sample(rms,performance.now());},aborter.signal);
+      if(cancelled||recognition!==current){capture.cancel();stopTracks();return;}
+      detector=createSpeechPauseDetector(performance.now(),reason=>{noSpeech=reason==='no_speech';current.stop();});
+      $('transcript').value='';capture.start();recording=true;voiceStatus='listening';renderVoice();
+      hardTimer=setTimeout(()=>current.stop(),45000);
       for(const track of stream.getAudioTracks())track.onended=()=>current.stop();
-      timer=setTimeout(()=>current.stop(),45000);
-    } catch(error) {
-      clearTimeout(permissionTimer);stopTracks();if(recognition===current){recognition=null;recording=false;voiceStatus=voiceFailureKey(error);renderVoice();}
+      const raw=await capture.finished;clearTimeout(hardTimer);stopTracks();
+      if(cancelled||recognition!==current)return;
+      recording=false;
+      if(noSpeech){voiceStatus='noSpeech';return;}
+      voiceStatus='transcribing';renderVoice();deadlineTimer=setTimeout(()=>aborter.abort(),35000);
+      const wav=await encodePcmWav(raw.samples,raw.sampleRate);if(cancelled||recognition!==current)return;
+      setVoicePreview(wav);
+      const result=await transcribeAudio(wav,aborter.signal,recordingLanguage);if(cancelled||recognition!==current)return;
+      if(result.reviewRecommended){$('transcript').value='';voiceStatus='unclearSpeech';}
+      else{queuedText=result.transcript;$('transcript').value=queuedText;voiceStatus='autoSending';}
+    }catch(error){
+      if(recognition===current&&(!cancelled||error?.name==='NotAllowedError')){voiceStatus=voiceFailureKey(error);if(error?.name==='OverconstrainedError'){selectedMicrophone='';storage.set('hb_microphone_v1','');void refreshMicrophones();}}
+    }finally{
+      clearTimeout(hardTimer);clearTimeout(permissionTimer);clearTimeout(deadlineTimer);capture?.cancel();stopTracks();
+      if(recognition===current){recognition=null;recording=false;renderVoice();}
     }
+    if(queuedText&&!cancelled)await deliverVoiceText(queuedText);
   }
 
   function updateSend() {
@@ -5085,13 +5095,10 @@ document.addEventListener("DOMContentLoaded", () => {
   $("repeat").onclick = startRecording;
   $("transcript").oninput = renderVoice;
 
-  $("send-voice").onclick = () => {
-    const text = $("transcript").value.trim();
-    if (!text || busy || recognition) return;
-    $("transcript").value = "";
-    voiceStatus = "ready";
-    submit(text);
-  };
+  $('microphone-select').onchange=()=>{selectedMicrophone=$('microphone-select').value;storage.set('hb_microphone_v1',selectedMicrophone);clearVoicePreview();};
+  navigator.mediaDevices?.addEventListener?.('devicechange',()=>void refreshMicrophones());
+  window.addEventListener('pagehide',clearVoicePreview);
+  void refreshMicrophones();
 
   $("prefs-form").onsubmit = event => {
     event.preventDefault();
@@ -5134,6 +5141,7 @@ document.addEventListener("DOMContentLoaded", () => {
 </script>
 </body>
 </html>
+
 
 
 
