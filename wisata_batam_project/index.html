@@ -947,7 +947,7 @@ document.addEventListener("DOMContentLoaded", () => {
   words.voiceLimit = ["Kuota transkripsi sedang penuh. Coba lagi sebentar atau ketik pertanyaan Anda.","Transcription quota is busy. Try again shortly or type your question."];
   words.transcribing = ["Mengubah suara menjadi teks…","Transcribing your recording…"];
   words.shortRecording = ["Rekam ucapan selama 1–45 detik, lalu tekan selesai.","Record 1–45 seconds of speech, then press stop."];
-  words.audioNotice = ["Rekam maksimal 45 detik. Bicara setelah mikrofon aktif. Periksa hasil ucapan, lalu tekan Kirim.","Record up to 45 seconds. Speak after the microphone is ready. Review the transcript, then press Send."];
+  words.audioNotice = ["Bicara setelah mikrofon aktif. Rekaman selesai otomatis saat Anda berhenti bicara. Periksa teks, lalu tekan Kirim. Maksimal 45 detik.","Speak after the microphone is ready. Recording stops automatically after you finish speaking. Review the text, then press Send. Maximum 45 seconds."];
   words.reviewUncertain = ["Sebagian ucapan kurang jelas. Periksa atau edit teks; Anda juga bisa merekam ulang.","Some speech was unclear. Review or edit the text, or record again."];
   words.denied=['Izin mikrofon ditolak. Di Chrome, klik ikon pengaturan di sebelah alamat situs → Izin situs → Mikrofon → Izinkan. Periksa juga akses mikrofon di pengaturan Windows, lalu muat ulang halaman.','Microphone permission was denied. In Chrome, open site controls beside the address → Site settings → Microphone → Allow. Also check system microphone access, then reload.'];
   const places = [
@@ -4523,14 +4523,62 @@ document.addEventListener("DOMContentLoaded", () => {
     }
     throw new Error('Session unavailable');
   }
+  function createSpeechPauseDetector(startedAt,onEnd) {
+    let previous=startedAt,lastSpeech=startedAt,voicedMs=0,heardSpeech=false,ended=false;
+    let peak=0,noiseFloor=0.0015;
+    return {
+      sample(level,now) {
+        if(ended)return;
+        const elapsed=Math.max(0,Math.min(100,now-previous));previous=now;
+        peak=Math.max(level,peak*0.995);
+        const threshold=Math.max(0.006,Math.min(0.014,noiseFloor*2.4),peak*0.16);
+        if(level>=threshold) {
+          voicedMs+=elapsed;lastSpeech=now;
+          if(voicedMs>=160)heardSpeech=true;
+        } else {
+          noiseFloor=noiseFloor*0.94+level*0.06;
+          if(!heardSpeech)voicedMs=Math.max(0,voicedMs-elapsed*0.5);
+        }
+        if(heardSpeech&&now-lastSpeech>=1200){ended=true;onEnd('speech_end');}
+        else if(!heardSpeech&&now-startedAt>=8000){ended=true;onEnd('no_speech');}
+      }
+    };
+  }
+  async function createSpeechPauseMonitor(stream,onEnd) {
+    let context,source,analyser,mute,interval;
+    const dispose=()=>{
+      clearInterval(interval);
+      for(const node of [source,analyser,mute])try{node?.disconnect();}catch{}
+      if(context&&context.state!=='closed')context.close().catch(()=>{});
+    };
+    try {
+      const AudioCtx=window.AudioContext||window.webkitAudioContext;
+      context=new AudioCtx();
+      await context.resume();
+      source=context.createMediaStreamSource(stream);analyser=context.createAnalyser();
+      analyser.fftSize=2048;
+      mute=context.createGain();mute.gain.value=0;
+      source.connect(analyser);analyser.connect(mute);mute.connect(context.destination);
+      const samples=new Float32Array(analyser.fftSize);
+      return {dispose,start(){
+        const detector=createSpeechPauseDetector(performance.now(),onEnd);
+        interval=setInterval(()=>{
+          if(context.state!=='running')return;
+          analyser.getFloatTimeDomainData(samples);
+          let energy=0;for(const sample of samples)energy+=sample*sample;
+          detector.sample(Math.sqrt(energy/samples.length),performance.now());
+        },50);
+      }};
+    } catch {dispose();return null;}
+  }
   async function startRecording() {
     if(recognition || busy)return;
     if(!CanRecordAudio){startBrowserRecording();return;}
     cancelSpeech();
-    let stream=null,recorder=null,timer=null,cancelled=false,permissionTimer=null;
+    let stream=null,recorder=null,timer=null,cancelled=false,permissionTimer=null,pauseMonitor=null,noSpeechDetected=false;
     const aborter=new AbortController();const recordingLanguage=lang==='EN'?'en':'id';
-    const stopTracks=()=>stream?.getTracks().forEach(track=>track.stop());
-    const current={abort(){cancelled=true;clearTimeout(timer);clearTimeout(permissionTimer);aborter.abort();if(recorder?.state==='recording')recorder.stop();stopTracks();},stop(){if(recorder?.state==='recording')recorder.stop();}};
+    const stopTracks=()=>{pauseMonitor?.dispose();pauseMonitor=null;stream?.getTracks().forEach(track=>track.stop());};
+    const current={abort(){cancelled=true;clearTimeout(timer);clearTimeout(permissionTimer);aborter.abort();if(recorder?.state==='recording')recorder.stop();stopTracks();},stop(){if(recorder?.state==='recording'){clearTimeout(timer);pauseMonitor?.dispose();pauseMonitor=null;recording=false;voiceStatus='transcribing';renderVoice();recorder.stop();}}};
     recognition=current;voiceStatus='starting';recording=false;renderVoice();
     try {
       const pending=navigator.mediaDevices.getUserMedia({audio:{channelCount:1,echoCancellation:true,noiseSuppression:true,autoGainControl:true},video:false});
@@ -4544,6 +4592,7 @@ document.addEventListener("DOMContentLoaded", () => {
       recorder.onerror=()=>{voiceStatus='voiceError';current.abort();if(recognition===current){recognition=null;recording=false;renderVoice();}};
       recorder.onstop=async()=>{
         clearTimeout(timer);stopTracks();if(cancelled||recognition!==current)return;
+        if(noSpeechDetected){recognition=null;recording=false;voiceStatus='noSpeech';renderVoice();return;}
         recording=false;voiceStatus='transcribing';renderVoice();
         const timeout=setTimeout(()=>aborter.abort(),35000);
         try {
@@ -4554,7 +4603,9 @@ document.addEventListener("DOMContentLoaded", () => {
         } catch(error) { if(!cancelled&&recognition===current)voiceStatus=voiceFailureKey(error); }
         finally {clearTimeout(timeout);if(recognition===current){recognition=null;recording=false;renderVoice();if(['review','reviewUncertain'].includes(voiceStatus))$('send-voice').focus();}}
       };
-      recorder.start();recording=true;voiceStatus='listening';$('transcript').value='';renderVoice();
+      pauseMonitor=await createSpeechPauseMonitor(stream,reason=>{noSpeechDetected=reason==='no_speech';current.stop();});
+      if(cancelled||recognition!==current){stopTracks();return;}
+      recorder.start();pauseMonitor?.start();recording=true;voiceStatus='listening';$('transcript').value='';renderVoice();
       for(const track of stream.getAudioTracks())track.onended=()=>current.stop();
       timer=setTimeout(()=>current.stop(),45000);
     } catch(error) {
@@ -5083,5 +5134,6 @@ document.addEventListener("DOMContentLoaded", () => {
 </script>
 </body>
 </html>
+
 
 
