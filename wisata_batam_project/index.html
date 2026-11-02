@@ -669,7 +669,6 @@ legend{font-size:14px;font-weight:700;margin-bottom:8px}
       <div class="voice-bottom">
         <div class="voice-controls">
           <button class="voice-control" id="voice-mute" type="button" aria-label="Jeda mikrofon"><span class="icon">mic</span><span id="voice-mute-label"></span></button>
-          <button class="voice-control" id="repeat" type="button" data-voice-label="voiceInterrupt" aria-label="Sela jawaban"><span class="icon">skip_next</span><span data-t="voiceInterrupt">Sela</span></button>
           <button class="voice-control voice-end" id="voice-end" type="button" data-voice-label="voiceEnd" aria-label="Akhiri percakapan"><span class="icon">call_end</span><span data-t="voiceEnd">Akhiri</span></button>
         </div>
         <p class="voice-footer-note" data-t="voiceFooter">Jawaban dapat keliru. Periksa informasi penting sebelum berangkat.</p>
@@ -684,7 +683,6 @@ legend{font-size:14px;font-weight:700;margin-bottom:8px}
         <div class="voice-sheet-header"><h2 data-t="voiceSettings">Pengaturan suara</h2><button class="voice-icon-button" id="voice-settings-close" type="button" data-voice-label="close" aria-label="Tutup"><span class="icon">close</span></button></div>
         <div class="voice-setting-field"><label for="microphone-select" data-t="microphone">Mikrofon</label><select id="microphone-select"><option value="" data-t="defaultMicrophone"></option></select></div>
         <div id="voice-level-wrap" hidden><progress id="voice-level" max="1" value="0" aria-label="Microphone level"></progress><p id="voice-level-label" class="small muted"></p></div>
-        <label class="voice-setting-toggle"><span data-t="voiceReadAloud">Bacakan jawaban</span><input id="voice-read-aloud" type="checkbox" checked></label>
         <div class="voice-setting-field"><label data-t="voiceLanguage">Bahasa percakapan</label><div class="language"><button type="button" data-lang="ID">Indonesia</button><button type="button" data-lang="EN">English</button></div></div>
         <div id="voice-preview" hidden class="voice-recording-preview"><p class="small muted" data-t="listenRecording">Dengarkan rekaman terakhir</p><audio id="voice-playback" controls preload="metadata"></audio></div>
         <p class="small muted" data-t="voiceSettingsNote">Pilih mikrofon yang Anda gunakan. Saat panel ini ditutup, percakapan dapat dilanjutkan.</p>
@@ -1042,10 +1040,10 @@ document.addEventListener("DOMContentLoaded", () => {
   words.denied=['Izin mikrofon ditolak. Di Chrome, klik ikon pengaturan di sebelah alamat situs → Izin situs → Mikrofon → Izinkan. Periksa juga akses mikrofon di pengaturan Windows, lalu muat ulang halaman.','Microphone permission was denied. In Chrome, open site controls beside the address → Site settings → Microphone → Allow. Also check system microphone access, then reload.'];
   Object.assign(words,{
     you:['Anda','You'],voiceSessionLabel:['Percakapan suara','Voice conversation'],
-    voiceStart:['Mulai ngobrol','Start conversation'],voiceMute:['Jeda mic','Mute mic'],voiceUnmute:['Lanjutkan','Unmute'],voiceEnd:['Akhiri','End'],voiceClose:['Kembali ke chat','Back to chat'],voiceInterrupt:['Sela','Interrupt'],voiceTranscript:['Transkrip percakapan','Conversation transcript'],voiceSettings:['Pengaturan suara','Voice settings'],voiceLanguage:['Bahasa percakapan','Conversation language'],voiceReadAloud:['Bacakan jawaban','Read answers aloud'],voiceEmptyHistory:['Percakapan Anda akan muncul di sini.','Your conversation will appear here.'],voiceSettingsNote:['Pilih mikrofon yang Anda gunakan. Percakapan dilanjutkan saat panel ini ditutup.','Choose your microphone. The conversation resumes when you close this panel.'],
+    voiceStart:['Mulai bicara','Start speaking'],voiceMute:['Jeda mic','Mute mic'],voiceUnmute:['Lanjutkan','Unmute'],voiceEnd:['Akhiri','End'],voiceClose:['Kembali ke chat','Back to chat'],voiceInterrupt:['Sela','Interrupt'],voiceTranscript:['Transkrip percakapan','Conversation transcript'],voiceSettings:['Pengaturan suara','Voice settings'],voiceLanguage:['Bahasa percakapan','Conversation language'],voiceReadAloud:['Bacakan jawaban','Read answers aloud'],voiceEmptyHistory:['Percakapan Anda akan muncul di sini.','Your conversation will appear here.'],voiceSettingsNote:['Pilih mikrofon yang Anda gunakan. Rekaman dilanjutkan saat panel ini ditutup.','Choose your microphone. Recording resumes when you close this panel.'],
     voiceIdlePhase:['HALLO BATAM · SUARA','HALLO BATAM · VOICE'],voiceReadyPhase:['SIAP MENDENGARKAN','READY TO LISTEN'],voiceConnectingPhase:['MENYIAPKAN MIKROFON','CONNECTING MICROPHONE'],voiceListeningPhase:['MENDENGARKAN','LISTENING'],voiceThinkingPhase:['MENCARIKAN PILIHAN','FINDING YOUR OPTIONS'],voiceSpeakingPhase:['HALLO BATAM MENJAWAB','HALLO BATAM IS SPEAKING'],voicePausedPhase:['MIKROFON DIJEDA','MICROPHONE MUTED'],voiceErrorPhase:['PERCAKAPAN DIJEDA','CONVERSATION PAUSED'],
-    voiceIdleTitle:['Ngobrol tentang Batam.','Let’s talk about Batam.'],voiceReadyTitle:['Saya siap mendengarkan.','I’m ready when you are.'],voiceConnectingTitle:['Sebentar, hampir siap.','One moment, almost ready.'],voiceListeningTitle:['Saya mendengarkan.','I’m listening.'],voiceThinkingTitle:['Sebentar, saya carikan.','Let me find a few options.'],voiceSpeakingTitle:['Ini pilihan untuk Anda.','Here are your options.'],voicePausedTitle:['Ambil waktu Anda.','Take your time.'],voiceErrorTitle:['Ketuk lingkaran untuk lanjut.','Tap the circle to continue.'],
-    voiceIdleCaption:['Ceritakan rencana perjalanan Anda. Saya bantu cari tempat, kuliner, dan penginapan di Batam.','Tell me about your trip. I can help find places, food and accommodation in Batam.'],voiceConnectingCaption:['Mulai bicara saat status berubah menjadi Mendengarkan.','Start speaking when the status changes to Listening.'],voiceThinkingCaption:['Saya sedang menyiapkan jawaban dari data sumber yang tersedia.','I’m preparing an answer from the available source data.'],voicePausedCaption:['Mikrofon tidak mendengarkan. Tekan Lanjutkan saat Anda siap.','Your microphone is not listening. Press Unmute when you’re ready.'],voiceFooter:['Jawaban dapat keliru. Periksa informasi penting sebelum berangkat.','Answers can be inaccurate. Check important information before you travel.']
+    voiceIdleTitle:['Tanyakan lewat suara.','Ask with your voice.'],voiceReadyTitle:['Saya siap mendengarkan.','I’m ready when you are.'],voiceConnectingTitle:['Sebentar, hampir siap.','One moment, almost ready.'],voiceListeningTitle:['Saya mendengarkan.','I’m listening.'],voiceThinkingTitle:['Sebentar, saya carikan.','Let me find a few options.'],voiceSpeakingTitle:['Ini pilihan untuk Anda.','Here are your options.'],voicePausedTitle:['Ambil waktu Anda.','Take your time.'],voiceErrorTitle:['Ketuk lingkaran untuk lanjut.','Tap the circle to continue.'],
+    voiceIdleCaption:['Selesai bicara, pertanyaan langsung dikirim. Jawaban tampil sebagai teks di percakapan.','When you finish speaking, your question is sent automatically. The answer appears as text in the chat.'],voiceConnectingCaption:['Mulai bicara saat status berubah menjadi Mendengarkan.','Start speaking when the status changes to Listening.'],voiceThinkingCaption:['Saya sedang menyiapkan jawaban dari data sumber yang tersedia.','I’m preparing an answer from the available source data.'],voicePausedCaption:['Mikrofon tidak mendengarkan. Tekan Lanjutkan saat Anda siap.','Your microphone is not listening. Press Unmute when you’re ready.'],voiceFooter:['Jawaban dapat keliru. Periksa informasi penting sebelum berangkat.','Answers can be inaccurate. Check important information before you travel.']
   });
   const places = [
   {
@@ -4689,7 +4687,7 @@ document.addEventListener("DOMContentLoaded", () => {
     if(queuedText&&!cancelled)await deliverVoiceText(queuedText);
   }
 
-  const voiceSession={active:false,muted:false,phase:'idle',generation:0,timer:null,utterance:null,request:null,liveText:'',answerText:'',errorKey:null,resumeSettings:false,readAloud:storage.get('hb_voice_read_aloud','1')!=='0'};
+  const voiceSession={active:false,muted:false,phase:'idle',generation:0,timer:null,utterance:null,request:null,liveText:'',answerText:'',errorKey:null,resumeSettings:false};
   function renderVoiceSession() {
     let phase='idle';
     if(voiceSession.active){
@@ -4717,10 +4715,8 @@ document.addEventListener("DOMContentLoaded", () => {
     $('voice-mute').setAttribute('aria-label',t(voiceSession.muted?'voiceUnmute':'voiceMute'));
     $('voice-mute').querySelector('.icon').textContent=voiceSession.muted?'mic_off':'mic';
     $('voice-mute-label').textContent=t(voiceSession.muted?'voiceUnmute':'voiceMute');
-    $('repeat').disabled=!voiceSession.utterance;
     $('microphone-select').disabled=!!recognition||busy;
     $('voice-level-wrap').hidden=!recording;
-    $('voice-read-aloud').checked=voiceSession.readAloud;
     document.querySelectorAll('[data-voice-label]').forEach(el=>el.setAttribute('aria-label',t(el.dataset.voiceLabel)));
     if(!recording){$('voice-level').value=0;$('voice').style.setProperty('--voice-amplitude','0');}
   }
@@ -4780,46 +4776,21 @@ document.addEventListener("DOMContentLoaded", () => {
     else if(!busy&&!voiceSession.utterance)scheduleVoiceListening(0);
     renderVoice();
   }
-  function interruptVoiceReply() {
-    if(!voiceSession.active)return;
-    voiceSession.utterance=null;if('speechSynthesis'in window)window.speechSynthesis.cancel();
-    if(!busy){voiceSession.muted=false;voiceSession.errorKey=null;scheduleVoiceListening(150);}renderVoice();
-  }
   function voiceOrbAction() {
     if(!voiceSession.active){beginVoiceSession();return;}
-    if(voiceSession.utterance){interruptVoiceReply();return;}
     if(recording&&recognition){recognition.stop();return;}
     if(!busy){voiceSession.muted=false;voiceSession.errorKey=null;scheduleVoiceListening(0);renderVoice();}
   }
-  async function speakVoiceReply(data,generation,question) {
-    if(!voiceSession.readAloud||!('speechSynthesis'in window))return;
-    const u=new SpeechSynthesisUtterance(voiceReplyForSpeech(data.response,question));
-    const language=String(data.language||lang).toLowerCase().startsWith('en')?'en-US':'id-ID';
-    u.lang=language;u.rate=1.02;
-    const available=window.speechSynthesis.getVoices();u.voice=available.find(v=>v.lang===language)||available.find(v=>v.lang.toLowerCase().startsWith(language.slice(0,2)))||null;
-    voiceSession.utterance=u;voiceSession.answerText=voicePlainText(data.response).slice(0,230);renderVoice();
-    await new Promise(resolve=>{
-      let settled=false;const finish=()=>{if(settled)return;settled=true;clearInterval(watch);clearTimeout(timeout);if(voiceSession.utterance===u)voiceSession.utterance=null;resolve();};
-      const watch=setInterval(()=>{if(!voiceSession.active||voiceSession.generation!==generation||voiceSession.utterance!==u)finish();},100);
-      const timeout=setTimeout(()=>{if(voiceSession.utterance===u){voiceSession.utterance=null;window.speechSynthesis.cancel();voiceSession.errorKey='ttsError';}finish();},90000);
-      u.onend=finish;u.onerror=()=>{if(voiceSession.active&&voiceSession.generation===generation&&voiceSession.utterance===u)voiceSession.errorKey='ttsError';finish();};
-      try{window.speechSynthesis.speak(u);}catch{voiceSession.errorKey='ttsError';finish();}
-    });
-  }
   async function deliverVoiceText(text) {
     text=String(text||'').trim();if(!text||busy||!voiceSession.active)return;
-    const generation=voiceSession.generation;voiceSession.liveText=text;$('transcript').value=text;voiceStatus='autoSending';renderVoice();
-    appendVoiceTurn('user',text,[],lang);
-    const controller=new AbortController();voiceSession.request=controller;
-    const data=await submit(text,null,{voice:true,signal:controller.signal});
-    if(voiceSession.request===controller)voiceSession.request=null;
-    if(!voiceSession.active||voiceSession.generation!==generation)return;
-    if(!data){voiceSession.errorKey='failed';voiceStatus='ready';renderVoice();return;}
-    appendVoiceTurn('assistant',data.response,data.sources,lang);
-    voiceSession.answerText=voicePlainText(data.response).slice(0,230);
-    voiceStatus='ready';await speakVoiceReply(data,generation,text);
-    if(!voiceSession.active||voiceSession.generation!==generation)return;
-    renderVoice();if(!voiceSession.errorKey)scheduleVoiceListening();
+    const requestLanguage=lang;
+    $('transcript').value=text;
+    appendVoiceTurn('user',text,[],requestLanguage);
+    // Voice is an input method. Finish capture before opening the normal text chat.
+    endVoiceSession();
+    showPage('chat');
+    const data=await submit(text);
+    if(data)appendVoiceTurn('assistant',data.response,data.sources,requestLanguage);
   }
   function createLiveRecognition(stream,signal,onInterim) {
     const major=Number(navigator.userAgent.match(/(?:Chrome|Chromium)\/(\d+)/)?.[1]||0);
@@ -5317,7 +5288,6 @@ document.addEventListener("DOMContentLoaded", () => {
   $('record').onclick=voiceOrbAction;
   $('voice-start').onclick=beginVoiceSession;
   $('voice-mute').onclick=toggleVoiceMute;
-  $('repeat').onclick=interruptVoiceReply;
   const closeVoice=()=>{endVoiceSession();showPage('chat');};
   $('voice-end').onclick=closeVoice;$('voice-close').onclick=closeVoice;
   $('composer-mic').addEventListener('click',beginVoiceSession);
@@ -5330,7 +5300,6 @@ document.addEventListener("DOMContentLoaded", () => {
   };
   $('voice-settings-close').onclick=()=>$('voice-settings').close();
   $('voice-settings').addEventListener('close',()=>{if(voiceSession.resumeSettings&&voiceSession.active){voiceSession.resumeSettings=false;voiceSession.muted=false;voiceSession.errorKey=null;scheduleVoiceListening();renderVoice();}});
-  $('voice-read-aloud').onchange=()=>{voiceSession.readAloud=$('voice-read-aloud').checked;storage.set('hb_voice_read_aloud',voiceSession.readAloud?'1':'0');if(!voiceSession.readAloud&&voiceSession.utterance){voiceSession.utterance=null;window.speechSynthesis?.cancel();}renderVoice();};
   $('microphone-select').onchange=()=>{selectedMicrophone=$('microphone-select').value;storage.set('hb_microphone_v1',selectedMicrophone);clearVoicePreview();};
   navigator.mediaDevices?.addEventListener?.('devicechange',()=>void refreshMicrophones());
   window.addEventListener('pagehide',()=>{endVoiceSession();clearVoicePreview();});
@@ -5378,8 +5347,3 @@ document.addEventListener("DOMContentLoaded", () => {
 </script>
 </body>
 </html>
-
-
-
-
-
