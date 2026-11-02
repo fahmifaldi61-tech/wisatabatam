@@ -26,6 +26,9 @@
         }
       ]
     }
-  ]
+  ],
+  "framework": null,
+  "buildCommand": "node build.cjs",
+  "outputDirectory": "public"
 }
 
