@@ -11,8 +11,8 @@
 <link href="https://fonts.googleapis.com/css2?family=Onest:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght@400&display=swap" rel="stylesheet">
 
-<script defer src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
-<script defer src="https://cdn.jsdelivr.net/npm/dompurify/dist/purify.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/marked@15.0.12/marked.min.js" integrity="sha384-948ahk4ZmxYVYOc+rxN1H2gM1EJ2Duhp7uHtZ4WSLkV4Vtx5MUqnV+l7u9B+jFv+" crossorigin="anonymous"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/dompurify@3.4.17/dist/purify.min.js" integrity="sha384-P0JNneQf81HOl9VwNXK76cQ9VMD6Nfsnepxb0cCOg8+UzEdzgPHAPV4wVQrvYQSx" crossorigin="anonymous"></script>
 
 <style>
 :root{
@@ -549,7 +549,7 @@ legend{font-size:14px;font-weight:700;margin-bottom:8px}
     <section class="page" id="home">
       <div class="home-intro">
         <div class="hero">
-          <img src="image_02fa79.jpg" alt="" onerror="this.hidden=true">
+          <img id="hero-photo" src="image_02fa79.jpg" alt="">
           <div class="hero-caption">
             <span class="tag">
               <span class="icon" style="font-size:15px">location_on</span>
@@ -801,6 +801,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
   const API_URL = "https://eucjlbumklqhmscwixvr.supabase.co/functions/v1/chat";
   const $ = id => document.getElementById(id);
+  const heroPhoto = $("hero-photo");
+  heroPhoto.addEventListener("error", () => { heroPhoto.hidden = true; });
+  if (heroPhoto.complete && !heroPhoto.naturalWidth) heroPhoto.hidden = true;
 
   const storage = {
     get(key, fallback = null) {
