@@ -25,7 +25,7 @@ assert.match(functionConfig,/\[functions\.chat\]\s*[\s\S]*?verify_jwt\s*=\s*fals
 assert.match(functionCode,/\bDeno\.serve\(handler\)/,'Edge Function must have its runtime handler');
 assert.match(functionCode,/\bhb_claim_session\b/,'Custom bearer session validation must remain');
 assert.match(functionCode,/\bhb_take_limit\b/,'Rate limiting must remain');
-assert.match(functionCode,/\bhb_search_documents\b/,'Verified document retrieval must remain');
+assert.match(functionCode,/\bhb_documents\b/,'Verified document table access must remain');
 assert.match(functionCode,/\bhb_discover_places\b/,'Destination discovery must remain');
 assert.match(functionCode,/\bhb_finish_grounded_turn\b/,'Chat persistence must remain');
 assert.match(functionCode,/\bOPENAI_KEY\b/,'Server-side OpenAI integration expected');
