@@ -1,4 +1,4 @@
-// Only these two files belong in the public website output.
+// Publish only the six explicitly reviewed application files below.
 // Run --update-csp locally after editing inline JavaScript, then review both files.
 const fs=require('node:fs'),path=require('node:path'),crypto=require('node:crypto'),assert=require('node:assert/strict');
 const root=__dirname,configPath=path.join(root,'vercel.json');
@@ -25,17 +25,24 @@ if(process.argv.includes('--update-csp')){
 }
 const actual=policy.value.split(';').map(s=>s.trim()).find(s=>s.startsWith('script-src '));
 assert.equal(actual,directive,'CSP does not match app code. Run node build.cjs --update-csp locally, review and test before publishing.');
-const allowed=['index.html','image_02fa79.jpg'],output=path.join(root,'public');
+const assets=[
+  {source:'index.html',output:'index.html'},
+  {source:'image_02fa79.jpg',output:'image_02fa79.jpg'},
+  {source:'telyu',output:'logo-telyu.png'},
+  {source:'btp',output:'logo-btp.png'},
+  {source:'greentech',output:'logo-greentech.png'},
+  {source:'sth',output:'logo-sth.png'}
+];
+const allowed=assets.map(asset=>asset.output),output=path.join(root,'public');
 // Never delete a computed directory; reject unexpected stale contents instead.
 if(fs.existsSync(output)){
   assert.ok(fs.lstatSync(output).isDirectory()&&!fs.lstatSync(output).isSymbolicLink(),'Output must be a real directory');
   for(const file of fs.readdirSync(output))assert.ok(allowed.includes(file),'Unexpected file in public output: '+file);
 }else fs.mkdirSync(output);
-for(const file of allowed){
-  const source=path.join(root,file),target=path.join(output,file);
+for(const asset of assets){
+  const source=path.join(root,asset.source),target=path.join(output,asset.output);
   assert.ok(fs.lstatSync(source).isFile()&&!fs.lstatSync(source).isSymbolicLink(),'Source must be a regular file');
   if(fs.existsSync(target))assert.ok(fs.lstatSync(target).isFile()&&!fs.lstatSync(target).isSymbolicLink(),'Output must be a regular file');
   fs.copyFileSync(source,target);
 }
-console.log('Security checks passed; published output contains only the application and its image.');
-
+console.log('Security checks passed; published output contains only the application, hero image and four contributor logos.');
