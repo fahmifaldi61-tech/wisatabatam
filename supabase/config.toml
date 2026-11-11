@@ -1,0 +1,4 @@
+# Mirrors the deployed chat function setting as inspected on 2026-11-11.
+# This endpoint validates its own opaque, short-lived browser sessions.
+[functions.chat]
+verify_jwt = false
