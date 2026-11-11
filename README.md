@@ -20,7 +20,7 @@ Asisten wisata Batam berbasis **frontend statis di Vercel**, **Supabase Edge Fun
 ## Cara kerja singkat
 
 1. Pengunjung membuka frontend di Vercel.
-2. Frontend meminta token sesi ke \`/functions/v1/chat\`, menyimpan token di browser, lalu mengirim pertanyaan.
+2. Frontend meminta token sesi ke `/functions/v1/chat`, menyimpan token di browser, lalu mengirim pertanyaan.
 3. Edge Function memvalidasi token, menerapkan limit, mencari informasi wisata terverifikasi di PostgreSQL, dan menyusun jawaban menggunakan data sumber serta OpenAI bila sesuai.
 4. Frontend menampilkan jawaban, daftar sumber, dan foto destinasi yang namanya muncul di jawaban (foto dimuat tanpa menunda teks).
 
@@ -30,13 +30,13 @@ Asisten wisata Batam berbasis **frontend statis di Vercel**, **Supabase Edge Fun
 
 Dari root repository, dengan Node.js:
 
-\`\`\`bash
+```bash
 node wisata_batam_project/check-integrations.cjs
 node wisata_batam_project/build.cjs
-\`\`\`
+```
 
-Periksa PR dan status Vercel sebelum menggabungkan perubahan. Untuk perubahan backend, cocokkan lagi versi live Supabase dengan source repo sebelum deploy. Gunakan dokumentasi CLI Supabase terbaru dan cek \`supabase --help\` terlebih dahulu.
+Periksa PR dan status Vercel sebelum menggabungkan perubahan. Untuk perubahan backend, cocokkan lagi versi live Supabase dengan source repo sebelum deploy. Gunakan dokumentasi CLI Supabase terbaru dan cek `supabase --help` terlebih dahulu.
 
 ## Status legacy
 
-Repository \`fahmifaldi61-tech/wisatabatam-backend.\` berisi Django/Chroma dari eksperimen lama dan **tidak digunakan** untuk menjalankan Hallo Batam AI sekarang. Jangan jalankan \`manage.py\`, \`Procfile\`, atau \`ingest.py\` sebagai bagian deploy produksi.
+Repository `fahmifaldi61-tech/wisatabatam-backend.` berisi Django/Chroma dari eksperimen lama dan **tidak digunakan** untuk menjalankan Hallo Batam AI sekarang. Jangan jalankan `manage.py`, `Procfile`, atau `ingest.py` sebagai bagian deploy produksi.
