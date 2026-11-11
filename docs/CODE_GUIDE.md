@@ -40,7 +40,7 @@ File: [`supabase/functions/chat/index.ts`](../supabase/functions/chat/index.ts)
 | Batas request | `limit`, `hb_take_limit` | Pembatasan abuse, biaya, dan kuota |
 | Autentikasi sesi | `hb_claim_session`, `sha256`, `tokenPattern` | Token dibuktikan dengan hash, bukan disimpan mentah |
 | Memahami pertanyaan | `questionPlan` | Mengidentifikasi intent dan kebutuhan wisata |
-| Pencarian materi wisata | `retrieveVerified`, `hb_search_documents`, `hb_discover_places` | Mengambil data sumber yang relevan/terverifikasi |
+| Pencarian materi wisata | `retrieveVerified`, `hb_discover_places`, `fetchSlugs` | Mengambil data sumber yang relevan/terverifikasi |
 | Model AI dan jawaban | `generateOpenAIAnswer`, `providerFetch` | Memanggil layanan OpenAI secara server-side |
 | Menyimpan hasil chat | `hb_finish_grounded_turn` | Pertanyaan, jawaban, sumber, dan metadata |
 | Suara ke teks | `transcribeVoice`, `validateVoiceWav` | Validasi audio dan API transkripsi |
