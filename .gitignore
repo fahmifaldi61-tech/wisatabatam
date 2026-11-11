@@ -1,0 +1,13 @@
+# Secrets and credentials
+.env
+.env.*
+**/.env
+**/.env.*
+!.env.example
+!**/.env.example
+# Build outputs and temporary files
+**/public/
+**/node_modules/
+**/.vercel/
+**/.supabase/
+**/.DS_Store
