@@ -27,6 +27,7 @@ const actual=policy.value.split(';').map(s=>s.trim()).find(s=>s.startsWith('scri
 assert.equal(actual,directive,'CSP does not match app code. Run node build.cjs --update-csp locally, review and test before publishing.');
 const assets=[
   {source:'index.html',output:'index.html'},
+  {source:'remote-destination-photo-sources.json',output:'remote-destination-photo-sources.json'},
   {source:'image_02fa79.jpg',output:'image_02fa79.jpg'},
   {source:'telyu',output:'logo-telyu.png'},
   {source:'btp',output:'logo-btp.png'},

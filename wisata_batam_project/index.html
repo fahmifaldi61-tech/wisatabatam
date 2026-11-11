@@ -294,6 +294,15 @@ p{font-size:14px;line-height:1.75}
 .answer h1,.answer h2,.answer h3{
   font-size:17px;letter-spacing:0;margin:15px 0 9px;
 }
+.answer-photo-gallery{margin-top:16px;padding-top:14px;border-top:1px solid var(--line)}
+.answer-photo-heading{font-size:12px;font-weight:700;margin:0 0 10px}
+.answer-photo-list{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px}
+.answer-photo-card{display:flex;flex-direction:column;text-align:left;overflow:hidden;min-width:0;padding:0;border-radius:14px;border:1px solid var(--line);background:var(--bg);color:var(--ink)}
+.answer-photo-card:hover{border-color:#8dc4aa}
+.answer-photo-card img{width:100%;height:120px;display:block;object-fit:cover;background:var(--mint)}
+.answer-photo-title{padding:9px 10px 2px;font-size:12px;line-height:1.4;font-weight:700}
+.answer-photo-credit{padding:0 10px 10px;font-size:10px;line-height:1.4;color:var(--muted)}
+@media(max-width:540px){.answer-photo-list{display:grid;grid-auto-flow:column;grid-auto-columns:minmax(155px,65%);grid-template-columns:none;overflow-x:auto;overscroll-behavior-x:contain;scroll-snap-type:x proximity;padding-bottom:6px}.answer-photo-card{scroll-snap-align:start}.answer-photo-card img{height:110px}}
 .sources{
   border-top:1px solid var(--line);margin-top:14px;padding-top:12px;
   display:flex;gap:7px;flex-wrap:wrap;
@@ -1053,6 +1062,30 @@ document.addEventListener("DOMContentLoaded", () => {
     voiceIdleCaption:['Setelah diam 1,5 detik, ucapan diproses dan pertanyaan dikirim otomatis. Jawaban tampil sebagai teks di percakapan.','After 1.5 seconds of silence, your speech is processed and your question is sent automatically. The answer appears as text in the chat.'],voiceConnectingCaption:['Mulai bicara saat status berubah menjadi Mendengarkan.','Start speaking when the status changes to Listening.'],voiceThinkingCaption:['Saya sedang menyiapkan jawaban dari data sumber yang tersedia.','I’m preparing an answer from the available source data.'],voicePausedCaption:['Mikrofon tidak mendengarkan. Tekan Lanjutkan saat Anda siap.','Your microphone is not listening. Press Unmute when you’re ready.'],voiceFooter:['Jawaban dapat keliru. Periksa informasi penting sebelum berangkat.','Answers can be inaccurate. Check important information before you travel.']
   });
   const destinationPhotos = {"Mangrove Pandang Tak Jemu":{"src":"./dest-00.webp","credit":"JADesta Kemenpar","source":"https://jadesta.kemenpar.go.id/atraksi/ekowisata_alam_mangrove_pandang_tak_jemu"},"Desa Wisata Kampung Terih":{"src":"./dest-01.webp","credit":"kumparanTravel","source":"https://kumparan.com/kumparantravel/mengunjungi-kampung-terih-tempat-wisata-instagenic-terbaru-di-batam"},"Jembatan Barelang":{"src":"./dest-02.webp","credit":"BP Batam","source":"https://bpbatam.go.id/about-batam/travel-destinations/"},"Pantai Nongsa":{"src":"./dest-03.webp","credit":"BP Batam","source":"https://bpbatam.go.id/about-batam/travel-destinations/"},"Mega Wisata Ocarina":{"src":"./dest-04.webp","credit":"BP Batam","source":"https://bpbatam.go.id/about-batam/travel-destinations/"},"Welcome to Batam":{"src":"./dest-05.webp","credit":"BP Batam","source":"https://bpbatam.go.id/about-batam/travel-destinations/"},"Eks Kamp Pengungsi Vietnam":{"src":"./dest-06.webp","credit":"BP Batam","source":"https://bpbatam.go.id/about-batam/travel-destinations/"},"Taman Rusa Sekupang":{"src":"./dest-07.webp","credit":"BP Batam","source":"https://bpbatam.go.id/about-batam/travel-destinations/"},"Kebun Raya Batam":{"src":"./dest-08.webp","credit":"UPTD Kebun Raya Batam","source":"https://kebunraya.batam.go.id/web/?page_id=142"},"Museum Batam Raja Ali Haji":{"src":"./dest-09.webp","credit":"Disbudpar Batam","source":"https://disbudpar.batam.go.id/2022/01/31/museum-batam-raja-ali-haji-jadi-rujukan-pembangunan-museum-di-belitung-timur/"},"Masjid Agung Raja Hamidah":{"src":"./dest-10.webp","credit":"ANTARA / Teguh Prihatna","source":"https://kepri.antaranews.com/berita/251598/update-jadwal-subuh-batam-wilayah-kepri-besok-rabu-25-februari-2026"},"Masjid Sultan Mahmud Riayat Syah":{"src":"./dest-11.webp","credit":"Kemenag Kota Batam","source":"https://batam.kemenag.go.id/main/detail/besok-masjid-sultan-mahmud-riayat-syah-diresmikan"},"Maha Vihara Duta Maitreya":{"src":"./dest-12.webp","credit":"Abdul Rahman / Wikimedia Commons","source":"https://commons.wikimedia.org/wiki/File:Maha_Vihara_Duta_Maitreya_Buddhist_Temple.jpg","license":"CC BY 2.0","licenseUrl":"https://creativecommons.org/licenses/by/2.0/"},"Montigo Resorts Nongsa":{"src":"./dest-13.webp","credit":"Montigo Resorts","source":"https://nongsa.montigoresorts.com/"},"Grand Batam Mall":{"src":"./dest-14.webp","credit":"Grand Batam Mall","source":"https://grandbatam.com/"},"Pantai Elyora":{"src":"./dest-15.webp","credit":"SISPEK Disbudpar Batam","source":"https://sispek.batam.go.id/bydestination/54"},"Pantai Tanjung Memban":{"src":"./dest-16.webp","credit":"Atourin","source":"https://atourin.com/destination/batam/pantai-tanjung-bemban"},"Masjid Tanjak Bandara":{"src":"./dest-17.webp","credit":"BP Batam","source":"https://bpbatam.go.id/masjid-tanjak-jadi-pilihan-ngabuburit-warga-kota-batam/"},"Swiss-Belhotel Harbour Bay":{"src":"./dest-19.webp","credit":"Swiss-Belhotel International","source":"https://www.swiss-belhotel.com/hotels/swiss-belhotel-harbour-bay-batam"},"ibis Styles Batam Nagoya":{"src":"./dest-20.webp","credit":"ALL Accor","source":"https://all.accor.com/hotel/9758/index.en.shtml"},"Nagoya Hill Hotel":{"src":"./dest-24.webp","credit":"Nagoya Hill Hotel","source":"https://nagoyahillhotel.com/"},"Hotel Santika Batam":{"src":"./dest-26.webp","credit":"Santika Indonesia","source":"https://www.mysantika.com/indonesia/batam/hotel-santika-batam"},"Turi Beach Resort":{"src":"./dest-27.webp","credit":"Turi Beach Resort","source":"https://www.turibeach.com/"},"Nongsa Point Marina & Resort":{"src":"./dest-28.webp","credit":"Nongsa Point Marina & Resort","source":"https://www.nongsapointmarina.com/"},"Wyndham Panbil Batam":{"src":"./dest-29.webp","credit":"Wyndham Hotels","source":"https://www.wyndhamhotels.com/wyndham/batam-indonesia/wyndham-panbil-batam/overview"},"Zest Harbour Bay Batam":{"src":"./dest-30.webp","credit":"Zest Hotels","source":"https://www.zesthotel.com/id-id/zest-hotel-harbour-bay-batam"},"Swiss-Belinn Baloi Batam":{"src":"./dest-31.webp","credit":"Swiss-Belhotel International","source":"https://www.swiss-belhotel.com/hotels/swiss-belinn-baloi-batam"},"Sei Enam Seafood":{"src":"./dest-32.webp","credit":"Indonesia Travel / Kemenpar","source":"https://www.indonesia.travel/id/id/travel-ideas/gastronomy/need-an-additional-dose-of-vitamin-sea-try-these-delicious-seafood-at-these-restaurants-in-batam"},"Kelong Baba":{"src":"./dest-36.webp","credit":"Indonesia Travel / Kemenpar","source":"https://www.indonesia.travel/id/id/travel-ideas/gastronomy/need-an-additional-dose-of-vitamin-sea-try-these-delicious-seafood-at-these-restaurants-in-batam"},"Pulau Abang":{"src":"./dest-40.webp","credit":"Disbudpar Batam","source":"https://disbudpar.batam.go.id/2020/01/15/snorkeling-di-pulau-abang-diminati-wisatawan/"},"Panbil Nature Reserve":{"src":"./dest-41.webp","credit":"Panbil Hospitality","source":"https://panbilhospitality.com/panbil-nature-reserve/"},"Taman Kolam Sekupang":{"src":"./dest-42.webp","credit":"SISPARNAS Kemenpar","source":"https://sisparnas.kemenpar.go.id/p/78839"},"Pantai Melayu Barelang":{"src":"./dest-43.webp","credit":"SISPARNAS Kemenpar","source":"https://sisparnas.kemenpar.go.id/p/128694"},"Dendang Melayu Barelang":{"src":"./dest-44.webp","credit":"SISPEK Disbudpar Batam","source":"https://sispek.batam.go.id/bydestination/49"},"Anchor Cafe & Roastery":{"src":"./dest-57.webp","credit":"Anchor Cafe & Roastery","source":"https://www.anchorcafeandroastery.com/new-page"},"Joyi Cafe Penuin":{"src":"./dest-58.webp","credit":"Restaurant Guru","source":"https://restaurantguru.com/Joyi-Cafe-Penuin-Batam"},"Mentari Kopitiam Penuin":{"src":"./dest-59.webp","credit":"Restaurant Guru","source":"https://restaurantguru.com/MENTARI-KOPITIAM-PENUIN-Batam"},"Mega Mall Batam Centre":{"src":"./dest-66.webp","credit":"Mega Mall Batam Centre","source":"https://www.megamallbatam.com/home"},"Nagoya Hill Mall":{"src":"./dest-67.webp","credit":"Nagoya Hill Mall","source":"https://nagoyahill.co.id/about/"}};
+
+  const replyPhotoContexts = new WeakMap();
+  // Extend the reviewed local photo collection with source-attributed remote images.
+  // A failed or blocked remote image keeps the existing accessible icon fallback.
+  fetch("./remote-destination-photo-sources.json")
+    .then(response => { if (!response.ok) throw new Error("Photo catalog unavailable"); return response.json(); })
+    .then(items => {
+      if (!Array.isArray(items)) return;
+      for (const item of items) {
+        if (!item || typeof item.name !== "string" || typeof item.url !== "string" ||
+            !/^https:\/\//.test(item.url) || typeof item.source !== "string" ||
+            !/^https:\/\//.test(item.source)) continue;
+        destinationPhotos[item.name] = {
+          src: item.url,
+          credit: item.credit || "Sumber foto",
+          source: item.source,
+          illustrative: item.illustrative === true
+        };
+      }
+      renderDestinations();
+      if (page === "detail") renderDetail();
+      refreshReplyPhotos();
+    })
+    .catch(() => {}); // The initial 39 images remain available without the remote catalog.
 
   const places = [
   {
@@ -4449,7 +4482,7 @@ document.addEventListener("DOMContentLoaded", () => {
       );
 
       const photo = destinationPhotos[place.name[0]];
-      if (photo) copy.append(node("small","dest-photo-note",(lang === "EN" ? "Photo: " : "Foto: ") + photo.credit));
+      if (photo) copy.append(node("small","dest-photo-note",(photo.illustrative ? (lang === "EN" ? "Illustration: " : "Ilustrasi: ") : (lang === "EN" ? "Photo: " : "Foto: ")) + photo.credit));
       button.append(art,copy);
       button.onclick = () => {
         selectedPlace = i;
@@ -4472,7 +4505,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const photo = destinationPhotos[place.name[0]];
     credit.hidden = !photo;
     if (photo) {
-      const source = node("a","",(lang === "EN" ? "Photo source: " : "Sumber foto: ") + photo.credit);
+      const source = node("a","",(photo.illustrative ? (lang === "EN" ? "Illustration source: " : "Sumber ilustrasi: ") : (lang === "EN" ? "Photo source: " : "Sumber foto: ")) + photo.credit);
       source.href = photo.source; source.target = "_blank"; source.rel = "noopener noreferrer";
       credit.append(source);
       if (photo.license) {
@@ -4999,6 +5032,72 @@ document.addEventListener("DOMContentLoaded", () => {
     requestAnimationFrame(refreshTables);
   }
 
+  // Use only places already named in the AI answer; this needs no extra AI request.
+  function normalizePhotoMatch(text) {
+    return String(text || '').normalize('NFKC').toLocaleLowerCase('id')
+      .replace(/[^\p{L}\p{N}]+/gu,' ').trim();
+  }
+
+  function relevantReplyPhotos(reply) {
+    const normalized = ' ' + normalizePhotoMatch(reply) + ' ';
+    const hits = [];
+    for (let i=0; i<places.length; i++) {
+      const place=places[i],photo=destinationPhotos[place.name[0]];
+      if (!photo) continue;
+      const name=normalizePhotoMatch(place.name[0]);
+      const start=normalized.indexOf(' '+name+' ');
+      if (start<0) continue;
+      hits.push({place,photo,index:i,start,end:start+name.length+2});
+    }
+    // Favor more specific names if two names overlap in the same answer.
+    hits.sort((a,b)=>b.place.name[0].length-a.place.name[0].length);
+    const selected=[];
+    for (const hit of hits) {
+      if (selected.some(other=>hit.start<other.end && other.start<hit.end)) continue;
+      selected.push(hit);
+    }
+    return selected.sort((a,b)=>a.start-b.start).slice(0,3);
+  }
+
+  function renderReplyPhotos(bubble,reply,language) {
+    const previous=bubble.querySelector('.answer-photo-gallery');
+    const placesInReply=relevantReplyPhotos(reply);
+    if (!placesInReply.length) {previous?.remove();return;}
+    const gallery=node('section','answer-photo-gallery');
+    gallery.setAttribute('aria-label',language==='EN'?'Photos of mentioned places':'Foto tempat yang disebut dalam jawaban');
+    gallery.append(node('p','answer-photo-heading',language==='EN'?'Photos of these places':'Foto tempat yang direkomendasikan'));
+    const grid=node('div','answer-photo-list');
+    for (const {place,photo,index} of placesInReply) {
+      const card=node('button','answer-photo-card');
+      card.type='button';
+      card.setAttribute('aria-label',(language==='EN'?'View place: ':'Lihat tempat: ')+place.name[0]);
+      const picture=node('img');
+      picture.alt=place.name[0];picture.width=320;picture.height=200;
+      picture.loading='lazy';picture.decoding='async';picture.fetchPriority='low';
+      picture.addEventListener('error',()=>{
+        card.remove();if (!grid.childElementCount)gallery.remove();
+      },{once:true});
+      const title=node('span','answer-photo-title',place.name[language==='EN'?1:0]||place.name[0]);
+      const label=(photo.illustrative?(language==='EN'?'Illustration: ':'Ilustrasi: '):(language==='EN'?'Photo: ':'Foto: '));
+      const credit=node('span','answer-photo-credit',label+photo.credit);
+      card.append(picture,title,credit);
+      card.addEventListener('click',()=>{
+        selectedPlace=index;detailTab='about';renderDetail();showPage('detail');
+      });
+      grid.append(card);picture.src=photo.src;
+    }
+    gallery.append(grid);
+    if(previous)previous.replaceWith(gallery);
+    else {const sources=bubble.querySelector('.sources');if(sources)sources.before(gallery);else bubble.append(gallery);}
+  }
+
+  function refreshReplyPhotos() {
+    document.querySelectorAll('.message.assistant .bubble').forEach(bubble=>{
+      const info=replyPhotoContexts.get(bubble);
+      if(info)renderReplyPhotos(bubble,info.reply,info.language);
+    });
+  }
+
   function showAnswer(data,requestLanguage) {
     const {wrapper,bubble} = addMessage(
       "assistant",undefined,requestLanguage
@@ -5033,6 +5132,8 @@ document.addEventListener("DOMContentLoaded", () => {
     const speechText = answer.textContent;
     prepareTables(answer);
     bubble.append(answer);
+    replyPhotoContexts.set(bubble,{reply:data.response,language:requestLanguage});
+    renderReplyPhotos(bubble,data.response,requestLanguage);
     addSources(bubble,data.sources,requestLanguage);
 
     const controls = node("div","message-tools");
