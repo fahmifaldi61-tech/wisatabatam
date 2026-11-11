@@ -30,7 +30,7 @@ Kode Edge Function memanggil SQL melalui `rpc(name,body)`; beberapa fungsi SQL t
 | `hb_claim_session` | Validasi hash token, mengunci sesi sementara |
 | `hb_take_limit` | Membatasi rate request pada window waktu |
 | `hb_cleanup` | Membersihkan catatan kedaluwarsa |
-| `hb_search_documents` | Cari dokumen wisata terverifikasi yang relevan |
+| `hb_search_documents` | Fungsi pencarian tersedia di database, tetapi **tidak dipanggil** oleh snapshot Edge Function v31 yang diaudit |
 | `hb_discover_places` | Pilih kandidat tempat berdasarkan filter |
 | `hb_reserve_openai_request` | Atur reservasi/kuota request OpenAI |
 | `hb_reserve_openai_transcription` | Atur kuota transkripsi suara |
