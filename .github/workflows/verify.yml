@@ -1,0 +1,19 @@
+name: Verify Hallo Batam integration
+on:
+  pull_request:
+  push:
+    branches: [main]
+permissions:
+  contents: read
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Check frontend and Supabase integration contracts
+        run: node wisata_batam_project/check-integrations.cjs
+      - name: Build published frontend and validate CSP
+        run: node wisata_batam_project/build.cjs
