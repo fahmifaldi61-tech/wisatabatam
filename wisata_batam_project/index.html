@@ -386,6 +386,13 @@ legend{font-size:14px;font-weight:700;margin-bottom:8px}
   display:grid;place-items:center;color:var(--green);overflow:hidden;
 }
 .dest-art .icon{font-size:56px}
+.dest-art img{display:block;width:100%;height:100%;object-fit:cover}
+.dest-card .dest-art{height:180px}
+.dest-photo-note{display:block;margin-top:12px;font-size:10px;color:var(--muted)}
+.detail-photo{height:clamp(200px,34vw,340px);border-radius:22px;margin:10px 0 0}
+.photo-credit{font-size:11px;line-height:1.6;color:var(--muted);margin:8px 0 24px}
+.photo-credit a{color:inherit;text-underline-offset:3px}
+.photo-credit a:focus-visible{outline:2px solid var(--green);outline-offset:3px}
 .dest-copy{padding:18px}
 .dest-copy h3{line-height:1.4;font-size:16px;margin:10px 0}
 .dest-copy p{font-size:12px;margin:0}
@@ -430,7 +437,7 @@ legend{font-size:14px;font-weight:700;margin-bottom:8px}
   .actions .button{padding:12px;font-size:12px}
   .dest-grid{grid-template-columns:1fr}
   .dest-card{display:flex}
-  .dest-card .dest-art{height:auto;width:100px;flex-shrink:0}
+  .dest-card .dest-art{height:auto;min-height:150px;width:108px;flex-shrink:0}
   .dest-copy{padding:15px}
   .composer{padding:8px 12px 10px}
   .card{padding:18px}
@@ -726,11 +733,8 @@ legend{font-size:14px;font-weight:700;margin-bottom:8px}
         <span data-t="backDest"></span>
       </button>
 
-      <div class="dest-art"
-        style="height:160px;border-radius:22px;margin:10px 0 24px"
-        aria-hidden="true">
-        <span class="icon" id="detail-icon"></span>
-      </div>
+      <div id="detail-photo" class="dest-art detail-photo"></div>
+      <p id="detail-photo-credit" class="photo-credit" hidden></p>
 
       <span class="tag" id="detail-category"></span>
       <h1 class="detail-title" id="detail-title" style="margin-top:14px"></h1>
@@ -1048,6 +1052,8 @@ document.addEventListener("DOMContentLoaded", () => {
     voiceIdleTitle:['Tanyakan lewat suara.','Ask with your voice.'],voiceReadyTitle:['Saya siap mendengarkan.','I’m ready when you are.'],voiceConnectingTitle:['Sebentar, hampir siap.','One moment, almost ready.'],voiceListeningTitle:['Saya mendengarkan.','I’m listening.'],voiceThinkingTitle:['Sebentar, saya carikan.','Let me find a few options.'],voiceSpeakingTitle:['Ini pilihan untuk Anda.','Here are your options.'],voicePausedTitle:['Ambil waktu Anda.','Take your time.'],voiceErrorTitle:['Ketuk lingkaran untuk lanjut.','Tap the circle to continue.'],
     voiceIdleCaption:['Setelah diam 1,5 detik, ucapan diproses dan pertanyaan dikirim otomatis. Jawaban tampil sebagai teks di percakapan.','After 1.5 seconds of silence, your speech is processed and your question is sent automatically. The answer appears as text in the chat.'],voiceConnectingCaption:['Mulai bicara saat status berubah menjadi Mendengarkan.','Start speaking when the status changes to Listening.'],voiceThinkingCaption:['Saya sedang menyiapkan jawaban dari data sumber yang tersedia.','I’m preparing an answer from the available source data.'],voicePausedCaption:['Mikrofon tidak mendengarkan. Tekan Lanjutkan saat Anda siap.','Your microphone is not listening. Press Unmute when you’re ready.'],voiceFooter:['Jawaban dapat keliru. Periksa informasi penting sebelum berangkat.','Answers can be inaccurate. Check important information before you travel.']
   });
+  const destinationPhotos = {"Mangrove Pandang Tak Jemu":{"src":"./dest-00.webp","credit":"JADesta Kemenpar","source":"https://jadesta.kemenpar.go.id/atraksi/ekowisata_alam_mangrove_pandang_tak_jemu"},"Desa Wisata Kampung Terih":{"src":"./dest-01.webp","credit":"kumparanTravel","source":"https://kumparan.com/kumparantravel/mengunjungi-kampung-terih-tempat-wisata-instagenic-terbaru-di-batam"},"Jembatan Barelang":{"src":"./dest-02.webp","credit":"BP Batam","source":"https://bpbatam.go.id/about-batam/travel-destinations/"},"Pantai Nongsa":{"src":"./dest-03.webp","credit":"BP Batam","source":"https://bpbatam.go.id/about-batam/travel-destinations/"},"Mega Wisata Ocarina":{"src":"./dest-04.webp","credit":"BP Batam","source":"https://bpbatam.go.id/about-batam/travel-destinations/"},"Welcome to Batam":{"src":"./dest-05.webp","credit":"BP Batam","source":"https://bpbatam.go.id/about-batam/travel-destinations/"},"Eks Kamp Pengungsi Vietnam":{"src":"./dest-06.webp","credit":"BP Batam","source":"https://bpbatam.go.id/about-batam/travel-destinations/"},"Taman Rusa Sekupang":{"src":"./dest-07.webp","credit":"BP Batam","source":"https://bpbatam.go.id/about-batam/travel-destinations/"},"Kebun Raya Batam":{"src":"./dest-08.webp","credit":"UPTD Kebun Raya Batam","source":"https://kebunraya.batam.go.id/web/?page_id=142"},"Museum Batam Raja Ali Haji":{"src":"./dest-09.webp","credit":"Disbudpar Batam","source":"https://disbudpar.batam.go.id/2022/01/31/museum-batam-raja-ali-haji-jadi-rujukan-pembangunan-museum-di-belitung-timur/"},"Masjid Agung Raja Hamidah":{"src":"./dest-10.webp","credit":"ANTARA / Teguh Prihatna","source":"https://kepri.antaranews.com/berita/251598/update-jadwal-subuh-batam-wilayah-kepri-besok-rabu-25-februari-2026"},"Masjid Sultan Mahmud Riayat Syah":{"src":"./dest-11.webp","credit":"Kemenag Kota Batam","source":"https://batam.kemenag.go.id/main/detail/besok-masjid-sultan-mahmud-riayat-syah-diresmikan"},"Maha Vihara Duta Maitreya":{"src":"./dest-12.webp","credit":"Abdul Rahman / Wikimedia Commons","source":"https://commons.wikimedia.org/wiki/File:Maha_Vihara_Duta_Maitreya_Buddhist_Temple.jpg","license":"CC BY 2.0","licenseUrl":"https://creativecommons.org/licenses/by/2.0/"},"Montigo Resorts Nongsa":{"src":"./dest-13.webp","credit":"Montigo Resorts","source":"https://nongsa.montigoresorts.com/"},"Grand Batam Mall":{"src":"./dest-14.webp","credit":"Grand Batam Mall","source":"https://grandbatam.com/"},"Pantai Elyora":{"src":"./dest-15.webp","credit":"SISPEK Disbudpar Batam","source":"https://sispek.batam.go.id/bydestination/54"},"Pantai Tanjung Memban":{"src":"./dest-16.webp","credit":"Atourin","source":"https://atourin.com/destination/batam/pantai-tanjung-bemban"},"Masjid Tanjak Bandara":{"src":"./dest-17.webp","credit":"BP Batam","source":"https://bpbatam.go.id/masjid-tanjak-jadi-pilihan-ngabuburit-warga-kota-batam/"},"Swiss-Belhotel Harbour Bay":{"src":"./dest-19.webp","credit":"Swiss-Belhotel International","source":"https://www.swiss-belhotel.com/hotels/swiss-belhotel-harbour-bay-batam"},"ibis Styles Batam Nagoya":{"src":"./dest-20.webp","credit":"ALL Accor","source":"https://all.accor.com/hotel/9758/index.en.shtml"},"Nagoya Hill Hotel":{"src":"./dest-24.webp","credit":"Nagoya Hill Hotel","source":"https://nagoyahillhotel.com/"},"Hotel Santika Batam":{"src":"./dest-26.webp","credit":"Santika Indonesia","source":"https://www.mysantika.com/indonesia/batam/hotel-santika-batam"},"Turi Beach Resort":{"src":"./dest-27.webp","credit":"Turi Beach Resort","source":"https://www.turibeach.com/"},"Nongsa Point Marina & Resort":{"src":"./dest-28.webp","credit":"Nongsa Point Marina & Resort","source":"https://www.nongsapointmarina.com/"},"Wyndham Panbil Batam":{"src":"./dest-29.webp","credit":"Wyndham Hotels","source":"https://www.wyndhamhotels.com/wyndham/batam-indonesia/wyndham-panbil-batam/overview"},"Zest Harbour Bay Batam":{"src":"./dest-30.webp","credit":"Zest Hotels","source":"https://www.zesthotel.com/id-id/zest-hotel-harbour-bay-batam"},"Swiss-Belinn Baloi Batam":{"src":"./dest-31.webp","credit":"Swiss-Belhotel International","source":"https://www.swiss-belhotel.com/hotels/swiss-belinn-baloi-batam"},"Sei Enam Seafood":{"src":"./dest-32.webp","credit":"Indonesia Travel / Kemenpar","source":"https://www.indonesia.travel/id/id/travel-ideas/gastronomy/need-an-additional-dose-of-vitamin-sea-try-these-delicious-seafood-at-these-restaurants-in-batam"},"Kelong Baba":{"src":"./dest-36.webp","credit":"Indonesia Travel / Kemenpar","source":"https://www.indonesia.travel/id/id/travel-ideas/gastronomy/need-an-additional-dose-of-vitamin-sea-try-these-delicious-seafood-at-these-restaurants-in-batam"},"Pulau Abang":{"src":"./dest-40.webp","credit":"Disbudpar Batam","source":"https://disbudpar.batam.go.id/2020/01/15/snorkeling-di-pulau-abang-diminati-wisatawan/"},"Panbil Nature Reserve":{"src":"./dest-41.webp","credit":"Panbil Hospitality","source":"https://panbilhospitality.com/panbil-nature-reserve/"},"Taman Kolam Sekupang":{"src":"./dest-42.webp","credit":"SISPARNAS Kemenpar","source":"https://sisparnas.kemenpar.go.id/p/78839"},"Pantai Melayu Barelang":{"src":"./dest-43.webp","credit":"SISPARNAS Kemenpar","source":"https://sisparnas.kemenpar.go.id/p/128694"},"Dendang Melayu Barelang":{"src":"./dest-44.webp","credit":"SISPEK Disbudpar Batam","source":"https://sispek.batam.go.id/bydestination/49"},"Anchor Cafe & Roastery":{"src":"./dest-57.webp","credit":"Anchor Cafe & Roastery","source":"https://www.anchorcafeandroastery.com/new-page"},"Joyi Cafe Penuin":{"src":"./dest-58.webp","credit":"Restaurant Guru","source":"https://restaurantguru.com/Joyi-Cafe-Penuin-Batam"},"Mentari Kopitiam Penuin":{"src":"./dest-59.webp","credit":"Restaurant Guru","source":"https://restaurantguru.com/MENTARI-KOPITIAM-PENUIN-Batam"},"Mega Mall Batam Centre":{"src":"./dest-66.webp","credit":"Mega Mall Batam Centre","source":"https://www.megamallbatam.com/home"},"Nagoya Hill Mall":{"src":"./dest-67.webp","credit":"Nagoya Hill Mall","source":"https://nagoyahill.co.id/about/"}};
+
   const places = [
   {
     "icon": "forest",
@@ -4406,6 +4412,26 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
+  function destinationArt(place,detail=false) {
+    const art = node("div","dest-art" + (detail ? " detail-photo" : ""));
+    const photo = destinationPhotos[place.name[0]];
+    const fallback = () => {
+      art.replaceChildren(node("span","icon",place.icon));
+      art.setAttribute("aria-hidden","true");
+      if (detail) $("detail-photo-credit").hidden = true;
+    };
+    if (!photo) { fallback(); return art; }
+    const image = node("img");
+    image.alt = detail ? local(place.name) : "";
+    if (!detail) art.setAttribute("aria-hidden","true");
+    image.loading = detail ? "eager" : "lazy";
+    image.decoding = "async";
+    image.onerror = fallback;
+    image.src = photo.src;
+    art.append(image);
+    return art;
+  }
+
   function renderDestinations() {
     $("dest-list").replaceChildren();
 
@@ -4413,9 +4439,7 @@ document.addEventListener("DOMContentLoaded", () => {
       const button = node("button","dest-card");
       button.type = "button";
 
-      const art = node("div","dest-art");
-      art.setAttribute("aria-hidden","true");
-      art.append(node("span","icon",place.icon));
+      const art = destinationArt(place);
 
       const copy = node("div","dest-copy");
       copy.append(
@@ -4424,6 +4448,8 @@ document.addEventListener("DOMContentLoaded", () => {
         node("p","muted",local(place.about))
       );
 
+      const photo = destinationPhotos[place.name[0]];
+      if (photo) copy.append(node("small","dest-photo-note",(lang === "EN" ? "Photo: " : "Foto: ") + photo.credit));
       button.append(art,copy);
       button.onclick = () => {
         selectedPlace = i;
@@ -4438,7 +4464,23 @@ document.addEventListener("DOMContentLoaded", () => {
 
   function renderDetail() {
     const place = places[selectedPlace];
-    $("detail-icon").textContent = place.icon;
+    const art = destinationArt(place,true);
+    art.id = "detail-photo";
+    $("detail-photo").replaceWith(art);
+    const credit = $("detail-photo-credit");
+    credit.replaceChildren();
+    const photo = destinationPhotos[place.name[0]];
+    credit.hidden = !photo;
+    if (photo) {
+      const source = node("a","",(lang === "EN" ? "Photo source: " : "Sumber foto: ") + photo.credit);
+      source.href = photo.source; source.target = "_blank"; source.rel = "noopener noreferrer";
+      credit.append(source);
+      if (photo.license) {
+        const license = node("a","",photo.license);
+        license.href = photo.licenseUrl; license.target = "_blank"; license.rel = "noopener noreferrer";
+        credit.append(document.createTextNode(" · "),license,document.createTextNode(lang === "EN" ? " · Resized for display" : " · Ukuran disesuaikan untuk tampilan"));
+      }
+    }
     $("detail-title").textContent = local(place.name);
     $("detail-category").textContent = local(place.category);
     $("map-link").href =
